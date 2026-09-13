@@ -1,0 +1,1422 @@
+/* ==========================================================================
+   MULTI-SIMULATOR HUB STYLES (Hub, Phantom, Shopify, Cash App)
+   ========================================================================== */
+
+:root {
+  --bg-main: #0a0b10;
+  --bg-card: rgba(23, 25, 35, 0.7);
+  --border-card: rgba(255, 255, 255, 0.08);
+  --phantom-purple: #ab9ff2;
+  --phantom-bg: #13141f;
+  --phantom-card: #1f1e2e;
+  --shopify-green: #008060;
+  --shopify-bg: #1a1a1a;
+  --shopify-card: #242424;
+  --cashapp-green: rgb(6, 174, 19);
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  background-color: var(--bg-main);
+  color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* View Container Management */
+.view-panel {
+  display: none;
+  width: 100%;
+  min-height: 100vh;
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+.view-panel.active {
+  display: flex;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   BACK BUTTON BAR (Shown on Simulator Screens)
+   -------------------------------------------------------------------------- */
+.sim-top-nav {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.back-to-hub-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  text-decoration: none;
+  user-select: none;
+}
+
+.back-to-hub-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateX(-2px);
+}
+
+.back-to-hub-btn svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s ease;
+}
+
+.back-to-hub-btn:hover svg {
+  transform: translateX(-3px);
+}
+
+.sim-platform-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 6px 12px;
+  border-radius: 9999px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* --------------------------------------------------------------------------
+   DASHBOARD HUB VIEW
+   -------------------------------------------------------------------------- */
+#view-dashboard {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 40px 20px 60px;
+  background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.12) 0%, transparent 60%),
+              radial-gradient(circle at 85% 80%, rgba(0, 213, 75, 0.08) 0%, transparent 50%),
+              #090a0f;
+  min-height: 100vh;
+}
+
+.hub-container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.hub-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.hub-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 12px;
+  font-weight: 600;
+  color: #a1a1aa;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.hub-badge .pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #22c55e;
+  box-shadow: 0 0 10px #22c55e;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.hub-title {
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin: 0 0 12px 0;
+  background: linear-gradient(135deg, #ffffff 40%, #a1a1aa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hub-subtitle {
+  font-size: 16px;
+  color: #71717a;
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* 3 Platform Cards Grid */
+.platform-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 20px;
+}
+
+@media (max-width: 960px) {
+  .platform-grid {
+    grid-template-columns: 1fr;
+    max-width: 460px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.platform-card {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 24px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  backdrop-filter: blur(20px);
+}
+
+.platform-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: transparent;
+  transition: all 0.3s ease;
+}
+
+.platform-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Card Variations */
+.platform-card.card-phantom:hover {
+  border-color: rgba(171, 159, 242, 0.4);
+}
+.platform-card.card-phantom::before {
+  background: linear-gradient(90deg, #ab9ff2, #8056f4);
+}
+
+.platform-card.card-shopify:hover {
+  border-color: rgba(0, 213, 115, 0.4);
+}
+.platform-card.card-shopify::before {
+  background: linear-gradient(90deg, #008060, #00d573);
+}
+
+.platform-card.card-cashapp:hover {
+  border-color: rgba(6, 174, 19, 0.5);
+}
+.platform-card.card-cashapp::before {
+  background: linear-gradient(90deg, #00D54B, #06ae13);
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.card-icon-wrap {
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.card-phantom .card-icon-wrap {
+  background: linear-gradient(135deg, #2a2245, #1f1a36);
+  border: 1px solid rgba(171, 159, 242, 0.25);
+}
+
+.card-shopify .card-icon-wrap {
+  background: linear-gradient(135deg, #132e22, #0d1e16);
+  border: 1px solid rgba(0, 128, 96, 0.4);
+}
+
+.card-cashapp .card-icon-wrap {
+  background: linear-gradient(135deg, #0c3315, #071f0d);
+  border: 1px solid rgba(6, 174, 19, 0.4);
+}
+
+.card-tag {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #a1a1aa;
+}
+
+.card-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: #fff;
+}
+
+.card-desc {
+  font-size: 13.5px;
+  color: #8b8f9e;
+  line-height: 1.5;
+  margin: 0 0 24px;
+  flex: 1;
+}
+
+/* Card Visual Mockup Preview */
+.card-preview {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.preview-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.preview-label {
+  font-size: 11px;
+  color: #71717a;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+.preview-val {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
+.preview-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+.card-launch-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #fff;
+}
+
+.card-phantom .card-launch-btn {
+  background: #6a4fd4;
+}
+.card-phantom .card-launch-btn:hover {
+  background: #7a5ee0;
+  box-shadow: 0 0 24px rgba(122, 94, 224, 0.5);
+}
+
+.card-shopify .card-launch-btn {
+  background: #008060;
+}
+.card-shopify .card-launch-btn:hover {
+  background: #009973;
+  box-shadow: 0 0 24px rgba(0, 153, 115, 0.4);
+}
+
+.card-cashapp .card-launch-btn {
+  background: #00D54B;
+  color: #000;
+}
+.card-cashapp .card-launch-btn:hover {
+  background: #0ae257;
+  box-shadow: 0 0 24px rgba(0, 213, 75, 0.5);
+}
+
+/* --------------------------------------------------------------------------
+   PHANTOM WALLET SIMULATOR VIEW
+   -------------------------------------------------------------------------- */
+#view-phantom {
+  justify-content: center;
+  align-items: center;
+  background: #0e0f17;
+  padding: 40px 16px;
+  min-height: 100vh;
+}
+
+.phantom-phone-frame {
+  width: 100%;
+  max-width: 400px;
+  background: var(--phantom-bg);
+  border-radius: 36px;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(171, 159, 242, 0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 720px;
+}
+
+/* Phantom Top Header */
+.phantom-header {
+  padding: 20px 20px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.phantom-wallet-select {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 6px 14px;
+  border-radius: 9999px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.15s ease;
+}
+
+.phantom-wallet-select:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.phantom-ghost-mini {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.phantom-wallet-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.phantom-address-pill {
+  font-size: 11px;
+  color: #ab9ff2;
+  background: rgba(171, 159, 242, 0.12);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-family: monospace;
+}
+
+/* Phantom Balance Hero */
+.phantom-balance-hero {
+  padding: 28px 20px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.phantom-total-balance {
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.phantom-change-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #22c55e;
+}
+
+/* Phantom Quick Action Buttons */
+.phantom-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding: 10px 20px 24px;
+}
+
+.phantom-action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+}
+
+.phantom-action-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ab9ff2;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.phantom-action-item:hover .phantom-action-circle {
+  background: rgba(171, 159, 242, 0.2);
+  color: #fff;
+  transform: scale(1.08);
+}
+
+.phantom-action-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #9496a8;
+}
+
+/* Phantom Tabs */
+.phantom-tabs {
+  display: flex;
+  padding: 0 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  gap: 20px;
+}
+
+.phantom-tab-btn {
+  background: none;
+  border: none;
+  padding: 10px 0;
+  color: #717388;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.15s ease;
+}
+
+.phantom-tab-btn.active {
+  color: #ab9ff2;
+}
+
+.phantom-tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #ab9ff2;
+  border-radius: 2px;
+}
+
+/* Tokens List */
+.phantom-tab-content {
+  flex: 1;
+  padding: 12px 16px 80px;
+  overflow-y: auto;
+}
+
+.token-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 8px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.token-row:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.token-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.token-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.token-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 2px;
+}
+
+.token-price {
+  font-size: 12px;
+  color: #8b8ea3;
+  margin: 0;
+}
+
+.token-price-gain {
+  color: #22c55e;
+  margin-left: 4px;
+}
+
+.token-right {
+  text-align: right;
+}
+
+.token-amount-fiat {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 2px;
+}
+
+.token-amount-crypto {
+  font-size: 12px;
+  color: #8b8ea3;
+  margin: 0;
+}
+
+/* Phantom Bottom Navbar */
+.phantom-bottom-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(19, 20, 31, 0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 12px 10px 18px;
+  z-index: 10;
+}
+
+.phantom-nav-btn {
+  background: none;
+  border: none;
+  color: #717388;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 12px;
+  transition: color 0.15s ease;
+}
+
+.phantom-nav-btn.active {
+  color: #ab9ff2;
+}
+
+/* --------------------------------------------------------------------------
+   SHOPIFY STORE DASHBOARD SIMULATOR VIEW
+   -------------------------------------------------------------------------- */
+#view-shopify {
+  justify-content: center;
+  align-items: flex-start;
+  background: #111215;
+  padding: 40px 16px;
+  min-height: 100vh;
+}
+
+.shopify-phone-frame {
+  width: 100%;
+  max-width: 440px;
+  background: #1a1a1a;
+  border-radius: 36px;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(0, 128, 96, 0.15);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 780px;
+  color: #f1f1f1;
+}
+
+/* Shopify Top Header */
+.shopify-header {
+  padding: 18px 20px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #1f1f1f;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.shopify-brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.shopify-logo-img {
+  height: 24px;
+  filter: brightness(0) invert(1);
+}
+
+.shopify-store-selector {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+}
+
+.shopify-store-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #008060;
+  box-shadow: 0 0 6px #008060;
+}
+
+/* Live Visitors Banner */
+.shopify-live-banner {
+  background: rgba(0, 128, 96, 0.15);
+  border-bottom: 1px solid rgba(0, 128, 96, 0.25);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.shopify-live-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #34d399;
+}
+
+.live-green-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 10px #10b981;
+  animation: pulse 1.5s infinite;
+}
+
+.shopify-live-tag {
+  font-size: 11px;
+  color: #a7f3d0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+}
+
+/* Shopify Scrollable Content */
+.shopify-content {
+  flex: 1;
+  padding: 16px 16px 80px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Date Range Pill Bar */
+.shopify-date-filter {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.shopify-date-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: #9ca3af;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.shopify-date-btn.active {
+  background: #303030;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Revenue Metric Card */
+.shopify-sales-card {
+  background: #242424;
+  border-radius: 18px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sales-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.sales-card-title {
+  font-size: 13px;
+  color: #9ca3af;
+  font-weight: 500;
+  margin: 0 0 4px;
+}
+
+.sales-card-amount {
+  font-size: 32px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.sales-growth-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* Interactive SVG Revenue Chart */
+.shopify-chart-wrap {
+  width: 100%;
+  height: 120px;
+  margin-top: 14px;
+  position: relative;
+}
+
+.shopify-chart-wrap svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.chart-axis-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #6b7280;
+  margin-top: 6px;
+}
+
+/* KPI 2x2 Grid */
+.shopify-kpi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.shopify-kpi-item {
+  background: #242424;
+  border-radius: 14px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.kpi-title {
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 0 0 6px;
+  font-weight: 500;
+}
+
+.kpi-val {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 4px;
+}
+
+.kpi-change {
+  font-size: 11px;
+  color: #34d399;
+  font-weight: 600;
+}
+
+/* Recent Orders Section */
+.shopify-orders-card {
+  background: #242424;
+  border-radius: 18px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.orders-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.orders-head-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.orders-head-link {
+  font-size: 12px;
+  color: #34d399;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.shopify-order-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.shopify-order-row:last-child {
+  border-bottom: none;
+}
+
+.order-user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 2px;
+}
+
+.order-meta {
+  font-size: 11px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.order-right {
+  text-align: right;
+}
+
+.order-price {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 2px;
+}
+
+.order-badge-paid {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  font-weight: 600;
+}
+
+/* Shopify Bottom Navigation */
+.shopify-bottom-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(31, 31, 31, 0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 10px 10px 16px;
+  z-index: 10;
+}
+
+.shopify-nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.shopify-nav-btn.active {
+  color: #fff;
+}
+
+/* --------------------------------------------------------------------------
+   CASH APP VIEW CONTAINER
+   -------------------------------------------------------------------------- */
+#view-cashapp {
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(6, 174, 19);
+  min-height: 100vh;
+}
+
+/* Simulated Transaction Modal */
+.sim-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  z-index: 20000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.sim-modal-overlay.active {
+  display: flex;
+}
+
+.sim-modal-box {
+  background: #18181b;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  padding: 28px;
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  color: #fff;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.sim-modal-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sim-modal-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.sim-modal-desc {
+  font-size: 14px;
+  color: #a1a1aa;
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+
+.sim-modal-close-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: #27272a;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.sim-modal-close-btn:hover {
+  background: #3f3f46;
+}
+
+/* Toast feedback */
+.toast-notice {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: rgba(18, 18, 22, 0.9);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  z-index: 30000;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toast-notice.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* Moving vibration animation for exceeding max amount (99999) */
+@keyframes cashapp-vibrate-amount {
+  0%, 100% { transform: translateX(0); }
+  15% { transform: translateX(-12px); }
+  30% { transform: translateX(12px); }
+  45% { transform: translateX(-9px); }
+  60% { transform: translateX(9px); }
+  75% { transform: translateX(-5px); }
+  90% { transform: translateX(5px); }
+}
+
+.cashapp-shaking {
+  animation: cashapp-vibrate-amount 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both !important;
+  will-change: transform;
+}
+
+/* ==========================================================================
+   CASH APP PAY SHEET MODAL (Screenshots 1 & 2)
+   ========================================================================== */
+.cashapp-pay-sheet-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 15000;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.cashapp-pay-sheet-overlay.active {
+  display: flex;
+}
+
+.cashapp-pay-sheet-container {
+  width: 100%;
+  max-width: 440px;
+  background: #000000;
+  border-radius: 28px;
+  padding: 24px 22px 28px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  color: #ffffff;
+  position: relative;
+  animation: cashappSheetPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@keyframes cashappSheetPop {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.cashapp-pay-close-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  align-self: flex-start;
+  transition: opacity 0.15s ease;
+}
+
+.cashapp-pay-close-btn:hover {
+  opacity: 0.8;
+}
+
+.cashapp-pay-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 20px 0;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  line-height: 1.15;
+}
+
+.cashapp-pay-title .pay-label-bold {
+  color: #ffffff;
+}
+
+.cashapp-pay-title .pay-to-dim {
+  color: #52525b;
+  font-weight: 600;
+}
+
+/* Search input container */
+.cashapp-pay-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #1c1c1e;
+  border-radius: 9999px;
+  padding: 0 16px;
+  height: 52px;
+  margin-bottom: 24px;
+  transition: background 0.15s ease;
+}
+
+.cashapp-pay-search-wrap:focus-within {
+  background: #242426;
+}
+
+.cashapp-search-icon {
+  width: 20px;
+  height: 20px;
+  color: #71717a;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.cashapp-pay-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: inherit;
+}
+
+.cashapp-pay-input::placeholder {
+  color: #71717a;
+  font-weight: 400;
+}
+
+.cashapp-qr-scan-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cashapp-qr-icon-img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.cashapp-qr-scan-btn:hover .cashapp-qr-icon-img {
+  opacity: 0.8;
+  transform: scale(1.08);
+}
+
+/* Find people you know card (State 1) */
+.cashapp-find-people-card {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 22px 20px;
+  background: transparent;
+}
+
+.cashapp-find-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 10px 0;
+}
+
+.cashapp-find-desc {
+  font-size: 14px;
+  line-height: 1.45;
+  color: #8e8e93;
+  margin: 0 0 18px 0;
+}
+
+.cashapp-sync-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  color: #000000;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px 22px;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.cashapp-sync-btn:hover {
+  background: #f0f0f0;
+}
+
+.cashapp-sync-btn:active {
+  transform: scale(0.97);
+}
+
+/* Results section (State 2) */
+.cashapp-results-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.cashapp-results-header {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 16px 0;
+}
+
+.cashapp-results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+  max-height: 380px;
+}
+
+.cashapp-result-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 8px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.cashapp-result-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cashapp-result-item:active {
+  transform: scale(0.99);
+}
+
+.cashapp-avatar-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.cashapp-user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.cashapp-user-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 2px 0;
+}
+
+.cashapp-user-cashtag {
+  font-size: 14px;
+  color: #8e8e93;
+  margin: 0;
+}
