@@ -48,6 +48,7 @@ body {
     opacity: 0;
     transform: translateY(6px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -124,8 +125,8 @@ body {
   justify-content: flex-start;
   padding: 40px 20px 60px;
   background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.12) 0%, transparent 60%),
-              radial-gradient(circle at 85% 80%, rgba(0, 213, 75, 0.08) 0%, transparent 50%),
-              #090a0f;
+    radial-gradient(circle at 85% 80%, rgba(0, 213, 75, 0.08) 0%, transparent 50%),
+    #090a0f;
   min-height: 100vh;
 }
 
@@ -166,9 +167,20 @@ body {
 }
 
 @keyframes pulse {
-  0% { transform: scale(0.95); opacity: 0.8; }
-  50% { transform: scale(1.2); opacity: 1; }
-  100% { transform: scale(0.95); opacity: 0.8; }
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
 }
 
 .hub-title {
@@ -242,6 +254,7 @@ body {
 .platform-card.card-phantom:hover {
   border-color: rgba(171, 159, 242, 0.4);
 }
+
 .platform-card.card-phantom::before {
   background: linear-gradient(90deg, #ab9ff2, #8056f4);
 }
@@ -249,6 +262,7 @@ body {
 .platform-card.card-shopify:hover {
   border-color: rgba(0, 213, 115, 0.4);
 }
+
 .platform-card.card-shopify::before {
   background: linear-gradient(90deg, #008060, #00d573);
 }
@@ -256,6 +270,7 @@ body {
 .platform-card.card-cashapp:hover {
   border-color: rgba(6, 174, 19, 0.5);
 }
+
 .platform-card.card-cashapp::before {
   background: linear-gradient(90deg, #00D54B, #06ae13);
 }
@@ -274,7 +289,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .card-phantom .card-icon-wrap {
@@ -382,6 +397,7 @@ body {
 .card-phantom .card-launch-btn {
   background: #6a4fd4;
 }
+
 .card-phantom .card-launch-btn:hover {
   background: #7a5ee0;
   box-shadow: 0 0 24px rgba(122, 94, 224, 0.5);
@@ -390,6 +406,7 @@ body {
 .card-shopify .card-launch-btn {
   background: #008060;
 }
+
 .card-shopify .card-launch-btn:hover {
   background: #009973;
   box-shadow: 0 0 24px rgba(0, 153, 115, 0.4);
@@ -399,6 +416,7 @@ body {
   background: #00D54B;
   color: #000;
 }
+
 .card-cashapp .card-launch-btn:hover {
   background: #0ae257;
   box-shadow: 0 0 24px rgba(0, 213, 75, 0.5);
@@ -1071,8 +1089,15 @@ body {
 }
 
 @keyframes popIn {
-  from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .sim-modal-icon {
@@ -1128,7 +1153,7 @@ body {
   border-radius: 9999px;
   font-size: 13px;
   font-weight: 600;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   z-index: 30000;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
   opacity: 0;
@@ -1142,13 +1167,35 @@ body {
 
 /* Moving vibration animation for exceeding max amount (99999) */
 @keyframes cashapp-vibrate-amount {
-  0%, 100% { transform: translateX(0); }
-  15% { transform: translateX(-12px); }
-  30% { transform: translateX(12px); }
-  45% { transform: translateX(-9px); }
-  60% { transform: translateX(9px); }
-  75% { transform: translateX(-5px); }
-  90% { transform: translateX(5px); }
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  15% {
+    transform: translateX(-12px);
+  }
+
+  30% {
+    transform: translateX(12px);
+  }
+
+  45% {
+    transform: translateX(-9px);
+  }
+
+  60% {
+    transform: translateX(9px);
+  }
+
+  75% {
+    transform: translateX(-5px);
+  }
+
+  90% {
+    transform: translateX(5px);
+  }
 }
 
 .cashapp-shaking {
@@ -1196,6 +1243,7 @@ body {
     opacity: 0;
     transform: translateY(20px) scale(0.97);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);

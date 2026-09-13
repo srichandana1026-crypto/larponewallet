@@ -5,7 +5,7 @@
 
 // Global App State
 const state = {
-  currentView: 'dashboard',
+  currentView: 'landing',
   cashAppAmount: '0',
   cashAppHistory: [
     { name: 'Sarah Jenkins', tag: '$sarahj22', amount: '+$75.00', date: 'Today at 11:42 AM', type: 'received' },
@@ -28,21 +28,186 @@ const state = {
       week: { sales: '$96,480.00', growth: '↑ 32.8%', orders: '754', conv: '4.21%', aov: '$127.95', sessions: '17,910' },
       month: { sales: '$384,150.00', growth: '↑ 41.5%', orders: '3,024', conv: '4.35%', aov: '$127.03', sessions: '69,500' }
     }
-  }
+  },
+  isLoggedIn: false,
+  userEmail: '',
+  pendingDestination: null
 };
+
+// Restore existing session immediately
+try {
+  const saved = localStorage.getItem('larpkit_user');
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    if (parsed && parsed.isLoggedIn) {
+      state.isLoggedIn = true;
+      state.userEmail = parsed.email || 'creator@larpkit.io';
+    }
+  }
+} catch (e) {}
+
+let currentAuthMode = 'login';
+
+function checkPasswordRules(pw) {
+  pw = pw || '';
+  const hasLen = pw.length >= 8;
+  const hasUpper = /[A-Z]/.test(pw);
+  const hasLower = /[a-z]/.test(pw);
+  const hasNum = /[0-9]/.test(pw);
+
+  const elLen = document.getElementById('rule-length');
+  const elUpper = document.getElementById('rule-upper');
+  const elLower = document.getElementById('rule-lower');
+  const elNum = document.getElementById('rule-number');
+
+  if (elLen) elLen.classList.toggle('valid', hasLen);
+  if (elUpper) elUpper.classList.toggle('valid', hasUpper);
+  if (elLower) elLower.classList.toggle('valid', hasLower);
+  if (elNum) elNum.classList.toggle('valid', hasNum);
+
+  return hasLen && hasUpper && hasLower && hasNum;
+}
+
+function updateUserNavUI() {
+  const guestMenu = document.getElementById('nav-guest-menu');
+  const authMenu = document.getElementById('nav-auth-menu');
+  const emailDisplay = document.getElementById('nav-user-email-display');
+  const userBtn = document.getElementById('nav-user-btn');
+
+  if (state.isLoggedIn) {
+    if (guestMenu) guestMenu.style.display = 'none';
+    if (authMenu) authMenu.style.display = 'block';
+    if (emailDisplay) emailDisplay.textContent = state.userEmail || 'creator@larpkit.io';
+    if (userBtn) userBtn.style.borderColor = 'rgba(52, 211, 153, 0.4)';
+  } else {
+    if (guestMenu) guestMenu.style.display = 'block';
+    if (authMenu) authMenu.style.display = 'none';
+    if (userBtn) userBtn.style.borderColor = 'var(--border-subtle)';
+  }
+}
+
+function openAuthModal(mode = 'signup', isGated = false) {
+  currentAuthMode = mode;
+
+  const authModal = document.getElementById('auth-modal');
+  const authCard = document.getElementById('auth-modal-card');
+  const stepCredentials = document.getElementById('auth-step-credentials');
+  const stepCard = document.getElementById('auth-step-card');
+  const authGateNotice = document.getElementById('auth-gate-notice');
+  const authGateText = document.getElementById('auth-gate-text');
+  const authTitle = document.getElementById('auth-card-title');
+  const authDesc = document.getElementById('auth-card-desc');
+  const pwRules = document.getElementById('auth-pw-rules');
+  const pwExtras = document.getElementById('auth-pw-extras');
+  const mainBtn = document.getElementById('auth-main-btn');
+  const switchText = document.getElementById('auth-switch-text');
+  const switchBtn = document.getElementById('auth-switch-btn');
+  const passwordInput = document.getElementById('auth-password-input');
+
+  if (!authModal) return;
+
+  // Reset view to Step 1 (credentials)
+  if (stepCredentials) stepCredentials.style.display = 'block';
+  if (stepCard) stepCard.style.display = 'none';
+  if (authCard) authCard.classList.remove('wider');
+
+  // Gate notice
+  if (authGateNotice) {
+    if (isGated) {
+      authGateNotice.style.display = 'flex';
+      if (authGateText && state.pendingDestination) {
+        const simNames = { phantom: 'Phantom Wallet', shopify: 'Shopify Admin', cashapp: 'Cash App' };
+        authGateText.textContent = `Please sign in to launch ${simNames[state.pendingDestination] || 'this simulator'}.`;
+      }
+    } else {
+      authGateNotice.style.display = 'none';
+    }
+  }
+
+  if (mode === 'signup') {
+    if (authTitle) authTitle.textContent = 'Create your account';
+    if (authDesc) authDesc.textContent = 'Make a new account to explore high-fidelity simulators. For free';
+    if (pwRules) pwRules.style.display = 'block';
+    if (pwExtras) pwExtras.style.display = 'none';
+    if (mainBtn) mainBtn.textContent = 'Get Started';
+    if (switchText) switchText.textContent = 'Already have an account?';
+    if (switchBtn) switchBtn.textContent = 'Log in';
+    if (passwordInput) checkPasswordRules(passwordInput.value);
+  } else {
+    if (authTitle) authTitle.textContent = 'Sign in with email';
+    if (authDesc) authDesc.textContent = 'Make a new doc to bring your words, data, and teams together. For free';
+    if (pwRules) pwRules.style.display = 'none';
+    if (pwExtras) pwExtras.style.display = 'flex';
+    if (mainBtn) mainBtn.textContent = 'Log In';
+    if (switchText) switchText.textContent = "Don't have an account?";
+    if (switchBtn) switchBtn.textContent = 'Sign up';
+  }
+
+  authModal.classList.add('active');
+}
+
+function closeAuthModal() {
+  const authModal = document.getElementById('auth-modal');
+  const authCard = document.getElementById('auth-modal-card');
+  const stepCredentials = document.getElementById('auth-step-credentials');
+  const stepCard = document.getElementById('auth-step-card');
+
+  if (authModal) authModal.classList.remove('active');
+  if (authCard) authCard.classList.remove('wider');
+  if (stepCredentials) stepCredentials.style.display = 'block';
+  if (stepCard) stepCard.style.display = 'none';
+}
+
+function completeAuthentication(email, isNewAccount = false) {
+  state.isLoggedIn = true;
+  state.userEmail = email || 'creator@larpkit.io';
+
+  try {
+    localStorage.setItem('larpkit_user', JSON.stringify({ isLoggedIn: true, email: state.userEmail }));
+  } catch (e) {}
+
+  updateUserNavUI();
+  closeAuthModal();
+
+  const welcomeMsg = isNewAccount
+    ? `Account activated! Free access to all simulators granted.`
+    : `Welcome back, ${state.userEmail}! Simulator unlocked.`;
+
+  showToast(welcomeMsg);
+
+  if (state.pendingDestination) {
+    const dest = state.pendingDestination;
+    state.pendingDestination = null;
+    setTimeout(() => {
+      navigateTo(dest);
+    }, 350);
+  }
+}
+
+window.openAuthModal = openAuthModal;
+window.closeAuthModal = closeAuthModal;
+window.updateUserNavUI = updateUserNavUI;
+window.completeAuthentication = completeAuthentication;
 
 // --------------------------------------------------------------------------
 // ROUTER & NAVIGATION
 // --------------------------------------------------------------------------
 function navigateTo(viewName, pushHistory = true) {
-  const validViews = ['dashboard', 'cashapp', 'phantom', 'shopify'];
+  const validViews = ['landing', 'cashapp', 'phantom', 'shopify'];
   if (!validViews.includes(viewName)) {
-    viewName = 'dashboard';
+    viewName = 'landing';
+  }
+
+  // Gate simulators behind login
+  if (['cashapp', 'phantom', 'shopify'].includes(viewName) && !state.isLoggedIn) {
+    state.pendingDestination = viewName;
+    openAuthModal('login', true);
+    return;
   }
 
   // Update URL hash
   if (pushHistory) {
-    window.location.hash = viewName === 'dashboard' ? '' : `#${viewName}`;
+    window.location.hash = viewName === 'landing' ? '' : `#${viewName}`;
   }
 
   state.currentView = viewName;
@@ -69,7 +234,7 @@ function navigateTo(viewName, pushHistory = true) {
     if (viewName === 'cashapp') themeMeta.setAttribute('content', '#06ae13');
     else if (viewName === 'phantom') themeMeta.setAttribute('content', '#13141f');
     else if (viewName === 'shopify') themeMeta.setAttribute('content', '#1a1a1a');
-    else themeMeta.setAttribute('content', '#0a0b10');
+    else themeMeta.setAttribute('content', '#09090b');
   }
 }
 
@@ -77,9 +242,15 @@ function navigateTo(viewName, pushHistory = true) {
 function handleHashChange() {
   const hash = window.location.hash.replace('#', '').trim().toLowerCase();
   if (['cashapp', 'phantom', 'shopify'].includes(hash)) {
-    navigateTo(hash, false);
+    if (!state.isLoggedIn) {
+      state.pendingDestination = hash;
+      navigateTo('landing', false);
+      openAuthModal('login', true);
+    } else {
+      navigateTo(hash, false);
+    }
   } else {
-    navigateTo('dashboard', false);
+    navigateTo('landing', false);
   }
 }
 
@@ -141,7 +312,7 @@ const contextMenu = document.getElementById('custom-context-menu');
 function showContextMenu(x, y) {
   if (!contextMenu) return;
   contextMenu.style.display = 'block';
-  
+
   // Keep inside screen viewport
   const rect = contextMenu.getBoundingClientRect();
   const maxX = window.innerWidth - 190;
@@ -195,7 +366,7 @@ function shakeCashAppAmount() {
   if (navigator.vibrate) {
     try {
       navigator.vibrate([40, 30, 40]);
-    } catch (e) {}
+    } catch (e) { }
   }
 }
 
@@ -303,8 +474,8 @@ function getFilteredCashAppContacts(query) {
   }
 
   // Match existing contacts
-  let matches = cashAppContacts.filter(c => 
-    c.name.toLowerCase().includes(q) || 
+  let matches = cashAppContacts.filter(c =>
+    c.name.toLowerCase().includes(q) ||
     c.cashtag.toLowerCase().includes(q)
   );
 
@@ -461,7 +632,7 @@ function switchPhantomTab(tabName) {
 }
 
 function copyPhantomAddress() {
-  navigator.clipboard.writeText(state.phantom.fullAddress).catch(() => {});
+  navigator.clipboard.writeText(state.phantom.fullAddress).catch(() => { });
   showToast('Copied Phantom address to clipboard!');
 }
 
@@ -552,6 +723,11 @@ document.addEventListener('DOMContentLoaded', () => {
     elem.addEventListener('click', (e) => {
       e.stopPropagation();
       const target = elem.dataset.navigate;
+      if (['cashapp', 'phantom', 'shopify'].includes(target) && !state.isLoggedIn) {
+        state.pendingDestination = target;
+        openAuthModal('login', true);
+        return;
+      }
       navigateTo(target);
     });
   });
@@ -560,8 +736,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const menuBackBtn = document.getElementById('menu-item-back');
   if (menuBackBtn) {
     menuBackBtn.addEventListener('click', () => {
-      if (state.currentView !== 'dashboard') {
-        navigateTo('dashboard');
+      if (state.currentView !== 'landing') {
+        navigateTo('landing');
       } else {
         window.history.back();
       }
@@ -695,6 +871,292 @@ document.addEventListener('DOMContentLoaded', () => {
   if (qrBtn) {
     qrBtn.addEventListener('click', () => {
       showToast('QR scanner active');
+    });
+  }
+
+  // --------------------------------------------------------------------------
+  // MODERN AUTH MODAL & SIMULATOR GATING CONTROLLER
+  // --------------------------------------------------------------------------
+  const authModal = document.getElementById('auth-modal');
+  const authCard = document.getElementById('auth-modal-card');
+  const stepCredentials = document.getElementById('auth-step-credentials');
+  const stepCard = document.getElementById('auth-step-card');
+  const emailInput = document.getElementById('auth-email-input');
+  const passwordInput = document.getElementById('auth-password-input');
+  const pwToggle = document.getElementById('auth-pw-toggle');
+  const switchBtn = document.getElementById('auth-switch-btn');
+  const backToStep1 = document.getElementById('auth-back-to-step1');
+  const formCredentials = document.getElementById('auth-form-credentials');
+  const formCard = document.getElementById('auth-form-card');
+  const cardNumberInput = document.getElementById('card-number-input');
+  const cardExpInput = document.getElementById('card-exp-input');
+  const authModalClose = document.getElementById('auth-modal-close-btn');
+
+  // Update nav state initially
+  updateUserNavUI();
+
+  // Real-time password validation on typing
+  if (passwordInput) {
+    passwordInput.addEventListener('input', () => {
+      if (currentAuthMode === 'signup') {
+        checkPasswordRules(passwordInput.value);
+      }
+      document.getElementById('wrap-auth-password')?.classList.remove('has-error');
+    });
+  }
+
+  if (emailInput) {
+    emailInput.addEventListener('input', () => {
+      document.getElementById('wrap-auth-email')?.classList.remove('has-error');
+    });
+  }
+
+  // Password Visibility Toggle
+  if (pwToggle && passwordInput) {
+    pwToggle.addEventListener('click', () => {
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
+      pwToggle.style.color = isPassword ? '#ffffff' : '#71717a';
+    });
+  }
+
+  // Close modal handlers
+  if (authModalClose) authModalClose.addEventListener('click', closeAuthModal);
+
+  if (authModal) {
+    authModal.addEventListener('click', (e) => {
+      if (e.target === authModal) closeAuthModal();
+    });
+  }
+
+  // Escape key closes modal
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAuthModal();
+  });
+
+  // Switch between Sign up and Log in modes inside modal
+  if (switchBtn) {
+    switchBtn.addEventListener('click', () => {
+      const authGateNotice = document.getElementById('auth-gate-notice');
+      const targetMode = currentAuthMode === 'signup' ? 'login' : 'signup';
+      openAuthModal(targetMode, authGateNotice && authGateNotice.style.display === 'flex');
+    });
+  }
+
+  // Form Step 1 Submit (Credentials)
+  if (formCredentials) {
+    formCredentials.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = emailInput ? emailInput.value.trim() : '';
+      const password = passwordInput ? passwordInput.value : '';
+
+      // Basic email check
+      if (!email || !email.includes('@')) {
+        document.getElementById('wrap-auth-email')?.classList.add('has-error');
+        showToast('Please enter a valid email address.');
+        emailInput?.focus();
+        return;
+      }
+
+      if (currentAuthMode === 'login') {
+        // Log in mode: requires email & password
+        if (!password) {
+          document.getElementById('wrap-auth-password')?.classList.add('has-error');
+          showToast('Please enter your password.');
+          passwordInput?.focus();
+          return;
+        }
+
+        completeAuthentication(email, false);
+      } else {
+        // Sign up mode: must follow password rules
+        const rulesPassed = checkPasswordRules(password);
+        if (!rulesPassed) {
+          document.getElementById('wrap-auth-password')?.classList.add('has-error');
+          showToast('Password must include 8+ chars, uppercase, lowercase, and a number.');
+          passwordInput?.focus();
+          return;
+        }
+
+        // Transition to Step 2: Wider card asking for card details
+        if (authCard) authCard.classList.add('wider');
+        if (stepCredentials) stepCredentials.style.display = 'none';
+        if (stepCard) stepCard.style.display = 'block';
+
+        const nameInput = document.getElementById('card-name-input');
+        if (nameInput) {
+          nameInput.value = email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+      }
+    });
+  }
+
+  // Back from Step 2 to Step 1
+  if (backToStep1) {
+    backToStep1.addEventListener('click', () => {
+      if (authCard) authCard.classList.remove('wider');
+      if (stepCard) stepCard.style.display = 'none';
+      if (stepCredentials) stepCredentials.style.display = 'block';
+    });
+  }
+
+  // Card formatting helpers
+  if (cardNumberInput) {
+    cardNumberInput.addEventListener('input', (e) => {
+      let val = e.target.value.replace(/\D/g, '').slice(0, 16);
+      val = val.replace(/(.{4})/g, '$1 ').trim();
+      e.target.value = val;
+
+      const badge = document.getElementById('card-brand-badge');
+      if (badge) {
+        if (val.startsWith('4')) badge.textContent = 'VISA';
+        else if (val.startsWith('5')) badge.textContent = 'MC';
+        else if (val.startsWith('3')) badge.textContent = 'AMEX';
+        else badge.textContent = 'CARD';
+      }
+    });
+  }
+
+  if (cardExpInput) {
+    cardExpInput.addEventListener('input', (e) => {
+      let val = e.target.value.replace(/\D/g, '').slice(0, 4);
+      if (val.length >= 2) {
+        val = val.slice(0, 2) + ' / ' + val.slice(2);
+      }
+      e.target.value = val;
+    });
+  }
+
+  // Form Step 2 Submit (Card Details)
+  if (formCard) {
+    formCard.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = emailInput ? emailInput.value.trim() : 'creator@larpkit.io';
+      completeAuthentication(email, true);
+    });
+  }
+
+  // Forgot password click
+  const forgotLink = document.getElementById('auth-forgot-link');
+  if (forgotLink) {
+    forgotLink.addEventListener('click', () => {
+      showToast('Password reset link sent to your email.');
+    });
+  }
+
+  // --------------------------------------------------------------------------
+  // DIRECT USER ACTION BUTTONS (HERO, NAV, CARDS, CTAs)
+  // --------------------------------------------------------------------------
+  // Hero CTA buttons
+  const heroBtnSignup = document.getElementById('hero-btn-signup');
+  if (heroBtnSignup) {
+    heroBtnSignup.addEventListener('click', () => openAuthModal('signup', false));
+  }
+
+  const heroBtnLogin = document.getElementById('hero-btn-login');
+  if (heroBtnLogin) {
+    heroBtnLogin.addEventListener('click', () => openAuthModal('login', false));
+  }
+
+  // Nav user profile trigger & dropdown toggle
+  const navUserBtn = document.getElementById('nav-user-btn');
+  const navUserWrap = document.getElementById('nav-user-wrap');
+  if (navUserBtn) {
+    navUserBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!state.isLoggedIn) {
+        openAuthModal('signup', false);
+      } else {
+        if (navUserWrap) navUserWrap.classList.toggle('open');
+      }
+    });
+  }
+
+  document.addEventListener('click', (e) => {
+    if (navUserWrap && !navUserWrap.contains(e.target)) {
+      navUserWrap.classList.remove('open');
+    }
+  });
+
+  // Nav user dropdown buttons
+  const navBtnSignup = document.getElementById('nav-btn-signup');
+  if (navBtnSignup) navBtnSignup.addEventListener('click', () => openAuthModal('signup', false));
+
+  const navBtnLogin = document.getElementById('nav-btn-login');
+  if (navBtnLogin) navBtnLogin.addEventListener('click', () => openAuthModal('login', false));
+
+  // Log Out button
+  const navBtnLogout = document.getElementById('nav-btn-logout');
+  if (navBtnLogout) {
+    navBtnLogout.addEventListener('click', () => {
+      state.isLoggedIn = false;
+      state.userEmail = '';
+      try {
+        localStorage.removeItem('larpkit_user');
+      } catch (e) {}
+      updateUserNavUI();
+      showToast('Logged out successfully.');
+      if (['phantom', 'shopify', 'cashapp'].includes(state.currentView)) {
+        navigateTo('landing');
+      }
+    });
+  }
+
+  // Simulator preview card clicks (launch or prompt auth)
+  document.querySelectorAll('.sim-preview-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.sim-card-action')) return;
+      const navBtn = card.querySelector('.sim-card-action[data-navigate]');
+      if (navBtn) {
+        const target = navBtn.dataset.navigate;
+        if (['cashapp', 'phantom', 'shopify'].includes(target) && !state.isLoggedIn) {
+          state.pendingDestination = target;
+          openAuthModal('login', true);
+        } else {
+          navigateTo(target);
+        }
+      }
+    });
+  });
+
+  // Section CTA buttons
+  const ctaBtnSignup = document.getElementById('cta-btn-signup');
+  if (ctaBtnSignup) ctaBtnSignup.addEventListener('click', () => openAuthModal('signup', false));
+
+  // Pricing checkout button
+  const pricingCheckoutBtn = document.getElementById('pricing-checkout-btn');
+  if (pricingCheckoutBtn) {
+    pricingCheckoutBtn.addEventListener('click', () => {
+      openAuthModal('signup', false);
+    });
+  }
+
+  // FAQ Accordion
+  document.querySelectorAll('.faq-question-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      if (item) {
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('open'));
+        if (!isOpen) {
+          item.classList.add('open');
+        }
+      }
+    });
+  });
+
+  // Footer links
+  const footerTerms = document.getElementById('footer-terms-btn');
+  if (footerTerms) {
+    footerTerms.addEventListener('click', () => {
+      showToast('LarpKit License: Single-seat developer and simulator use.');
+    });
+  }
+
+  const footerPrivacy = document.getElementById('footer-privacy-btn');
+  if (footerPrivacy) {
+    footerPrivacy.addEventListener('click', () => {
+      showToast('Privacy Policy: All simulator data stays strictly in your browser.');
     });
   }
 
