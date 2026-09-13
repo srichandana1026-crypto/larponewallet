@@ -1,0 +1,46 @@
+/* LarpPay — numbers, symbols and glyphs only (letters fall through to next family) */
+
+@font-face {
+  font-family: 'LarpPayGlyphs';
+  src: url('/fonts/larppay/LarpPay-Regular.ttf?v=3') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020-002F, U+0030-0039, U+003A-0040, U+005B-0060, U+007B-007E, U+00A0-00BF, U+2000-206F, U+2070-209F, U+20A0-20BF, U+2100-214F, U+2190-21FF, U+2200-22FF, U+25A0-25FF, U+2700-27BF;
+}
+
+@font-face {
+  font-family: 'LarpPayGlyphs';
+  src: url('/fonts/larppay/LarpPay-Medium.ttf?v=3') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020-002F, U+0030-0039, U+003A-0040, U+005B-0060, U+007B-007E, U+00A0-00BF, U+2000-206F, U+2070-209F, U+20A0-20BF, U+2100-214F, U+2190-21FF, U+2200-22FF, U+25A0-25FF, U+2700-27BF;
+}
+
+@font-face {
+  font-family: 'LarpPayGlyphs';
+  src: url('/fonts/larppay/LarpPay-SemiBold.ttf?v=3') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020-002F, U+0030-0039, U+003A-0040, U+005B-0060, U+007B-007E, U+00A0-00BF, U+2000-206F, U+2070-209F, U+20A0-20BF, U+2100-214F, U+2190-21FF, U+2200-22FF, U+25A0-25FF, U+2700-27BF;
+}
+
+@font-face {
+  font-family: 'LarpPayGlyphs';
+  src: url('/fonts/larppay/LarpPay-Bold.ttf?v=3') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020-002F, U+0030-0039, U+003A-0040, U+005B-0060, U+007B-007E, U+00A0-00BF, U+2000-206F, U+2070-209F, U+20A0-20BF, U+2100-214F, U+2190-21FF, U+2200-22FF, U+25A0-25FF, U+2700-27BF;
+}
+
+@font-face {
+  font-family: 'LarpPayGlyphs';
+  src: url('/fonts/larppay/LarpPay-ExtraBold.ttf?v=3') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020-002F, U+0030-0039, U+003A-0040, U+005B-0060, U+007B-007E, U+00A0-00BF, U+2000-206F, U+2070-209F, U+20A0-20BF, U+2100-214F, U+2190-21FF, U+2200-22FF, U+25A0-25FF, U+2700-27BF;
+}

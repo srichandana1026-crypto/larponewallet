@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#9a9a9f"/>
+      <stop offset="55%" stop-color="#85858a"/>
+      <stop offset="100%" stop-color="#707075"/>
+    </linearGradient>
+  </defs>
+
+  <!-- transparent background -->
+  <rect x="92" y="124" width="840" height="520" rx="112" fill="url(#g)"/>
+
+  <!-- corner details -->
+  <path d="M190 230
+           Q190 184 236 184
+           H300
+           Q318 184 312 202
+           Q288 274 214 296
+           Q190 302 190 278 Z"
+        fill="#29292d"/>
+
+  <path d="M834 230
+           Q834 184 788 184
+           H724
+           Q706 184 712 202
+           Q736 274 810 296
+           Q834 302 834 278 Z"
+        fill="#29292d"/>
+
+  <path d="M190 538
+           Q190 584 236 584
+           H300
+           Q318 584 312 566
+           Q288 494 214 472
+           Q190 466 190 490 Z"
+        fill="#29292d"/>
+
+  <path d="M834 538
+           Q834 584 788 584
+           H724
+           Q706 584 712 566
+           Q736 494 810 472
+           Q834 466 834 490 Z"
+        fill="#29292d"/>
+
+  <!-- center circle -->
+  <circle cx="512" cy="384" r="112" fill="#29292d"/>
+</svg>
