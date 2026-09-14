@@ -7,12 +7,9 @@
 const state = {
   currentView: 'landing',
   cashAppAmount: '0',
-  cashAppHistory: [
-    { name: 'Sarah Jenkins', tag: '$sarahj22', amount: '+$75.00', date: 'Today at 11:42 AM', type: 'received' },
-    { name: 'Spotify Premium', tag: '$spotify', amount: '-$14.99', date: 'Yesterday', type: 'sent' },
-    { name: 'Marcus Bell', tag: '$mbell_tech', amount: '+$350.00', date: 'Mar 11', type: 'received' },
-    { name: 'Uber Technologies', tag: '$uber', amount: '-$32.50', date: 'Mar 10', type: 'sent' }
-  ],
+  cashAppBalance: 0,
+  cashAppActiveTab: 'keypad',
+  cashAppHistory: [],
   phantom: {
     address: '9WzQ...7k2q',
     fullAddress: '9WzQxR64mY8cK3eN2uFpLt5J8vG1mZbAo41P7k2q',
@@ -361,11 +358,11 @@ function shakeCashAppAmount() {
   displayVal.classList.add('cashapp-shaking');
   setTimeout(() => {
     displayVal.classList.remove('cashapp-shaking');
-  }, 450);
+  }, 800);
 
   if (navigator.vibrate) {
     try {
-      navigator.vibrate([40, 30, 40]);
+      navigator.vibrate([30, 40, 30]);
     } catch (e) { }
   }
 }
@@ -459,63 +456,78 @@ const cashAppContacts = [
   { name: 'Ethan Ross', cashtag: '$ethanr', initial: 'E', bg: '#ff6b6b' }
 ];
 
+let selectedCashAppRecipient = null;
+let cashAppSearchDebounce = null;
+
 function getFilteredCashAppContacts(query) {
   const q = query.trim().toLowerCase().replace('$', '');
   if (!q) return [];
 
-  // If query starts with allm or is allmigt, return the 4 exact contacts from Screenshot 2
-  if (q === 'allmigt' || q.startsWith('allm')) {
-    return [
-      { name: 'Aaron Brooks', cashtag: '$allmigt', initial: 'A', bg: '#e85656' },
-      { name: 'Marcus Thomas', cashtag: '$allmigt2', initial: 'M', bg: '#e85656' },
-      { name: 'Alex Lewis', cashtag: '$allmigtt', initial: 'A', bg: '#d87498' },
-      { name: 'Devin Parker', cashtag: '$allmi5', initial: 'D', bg: '#e86b59' }
-    ];
-  }
+  const capitalized = q.charAt(0).toUpperCase() + q.slice(1);
 
-  // Match existing contacts
-  let matches = cashAppContacts.filter(c =>
-    c.name.toLowerCase().includes(q) ||
-    c.cashtag.toLowerCase().includes(q)
-  );
-
-  // If less than 4 matches, dynamically generate contacts tailored for this word so results appear for ANY word typed
-  if (matches.length < 4) {
-    const capitalized = q.charAt(0).toUpperCase() + q.slice(1);
-    const dynamicNames = [
-      { name: `${capitalized} Brooks`, cashtag: `$${q}`, initial: capitalized.charAt(0) || 'A', bg: '#e85656' },
-      { name: `Marcus ${capitalized}`, cashtag: `$${q}2`, initial: 'M', bg: '#e85656' },
-      { name: `Alex ${capitalized}`, cashtag: `$${q}tt`, initial: 'A', bg: '#d87498' },
-      { name: `Devin ${capitalized}`, cashtag: `$${q}5`, initial: 'D', bg: '#e86b59' }
-    ];
-
-    for (const d of dynamicNames) {
-      if (!matches.some(m => m.cashtag.toLowerCase() === d.cashtag.toLowerCase())) {
-        matches.push(d);
-      }
-      if (matches.length >= 4) break;
+  // Exact match structure from Screenshots 2 & 3:
+  // Option 1 dynamically reflects the typed name/cashtag
+  // Options 2-4 provide the authentic peer options
+  return [
+    {
+      name: `${capitalized} Hayes`,
+      cashtag: `$${q}`,
+      initial: capitalized.charAt(0) || 'I',
+      bg: '#29b6f6'
+    },
+    {
+      name: 'Sean Anderson',
+      cashtag: '$seana',
+      initial: 'S',
+      bg: '#22c55e'
+    },
+    {
+      name: 'Dylan Garcia',
+      cashtag: '$dylan39',
+      initial: 'D',
+      bg: '#3b82f6'
+    },
+    {
+      name: 'Alex Walker',
+      cashtag: '$awalker',
+      initial: 'A',
+      bg: '#f59e0b'
     }
-  }
-
-  return matches;
+  ];
 }
 
 function openCashAppPaySheet(amountText) {
   const sheet = document.getElementById('cashapp-pay-sheet');
   const amountEl = document.getElementById('pay-sheet-amount');
+  const confirmAmountEl = document.getElementById('cashapp-confirm-amount');
   const input = document.getElementById('cashapp-recipient-input');
   const contactsCard = document.getElementById('cashapp-contacts-card');
+  const spinnerWrap = document.getElementById('cashapp-search-spinner');
   const resultsSection = document.getElementById('cashapp-results-section');
   const resultsContainer = document.getElementById('cashapp-results-list');
+  const searchView = document.getElementById('cashapp-view-search');
+  const confirmView = document.getElementById('cashapp-view-confirm');
+  const backBtn = document.getElementById('cashapp-pay-sheet-back');
+  const closeBtn = document.getElementById('cashapp-pay-sheet-close');
 
   if (!sheet) return;
 
   if (amountEl) amountEl.textContent = amountText;
+  if (confirmAmountEl) confirmAmountEl.textContent = amountText;
+
+  // Reset to Step 1 (Search View)
+  if (searchView) searchView.style.display = 'block';
+  if (confirmView) confirmView.style.display = 'none';
+  if (backBtn) backBtn.style.display = 'none';
+  if (closeBtn) closeBtn.style.display = 'flex';
+
   if (input) {
     input.value = '';
     setTimeout(() => input.focus(), 150);
   }
+
   if (contactsCard) contactsCard.style.display = 'block';
+  if (spinnerWrap) spinnerWrap.style.display = 'none';
   if (resultsSection) resultsSection.style.display = 'none';
   if (resultsContainer) resultsContainer.innerHTML = '';
 
@@ -525,59 +537,292 @@ function openCashAppPaySheet(amountText) {
 function closeCashAppPaySheet() {
   const sheet = document.getElementById('cashapp-pay-sheet');
   if (sheet) sheet.classList.remove('active');
+  if (cashAppSearchDebounce) clearTimeout(cashAppSearchDebounce);
 }
 
-function renderCashAppSearchResults(query) {
-  const resultsContainer = document.getElementById('cashapp-results-list');
+function handleCashAppSearchInput(query) {
   const contactsCard = document.getElementById('cashapp-contacts-card');
+  const spinnerWrap = document.getElementById('cashapp-search-spinner');
   const resultsSection = document.getElementById('cashapp-results-section');
-  if (!resultsContainer || !contactsCard || !resultsSection) return;
+  const resultsContainer = document.getElementById('cashapp-results-list');
+
+  if (cashAppSearchDebounce) clearTimeout(cashAppSearchDebounce);
 
   const trimmed = query.trim();
   if (trimmed === '') {
-    contactsCard.style.display = 'block';
-    resultsSection.style.display = 'none';
-    resultsContainer.innerHTML = '';
+    if (contactsCard) contactsCard.style.display = 'block';
+    if (spinnerWrap) spinnerWrap.style.display = 'none';
+    if (resultsSection) resultsSection.style.display = 'none';
+    if (resultsContainer) resultsContainer.innerHTML = '';
     return;
   }
 
-  contactsCard.style.display = 'none';
-  resultsSection.style.display = 'flex';
+  // Hide contacts card & results immediately while user is typing
+  if (contactsCard) contactsCard.style.display = 'none';
+  if (resultsSection) resultsSection.style.display = 'none';
 
-  const matches = getFilteredCashAppContacts(trimmed);
-  resultsContainer.innerHTML = '';
+  // Show loading spinner (Screenshot 2)
+  if (spinnerWrap) spinnerWrap.style.display = 'flex';
 
-  matches.forEach(item => {
-    const row = document.createElement('div');
-    row.className = 'cashapp-result-item';
-    row.innerHTML = `
-      <div class="cashapp-avatar-circle" style="background-color: ${item.bg};">${item.initial}</div>
-      <div class="cashapp-user-info">
-        <div class="cashapp-user-name">${item.name}</div>
-        <div class="cashapp-user-cashtag">${item.cashtag}</div>
-      </div>
-    `;
-    row.addEventListener('click', () => {
-      selectCashAppRecipient(item);
-    });
-    resultsContainer.appendChild(row);
-  });
+  // Debounce: Only once user finishes typing, show options (Screenshot 3)
+  cashAppSearchDebounce = setTimeout(() => {
+    if (spinnerWrap) spinnerWrap.style.display = 'none';
+    const matches = getFilteredCashAppContacts(trimmed);
+
+    if (resultsContainer) {
+      resultsContainer.innerHTML = '';
+      matches.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'cashapp-result-item';
+        row.innerHTML = `
+          <div class="cashapp-avatar-circle" style="background-color: ${item.bg};">${item.initial}</div>
+          <div class="cashapp-user-info">
+            <div class="cashapp-user-name">${item.name}</div>
+            <div class="cashapp-user-cashtag">${item.cashtag}</div>
+          </div>
+        `;
+        row.addEventListener('click', () => {
+          selectCashAppRecipient(item);
+        });
+        resultsContainer.appendChild(row);
+      });
+    }
+
+    if (resultsSection) resultsSection.style.display = 'flex';
+  }, 480);
 }
 
 function selectCashAppRecipient(recipient) {
-  const currentAmount = document.getElementById('pay-sheet-amount')?.textContent || '$99,999';
-  closeCashAppPaySheet();
+  selectedCashAppRecipient = recipient;
 
-  showSimModal({
-    iconSvg: '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
-    iconBg: 'rgba(34, 197, 94, 0.15)',
-    title: `Sent ${currentAmount}`,
-    desc: `Payment successfully sent to ${recipient.name} (${recipient.cashtag}) with instant settlement.`,
-    actionText: 'Done'
+  const searchView = document.getElementById('cashapp-view-search');
+  const confirmView = document.getElementById('cashapp-view-confirm');
+  const backBtn = document.getElementById('cashapp-pay-sheet-back');
+  const closeBtn = document.getElementById('cashapp-pay-sheet-close');
+
+  const avatarEl = document.getElementById('cashapp-confirm-avatar');
+  const shortNameEl = document.getElementById('cashapp-confirm-short-name');
+  const noteInput = document.getElementById('cashapp-note-input');
+  const reviewBtn = document.getElementById('cashapp-review-btn');
+  const noteDisplay = document.getElementById('cashapp-confirm-note-display');
+  const finalPayBox = document.getElementById('cashapp-final-pay-box');
+
+  // Format short name: First name + Last initial (e.g. "Igbibb H." from Screenshot 4)
+  const nameParts = recipient.name.split(' ');
+  const shortName = nameParts.length > 1
+    ? `${nameParts[0]} ${nameParts[1].charAt(0)}.`
+    : recipient.name;
+
+  if (avatarEl) {
+    avatarEl.textContent = recipient.initial;
+    avatarEl.style.backgroundColor = recipient.bg;
+  }
+  if (shortNameEl) shortNameEl.textContent = shortName;
+
+  // Switch to Step 4 (Note View)
+  if (searchView) searchView.style.display = 'none';
+  if (confirmView) confirmView.style.display = 'block';
+  if (backBtn) backBtn.style.display = 'flex';
+  if (closeBtn) closeBtn.style.display = 'none';
+
+  // Reset note & pay box
+  if (noteInput) {
+    noteInput.value = '';
+    setTimeout(() => noteInput.focus(), 150);
+  }
+  if (reviewBtn) {
+    reviewBtn.classList.remove('active');
+    reviewBtn.disabled = true;
+  }
+  if (noteDisplay) {
+    noteDisplay.style.display = 'none';
+    noteDisplay.textContent = '';
+  }
+  if (finalPayBox) {
+    finalPayBox.style.display = 'none';
+  }
+}
+
+function handleCashAppNoteSubmit() {
+  const noteInput = document.getElementById('cashapp-note-input');
+  const noteDisplay = document.getElementById('cashapp-confirm-note-display');
+  const finalPayBox = document.getElementById('cashapp-final-pay-box');
+
+  const noteVal = (noteInput ? noteInput.value.trim() : '') || 'MAKE NO MISTAKES';
+
+  if (noteDisplay) {
+    noteDisplay.textContent = noteVal.toUpperCase();
+    noteDisplay.style.display = 'block';
+  }
+
+  // Show Step 5 funding pill & Pay button
+  if (finalPayBox) {
+    finalPayBox.style.display = 'block';
+  }
+}
+
+function getCurrentTimeFormatted() {
+  const now = new Date();
+  let hours = now.getHours();
+  const minutes = now.getMinutes().toString().padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  return `${hours}:${minutes} ${ampm}`;
+}
+
+function updateCashAppHomeBalance() {
+  const balEl = document.getElementById('cashapp-main-cash-balance');
+  const subEl = document.getElementById('cashapp-add-money-sub');
+  const formatted = `$${state.cashAppBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  if (balEl) balEl.textContent = formatted;
+  if (subEl) subEl.textContent = `Cash balance ${formatted}`;
+}
+
+function renderCashAppHistory() {
+  const emptyEl = document.getElementById('cashapp-history-empty');
+  const listEl = document.getElementById('cashapp-history-list');
+  if (!emptyEl || !listEl) return;
+
+  if (!state.cashAppHistory || state.cashAppHistory.length === 0) {
+    emptyEl.style.display = 'block';
+    listEl.style.display = 'none';
+    listEl.innerHTML = '';
+  } else {
+    emptyEl.style.display = 'none';
+    listEl.style.display = 'flex';
+    listEl.innerHTML = '';
+
+    state.cashAppHistory.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'cashapp-history-item';
+      row.innerHTML = `
+        <div class="cashapp-history-avatar" style="background-color: ${item.bg || '#29b6f6'};">${item.initial || 'I'}</div>
+        <div class="cashapp-history-info">
+          <div class="cashapp-history-name">${item.name}</div>
+          <div class="cashapp-history-note">${item.note}</div>
+          <div class="cashapp-history-time">${item.time}</div>
+        </div>
+        <div class="cashapp-history-amount">-${item.amount}</div>
+      `;
+      listEl.appendChild(row);
+    });
+  }
+}
+
+function switchCashAppTab(tabName) {
+  state.cashAppActiveTab = tabName;
+
+  const phoneContainer = document.getElementById('cashapp-phone-container');
+  const tabKeypad = document.getElementById('cashapp-tab-keypad');
+  const tabHome = document.getElementById('cashapp-tab-home');
+  const tabHistory = document.getElementById('cashapp-tab-history');
+
+  document.querySelectorAll('.cashapp-tab-nav-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.cashappTab === tabName);
   });
 
+  if (tabName === 'keypad') {
+    if (phoneContainer) {
+      phoneContainer.classList.remove('dark-theme');
+      phoneContainer.style.backgroundColor = 'rgb(6, 174, 19)';
+    }
+    if (tabKeypad) tabKeypad.style.display = 'flex';
+    if (tabHome) tabHome.style.display = 'none';
+    if (tabHistory) tabHistory.style.display = 'none';
+  } else if (tabName === 'home') {
+    if (phoneContainer) {
+      phoneContainer.classList.add('dark-theme');
+      phoneContainer.style.backgroundColor = '#000000';
+    }
+    if (tabKeypad) tabKeypad.style.display = 'none';
+    if (tabHome) tabHome.style.display = 'block';
+    if (tabHistory) tabHistory.style.display = 'none';
+    updateCashAppHomeBalance();
+  } else if (tabName === 'history') {
+    if (phoneContainer) {
+      phoneContainer.classList.add('dark-theme');
+      phoneContainer.style.backgroundColor = '#000000';
+    }
+    if (tabKeypad) tabKeypad.style.display = 'none';
+    if (tabHome) tabHome.style.display = 'none';
+    if (tabHistory) tabHistory.style.display = 'block';
+    renderCashAppHistory();
+  }
+}
+
+let selectedAddMoneyAmount = 25;
+
+function openCashAppAddMoneySheet() {
+  const sheet = document.getElementById('cashapp-add-money-sheet');
+  if (sheet) {
+    updateCashAppHomeBalance();
+    sheet.style.display = 'flex';
+  }
+}
+
+function closeCashAppAddMoneySheet() {
+  const sheet = document.getElementById('cashapp-add-money-sheet');
+  if (sheet) {
+    sheet.style.display = 'none';
+  }
+}
+
+function handleAddMoneySubmit() {
+  state.cashAppBalance += selectedAddMoneyAmount;
+  updateCashAppHomeBalance();
+  closeCashAppAddMoneySheet();
+
+  // Show Big Black Screen for Add Money confirmation
+  const successScreen = document.getElementById('cashapp-success-screen');
+  const messageEl = document.getElementById('cashapp-success-message');
+  if (messageEl) {
+    messageEl.textContent = `$${selectedAddMoneyAmount} added to your Cash balance`;
+  }
+  if (successScreen) {
+    successScreen.style.display = 'flex';
+  }
+}
+
+function executeCashAppPayment() {
+  const amount = document.getElementById('pay-sheet-amount')?.textContent || '$99,999';
+  const recipientName = selectedCashAppRecipient ? selectedCashAppRecipient.name : 'Igbibb Hayes';
+  const noteInput = document.getElementById('cashapp-note-input');
+  const noteText = (noteInput ? noteInput.value.trim() : '') || 'MAKE NO MISTAKES';
+
+  closeCashAppPaySheet();
+
+  // Record payment in History (Screenshot 1)
+  state.cashAppHistory.unshift({
+    name: recipientName,
+    note: noteText,
+    amount: amount,
+    time: getCurrentTimeFormatted(),
+    initial: selectedCashAppRecipient ? selectedCashAppRecipient.initial : 'I',
+    bg: selectedCashAppRecipient ? selectedCashAppRecipient.bg : '#29b6f6'
+  });
+
+  // Show Big Black Screen (Screenshot 6 / User Request)
+  const successScreen = document.getElementById('cashapp-success-screen');
+  const messageEl = document.getElementById('cashapp-success-message');
+
+  if (messageEl) {
+    messageEl.textContent = `You sent ${amount} to ${recipientName}`;
+  }
+  if (successScreen) {
+    successScreen.style.display = 'flex';
+  }
+
+  // Reset keypad amount
   state.cashAppAmount = '0';
   updateCashAppDisplay();
+}
+
+function closeCashAppSuccessScreen() {
+  const successScreen = document.getElementById('cashapp-success-screen');
+  if (successScreen) {
+    successScreen.style.display = 'none';
+  }
 }
 
 function triggerCashAppAction(actionType) {
@@ -838,6 +1083,20 @@ document.addEventListener('DOMContentLoaded', () => {
     paySheetCloseBtn.addEventListener('click', closeCashAppPaySheet);
   }
 
+  const paySheetBackBtn = document.getElementById('cashapp-pay-sheet-back');
+  if (paySheetBackBtn) {
+    paySheetBackBtn.addEventListener('click', () => {
+      const searchView = document.getElementById('cashapp-view-search');
+      const confirmView = document.getElementById('cashapp-view-confirm');
+      const backBtn = document.getElementById('cashapp-pay-sheet-back');
+      const closeBtn = document.getElementById('cashapp-pay-sheet-close');
+      if (searchView) searchView.style.display = 'block';
+      if (confirmView) confirmView.style.display = 'none';
+      if (backBtn) backBtn.style.display = 'none';
+      if (closeBtn) closeBtn.style.display = 'flex';
+    });
+  }
+
   const paySheetOverlay = document.getElementById('cashapp-pay-sheet');
   if (paySheetOverlay) {
     paySheetOverlay.addEventListener('click', (e) => {
@@ -850,19 +1109,56 @@ document.addEventListener('DOMContentLoaded', () => {
   const recipientInput = document.getElementById('cashapp-recipient-input');
   if (recipientInput) {
     recipientInput.addEventListener('input', (e) => {
-      renderCashAppSearchResults(e.target.value);
+      handleCashAppSearchInput(e.target.value);
     });
+  }
+
+  const noteInput = document.getElementById('cashapp-note-input');
+  const reviewBtn = document.getElementById('cashapp-review-btn');
+  if (noteInput && reviewBtn) {
+    noteInput.addEventListener('input', (e) => {
+      const hasText = e.target.value.trim().length > 0;
+      reviewBtn.disabled = !hasText;
+      reviewBtn.classList.toggle('active', hasText);
+    });
+
+    noteInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleCashAppNoteSubmit();
+      }
+    });
+
+    reviewBtn.addEventListener('click', () => {
+      handleCashAppNoteSubmit();
+    });
+  }
+
+  const finalPayBtn = document.getElementById('cashapp-final-pay-btn');
+  if (finalPayBtn) {
+    finalPayBtn.addEventListener('click', () => {
+      executeCashAppPayment();
+    });
+  }
+
+  const successCloseBtn = document.getElementById('cashapp-success-close-btn');
+  if (successCloseBtn) {
+    successCloseBtn.addEventListener('click', closeCashAppSuccessScreen);
+  }
+
+  const successDoneBtn = document.getElementById('cashapp-success-done-btn');
+  if (successDoneBtn) {
+    successDoneBtn.addEventListener('click', closeCashAppSuccessScreen);
   }
 
   const syncContactsBtn = document.getElementById('cashapp-sync-contacts-btn');
   if (syncContactsBtn) {
     syncContactsBtn.addEventListener('click', () => {
-      showToast('Contacts synced from address book');
       const input = document.getElementById('cashapp-recipient-input');
       if (input) {
-        input.value = 'a';
-        renderCashAppSearchResults('a');
-        input.select();
+        input.value = 'igbibb';
+        handleCashAppSearchInput('igbibb');
+        input.focus();
       }
     });
   }
@@ -872,6 +1168,50 @@ document.addEventListener('DOMContentLoaded', () => {
     qrBtn.addEventListener('click', () => {
       showToast('QR scanner active');
     });
+  }
+
+  // Cash App Bottom Nav Tab Buttons (Home, Keypad, History)
+  document.querySelectorAll('.cashapp-tab-nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      switchCashAppTab(btn.dataset.cashappTab);
+    });
+  });
+
+  // Cash App Add Money Listeners (Screenshot 5)
+  const homeAddMoneyBtn = document.getElementById('cashapp-home-add-money-btn');
+  if (homeAddMoneyBtn) {
+    homeAddMoneyBtn.addEventListener('click', openCashAppAddMoneySheet);
+  }
+
+  const addMoneySheet = document.getElementById('cashapp-add-money-sheet');
+  if (addMoneySheet) {
+    addMoneySheet.addEventListener('click', (e) => {
+      if (e.target === addMoneySheet) {
+        closeCashAppAddMoneySheet();
+      }
+    });
+  }
+
+  document.querySelectorAll('.cashapp-preset-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('.cashapp-preset-pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      const val = pill.dataset.addAmount;
+      if (val === 'custom') {
+        const custom = prompt('Enter amount to add:', '50');
+        const num = parseFloat(custom);
+        if (num && num > 0) {
+          selectedAddMoneyAmount = num;
+        }
+      } else {
+        selectedAddMoneyAmount = parseInt(val, 10) || 25;
+      }
+    });
+  });
+
+  const submitAddMoneyBtn = document.getElementById('cashapp-submit-add-money-btn');
+  if (submitAddMoneyBtn) {
+    submitAddMoneyBtn.addEventListener('click', handleAddMoneySubmit);
   }
 
   // --------------------------------------------------------------------------
@@ -1104,11 +1444,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Simulator preview card clicks (launch or prompt auth)
   document.querySelectorAll('.sim-preview-card').forEach(card => {
-    card.addEventListener('click', (e) => {
-      if (e.target.closest('.sim-card-action')) return;
-      const navBtn = card.querySelector('.sim-card-action[data-navigate]');
-      if (navBtn) {
-        const target = navBtn.dataset.navigate;
+    card.addEventListener('click', () => {
+      const target = card.dataset.navigate || (card.querySelector('[data-navigate]') && card.querySelector('[data-navigate]').dataset.navigate);
+      if (target) {
         if (['cashapp', 'phantom', 'shopify'].includes(target) && !state.isLoggedIn) {
           state.pendingDestination = target;
           openAuthModal('login', true);
