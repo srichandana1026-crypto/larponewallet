@@ -59,9 +59,8 @@ p b,
   font-weight: 400 !important;
 }
 
-/* Headings: strictly regular (400) and thin (300), never bold */
-h1, h2, h3, h4, h5, h6,
-.hero-title,
+/* Headings default regular (400) */
+h2, h3, h4, h5, h6,
 .section-title,
 .sim-card-title,
 .sim-cta-title,
@@ -78,7 +77,7 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .hero-title {
-  font-weight: 300 !important;
+  font-weight: 600 !important;
 }
 
 /* Landing Page Wrapper */
@@ -350,7 +349,7 @@ h1, h2, h3, h4, h5, h6,
 
 .hero-title {
   font-size: clamp(26px, 3.4vw, 42px);
-  font-weight: 300;
+  font-weight: 600;
   line-height: 1.18;
   letter-spacing: -0.03em;
   margin: 0 0 16px;
