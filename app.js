@@ -1573,7 +1573,7 @@ document.addEventListener('DOMContentLoaded', () => {
     titleEl.innerHTML = '';
     const words = fullText.split(' ');
     let charCount = 0;
-    const charDelayMs = 46;
+    const charDelayMs = 25;
     const totalLetters = fullText.replace(/\s+/g, '').length;
     let animatedLetterCount = 0;
 
@@ -1612,7 +1612,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Safety fallback to guarantee subtitle reveals even if animationend event is blocked
     setTimeout(() => {
       if (subtitleEl) subtitleEl.classList.add('is-visible');
-    }, (charCount * charDelayMs) + 750);
+    }, (charCount * charDelayMs) + 550);
   }
 
   initHeroLetterUnblur();
