@@ -4,11 +4,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-  <meta name="author" content="LarpKit">
+  <meta name="author" content="Larpwallet">
   <meta name="theme-color" content="#0a0b10">
-  <meta name="application-name" content="LarpKit Multi-Simulator Hub">
-  <title>LarpKit — Multi-Simulator Hub</title>
+  <meta name="application-name" content="Larpwallet">
+  <title>Larpwallet</title>
   <meta name="description" content="Simulate Cash App, Phantom Wallet, and Shopify Store Admin dashboards.">
+
+  <script>
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+  </script>
 
   <!-- Inter & Inter Tight Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,7 +41,7 @@
       <div class="landing-nav-inner">
         <a href="#hero" class="landing-brand">
           <div class="landing-brand-mark">L</div>
-          <span>LarpKit</span>
+          <span>Larpwallet</span>
         </a>
 
         <nav>
@@ -86,17 +93,17 @@
         <div class="hero-content">
           <h1 class="hero-title">You don't need to pinterest your figures like these cars anymore.</h1>
           <p class="hero-subtitle">
-            Stop larping your numbers with Pinterest screenshots like you do with cars. Generate believable balances and transaction proofs in seconds.
+            Stop larping your numbers with Pinterest screenshots like you do with cars. Access shopify, phantom wallet plus cash app and create your balances.
           </p>
         </div>
       </div>
+      <div class="hero-signature-tag">[N00BIEDOB]</div>
     </section>
 
     <!-- 2. SIMULATORS SECTION (3 Cards + CTA without price mention) -->
     <section id="simulators" class="landing-section">
       <div class="landing-container">
-        <div class="section-header text-center">
-          <div class="section-tag">Supported Ecosystems</div>
+        <div class="section-header text-center scroll-reveal">
           <h2 class="section-title">Tested interfaces. Pixel-perfect fidelity.</h2>
           <p class="section-desc">
             Interact with live balances, order streams, and payment flows engineered to match real-world apps.
@@ -105,7 +112,7 @@
 
         <div class="simulators-grid">
           <!-- Card 1: Shopify -->
-          <article class="sim-preview-card" data-navigate="shopify">
+          <article class="sim-preview-card scroll-reveal" data-navigate="shopify">
             <div class="sim-card-top-row">
               <h3 class="sim-card-title">Shopify</h3>
               <span class="sim-card-pill-btn">Get started +</span>
@@ -119,7 +126,7 @@
           </article>
 
           <!-- Card 2: Phantom -->
-          <article class="sim-preview-card" data-navigate="phantom">
+          <article class="sim-preview-card scroll-reveal reveal-delay-1" data-navigate="phantom">
             <div class="sim-card-top-row">
               <h3 class="sim-card-title">Phantom</h3>
               <span class="sim-card-pill-btn">Get started +</span>
@@ -133,7 +140,7 @@
           </article>
 
           <!-- Card 3: Cash App -->
-          <article class="sim-preview-card" data-navigate="cashapp">
+          <article class="sim-preview-card scroll-reveal reveal-delay-2" data-navigate="cashapp">
             <div class="sim-card-top-row">
               <h3 class="sim-card-title">Cash App</h3>
               <span class="sim-card-pill-btn">Get started +</span>
@@ -146,19 +153,25 @@
             </div>
           </article>
         </div>
+
+        <!-- 2nd Section End Row: Left [N00BIEDOB], Right [LASTS FOREVER] -->
+        <div class="sim-corner-row scroll-reveal reveal-delay-2">
+          <span class="sim-corner-tag">[N00BIEDOB]</span>
+          <span class="sim-corner-tag">[LASTS FOREVER]</span>
+        </div>
       </div>
     </section>
 
     <!-- 3. PRICING SECTION (Single System: $9.99 Lifetime with future updates) -->
     <section id="pricing" class="landing-section">
       <div class="landing-container">
-        <div class="section-header text-center">
+        <div class="section-header text-center scroll-reveal">
           <div class="section-tag">Simple Pricing</div>
           <h2 class="section-title">One plan. Lifetime ownership.</h2>
         </div>
 
         <div class="pricing-wrapper">
-          <div class="pricing-card-device">
+          <div class="pricing-card-device scroll-reveal reveal-delay-1">
             <!-- White top display screen with right-aligned pricing -->
             <div class="pricing-screen-white">
               <div class="pricing-screen-content">
@@ -197,13 +210,16 @@
             </div>
           </div>
         </div>
+
+        <!-- Pricing below center tag -->
+        <div class="pricing-signature-tag scroll-reveal reveal-delay-2">[N00BIEDOB]</div>
       </div>
     </section>
 
     <!-- 4. FAQ SECTION -->
     <section id="faq" class="landing-section">
       <div class="landing-container">
-        <div class="section-header text-center">
+        <div class="section-header text-center scroll-reveal">
           <div class="section-tag">Help & Clarity</div>
           <h2 class="section-title">Frequently Asked Questions</h2>
           <p class="section-desc">
@@ -212,7 +228,7 @@
         </div>
 
         <div class="faq-list">
-          <div class="faq-item">
+          <div class="faq-item scroll-reveal">
             <button type="button" class="faq-question-btn">
               <div class="faq-roll-wrapper">
                 <span class="faq-roll-primary">What is included with the $9.99 lifetime purchase?</span>
@@ -227,7 +243,7 @@
             </div>
           </div>
 
-          <div class="faq-item">
+          <div class="faq-item scroll-reveal reveal-delay-1">
             <button type="button" class="faq-question-btn">
               <div class="faq-roll-wrapper">
                 <span class="faq-roll-primary">Are there recurring or monthly subscription fees?</span>
@@ -242,7 +258,7 @@
             </div>
           </div>
 
-          <div class="faq-item">
+          <div class="faq-item scroll-reveal reveal-delay-2">
             <button type="button" class="faq-question-btn">
               <div class="faq-roll-wrapper">
                 <span class="faq-roll-primary">How do future updates work?</span>
@@ -257,7 +273,7 @@
             </div>
           </div>
 
-          <div class="faq-item">
+          <div class="faq-item scroll-reveal reveal-delay-3">
             <button type="button" class="faq-question-btn">
               <div class="faq-roll-wrapper">
                 <span class="faq-roll-primary">Can the simulators be used offline?</span>
@@ -272,7 +288,7 @@
             </div>
           </div>
 
-          <div class="faq-item">
+          <div class="faq-item scroll-reveal reveal-delay-4">
             <button type="button" class="faq-question-btn">
               <div class="faq-roll-wrapper">
                 <span class="faq-roll-primary">How do I sign up or log in?</span>
@@ -294,7 +310,7 @@
     <footer class="landing-footer">
       <div class="landing-container">
         <!-- Top Row: Navigation Links -->
-        <div class="footer-top-row">
+        <div class="footer-top-row scroll-reveal">
           <div class="footer-links-grid">
             <div>
               <div class="footer-col-title">Simulators</div>
@@ -323,10 +339,10 @@
         </div>
 
         <!-- Left Bottom Brand: Logo + Description directly above the 2026 line -->
-        <div class="footer-brand-wrap">
+        <div class="footer-brand-wrap scroll-reveal reveal-delay-1">
           <a href="#hero" class="landing-brand">
             <div class="landing-brand-mark">L</div>
-            <span>LarpKit</span>
+            <span>Larpwallet</span>
           </a>
           <p class="footer-brand-desc">
             Minimalist, high-fidelity interface simulation for digital creators, testers, and developers.
@@ -334,9 +350,9 @@
         </div>
 
         <!-- Bottom Row: 2026 Line & Back to Top -->
-        <div class="footer-bottom-row">
+        <div class="footer-bottom-row scroll-reveal reveal-delay-2">
           <div class="footer-bottom-left">
-            <div>© 2026 LarpKit. All rights reserved. For educational and simulation purposes only.</div>
+            <div>© 2026 Larpwallet. All rights reserved. For educational and simulation purposes only.</div>
           </div>
           <div class="footer-bottom-right">
             <a href="#hero" class="footer-link">Back to Top ↑</a>
@@ -344,6 +360,13 @@
         </div>
       </div>
     </footer>
+
+    <!-- Floating Back to Top Button with Unblur & Float Animation -->
+    <button type="button" class="floating-scroll-top" id="floating-scroll-top" aria-label="Scroll to top">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m18 15-6-6-6 6"/>
+      </svg>
+    </button>
 
   </section>
 

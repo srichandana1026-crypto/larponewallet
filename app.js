@@ -247,7 +247,12 @@ function handleHashChange() {
       navigateTo(hash, false);
     }
   } else {
+    // If an anchor like #simulators is in the hash on reload, clean it so browser never jumps to white gap
+    if (['simulators', 'pricing', 'faq'].includes(hash)) {
+      history.replaceState(null, null, window.location.pathname);
+    }
     navigateTo('landing', false);
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }
 }
 
@@ -1497,6 +1502,120 @@ document.addEventListener('DOMContentLoaded', () => {
       showToast('Privacy Policy: All simulator data stays strictly in your browser.');
     });
   }
+
+  // --------------------------------------------------------------------------
+  // SCROLL-TRIGGERED UNBLUR & SCROLL-UP ANIMATION OBSERVER
+  // --------------------------------------------------------------------------
+  function initScrollReveal() {
+    const revealElements = document.querySelectorAll('.scroll-reveal');
+    if (!revealElements.length) return;
+
+    if (!('IntersectionObserver' in window)) {
+      revealElements.forEach(el => el.classList.add('is-revealed'));
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-revealed');
+        } else {
+          // When scrolled out of view, remove the class so it unblurs and scrolls up again when scrolling back
+          entry.target.classList.remove('is-revealed');
+        }
+      });
+    }, {
+      root: null,
+      rootMargin: '0px 0px -40px 0px',
+      threshold: 0.12
+    });
+
+    revealElements.forEach(el => observer.observe(el));
+  }
+
+  initScrollReveal();
+
+  // Floating Back to Top Button & Scroll-Up Behavior
+  const floatingScrollTop = document.getElementById('floating-scroll-top');
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY || document.documentElement.scrollTop;
+    if (floatingScrollTop) {
+      if (scrollY > 320) {
+        floatingScrollTop.classList.add('visible');
+      } else {
+        floatingScrollTop.classList.remove('visible');
+      }
+    }
+  }, { passive: true });
+
+  if (floatingScrollTop) {
+    floatingScrollTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  // --------------------------------------------------------------------------
+  // HERO HEADING SEQUENTIAL LETTER UNBLUR REVEAL
+  // --------------------------------------------------------------------------
+  function initHeroLetterUnblur() {
+    const titleEl = document.querySelector('.hero-title');
+    const subtitleEl = document.querySelector('.hero-subtitle');
+    if (!titleEl) return;
+
+    const fullText = "You don't need to pinterest your figures like these cars anymore.";
+
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      titleEl.textContent = fullText;
+      if (subtitleEl) subtitleEl.classList.add('is-visible');
+      return;
+    }
+
+    titleEl.innerHTML = '';
+    const words = fullText.split(' ');
+    let charCount = 0;
+    const charDelayMs = 46;
+    const totalLetters = fullText.replace(/\s+/g, '').length;
+    let animatedLetterCount = 0;
+
+    words.forEach((word, wIdx) => {
+      const wordSpan = document.createElement('span');
+      wordSpan.className = 'hero-word-wrap';
+
+      for (let i = 0; i < word.length; i++) {
+        const charSpan = document.createElement('span');
+        charSpan.className = 'hero-char-unblur';
+        charSpan.textContent = word[i];
+        charSpan.style.animationDelay = `${charCount * charDelayMs}ms`;
+        wordSpan.appendChild(charSpan);
+        charCount++;
+        animatedLetterCount++;
+
+        // Once the final letter completes its unblur animation, reveal description
+        if (animatedLetterCount === totalLetters) {
+          charSpan.addEventListener('animationend', () => {
+            if (subtitleEl) subtitleEl.classList.add('is-visible');
+          }, { once: true });
+        }
+      }
+
+      titleEl.appendChild(wordSpan);
+
+      if (wIdx < words.length - 1) {
+        const spaceSpan = document.createElement('span');
+        spaceSpan.className = 'hero-char-space';
+        spaceSpan.innerHTML = '&nbsp;';
+        titleEl.appendChild(spaceSpan);
+        charCount++;
+      }
+    });
+
+    // Safety fallback to guarantee subtitle reveals even if animationend event is blocked
+    setTimeout(() => {
+      if (subtitleEl) subtitleEl.classList.add('is-visible');
+    }, (charCount * charDelayMs) + 750);
+  }
+
+  initHeroLetterUnblur();
 
   // Check initial hash route
   handleHashChange();

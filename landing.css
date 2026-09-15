@@ -302,11 +302,13 @@ h2, h3, h4, h5, h6,
    ========================================================================== */
 .landing-hero {
   position: relative;
-  min-height: calc(100vh - 64px);
+  height: calc(100vh - 64px);
+  height: calc(100dvh - 64px);
+  min-height: 520px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 160px 0 140px;
+  padding: 40px 24px;
   text-align: center;
   box-sizing: border-box;
   background-color: var(--bg-primary);
@@ -347,6 +349,35 @@ h2, h3, h4, h5, h6,
   width: 100%;
 }
 
+.hero-signature-tag {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  color: rgba(255, 255, 255, 0.45);
+  font-family: var(--font-family);
+  user-select: none;
+  white-space: nowrap;
+  animation: heroTagUnblur 1.05s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
+}
+
+@keyframes heroTagUnblur {
+  0% {
+    opacity: 0;
+    filter: blur(14px);
+    transform: translateX(-50%) translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
 .hero-title {
   font-size: clamp(26px, 3.4vw, 42px);
   font-weight: 500;
@@ -355,6 +386,38 @@ h2, h3, h4, h5, h6,
   margin: 0 0 16px;
   color: #ffffff;
   text-shadow: 0 2px 20px rgba(0, 0, 0, 0.95), 0 0 40px rgba(0, 0, 0, 0.85);
+  min-height: 2.36em;
+}
+
+.hero-word-wrap {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.hero-char-unblur {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(14px);
+  transform: translateY(6px);
+  animation: heroCharUnblurIn 0.72s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, filter, transform;
+}
+
+.hero-char-space {
+  display: inline-block;
+}
+
+@keyframes heroCharUnblurIn {
+  0% {
+    opacity: 0;
+    filter: blur(14px);
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateY(0);
+  }
 }
 
 .hero-subtitle {
@@ -366,6 +429,19 @@ h2, h3, h4, h5, h6,
   font-weight: 300;
   letter-spacing: -0.01em;
   text-shadow: 0 2px 16px rgba(0, 0, 0, 0.95), 0 0 30px rgba(0, 0, 0, 0.85);
+  opacity: 0;
+  filter: blur(14px);
+  transform: translateY(16px);
+  transition: opacity 1.05s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 1.05s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1.05s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, filter, transform;
+}
+
+.hero-subtitle.is-visible {
+  opacity: 1;
+  filter: blur(0px);
+  transform: translateY(0);
 }
 
 .hero-actions {
@@ -466,12 +542,27 @@ h2, h3, h4, h5, h6,
 
 #simulators.landing-section {
   background-color: #ffffff;
-  padding: 96px 0;
+  padding: 46px 0 72px;
   border-top: none;
 }
 
-#simulators .section-tag {
+.sim-corner-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 36px;
+  margin-bottom: 0;
+}
+
+.sim-corner-tag {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
   color: #71717a;
+  font-family: var(--font-family);
+  user-select: none;
+  white-space: nowrap;
 }
 
 #simulators .section-title {
@@ -482,8 +573,20 @@ h2, h3, h4, h5, h6,
   color: #52525b;
 }
 
+.pricing-signature-tag {
+  text-align: center;
+  margin-top: 36px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  color: #71717a;
+  font-family: var(--font-family);
+  user-select: none;
+  white-space: nowrap;
+}
+
 .section-header {
-  margin-bottom: 48px;
+  margin-bottom: 28px;
 }
 
 .section-header.text-center {
@@ -608,32 +711,36 @@ h2, h3, h4, h5, h6,
   letter-spacing: -0.01em;
 }
 
-/* 3D Metallic Logo (Moved downwards & increased in size without changing card bounds) */
+/* 3D Metallic Logo (Bottom-anchored, calibrated size) */
 .sim-card-logo-wrap {
-  width: 100%;
+  width: calc(100% + 68px);
+  margin-left: -34px;
+  margin-right: -34px;
   margin-top: auto;
-  margin-bottom: -6px;
+  margin-bottom: -16px;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  height: 220px;
+  height: 230px;
   flex: 1;
 }
 
 .sim-card-logo-img {
   width: 100%;
-  max-height: 210px;
+  max-height: 230px;
   object-fit: contain;
   object-position: bottom center;
   pointer-events: none;
   border: none !important;
   border-radius: 0 !important;
   background: transparent !important;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: scale(1.12);
+  transform-origin: bottom center;
 }
 
-.sim-preview-card:hover .sim-card-logo-img {
-  transform: scale(1.04);
+/* Subtle decrease for Phantom logo to match visual weight */
+.sim-preview-card[data-navigate="phantom"] .sim-card-logo-img {
+  transform: scale(0.98);
 }
 
 /* ==========================================================================
@@ -1521,5 +1628,164 @@ h2, h3, h4, h5, h6,
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 140px;
+}
+
+/* ==========================================================================
+   GLOBAL UNBLURRING & SCROLL-UP ANIMATION SYSTEM
+   ========================================================================== */
+
+/* Hero Entrance: immediate unblur + glide up on page load */
+@keyframes heroUnblurUp {
+  0% {
+    opacity: 0;
+    filter: blur(16px);
+    transform: translateY(28px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateY(0);
+  }
+}
+
+/* Sticky navigation subtle unblur fade-in */
+.landing-nav {
+  animation: navUnblurFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes navUnblurFade {
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(-8px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateY(0);
+  }
+}
+
+/* Scroll-Triggered Reveal: Unblur + Glide Up across sections */
+.scroll-reveal {
+  opacity: 0;
+  filter: blur(14px);
+  transform: translateY(32px);
+  transition: opacity 0.35s ease,
+              filter 0.35s ease,
+              transform 0.35s ease;
+  will-change: opacity, filter, transform;
+}
+
+.scroll-reveal.is-revealed {
+  opacity: 1;
+  filter: blur(0px);
+  transform: translateY(0);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Stagger delay classes for fluid card & item reveals */
+.reveal-delay-1 {
+  transition-delay: 0.1s;
+}
+
+.reveal-delay-2 {
+  transition-delay: 0.2s;
+}
+
+.reveal-delay-3 {
+  transition-delay: 0.3s;
+}
+
+.reveal-delay-4 {
+  transition-delay: 0.4s;
+}
+
+/* Card hover compatibility with scroll-reveal */
+.sim-preview-card.scroll-reveal.is-revealed:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.2);
+}
+
+/* View Panel (Simulators) Transition Unblur */
+.view-panel.active:not(#view-landing) {
+  animation: panelUnblurEnter 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes panelUnblurEnter {
+  0% {
+    opacity: 0;
+    filter: blur(12px);
+    transform: translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+/* Floating Scroll to Top Pill with Unblur & Float Animation */
+.floating-scroll-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 99;
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  background: rgba(18, 18, 22, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  opacity: 0;
+  visibility: hidden;
+  filter: blur(12px);
+  transform: translateY(18px);
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.2s ease,
+              border-color 0.2s ease;
+}
+
+.floating-scroll-top.visible {
+  opacity: 1;
+  visibility: visible;
+  filter: blur(0);
+  transform: translateY(0);
+}
+
+.floating-scroll-top:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 255, 255, 0.12);
+}
+
+.floating-scroll-top:active {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal,
+  .hero-title,
+  .hero-subtitle,
+  .landing-nav,
+  .floating-scroll-top {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
 }
 
