@@ -33,14 +33,17 @@ const state = {
     }
   },
   shopify: {
-    timeframe: 'today',
-    visitors: 38,
-    data: {
-      today: { sales: '$18,429.50', growth: '↑ 28.4%', orders: '142', conv: '4.52%', aov: '$129.78', sessions: '3,140' },
-      yesterday: { sales: '$14,350.00', growth: '↑ 14.2%', orders: '112', conv: '3.98%', aov: '$128.12', sessions: '2,810' },
-      week: { sales: '$96,480.00', growth: '↑ 32.8%', orders: '754', conv: '4.21%', aov: '$127.95', sessions: '17,910' },
-      month: { sales: '$384,150.00', growth: '↑ 41.5%', orders: '3,024', conv: '4.35%', aov: '$127.03', sessions: '69,500' }
-    }
+    storeName: 'Shop Name',
+    sales: '$0',
+    salesGrowth: '0%',
+    orders: '0',
+    ordersGrowth: '0%',
+    sessions: '0',
+    sessionsGrowth: '0%',
+    conv: '0%',
+    convGrowth: '0%',
+    visitors: '0',
+    fulfillOrders: 2
   },
   isLoggedIn: false,
   userEmail: '',
@@ -68,6 +71,17 @@ try {
       if (parsedP.walletName !== undefined) state.phantom.walletName = parsedP.walletName;
       if (parsedP.cash !== undefined) state.phantom.cash = parsedP.cash;
       if (parsedP.tokens) state.phantom.tokens = { ...state.phantom.tokens, ...parsedP.tokens };
+    }
+  }
+} catch (e) {}
+
+// Restore Shopify state
+try {
+  const savedShopify = localStorage.getItem('larpkit_shopify');
+  if (savedShopify) {
+    const parsedS = JSON.parse(savedShopify);
+    if (parsedS) {
+      state.shopify = { ...state.shopify, ...parsedS };
     }
   }
 } catch (e) {}
@@ -259,7 +273,10 @@ function navigateTo(viewName, pushHistory = true) {
   if (themeMeta) {
     if (viewName === 'cashapp') themeMeta.setAttribute('content', '#06ae13');
     else if (viewName === 'phantom') themeMeta.setAttribute('content', '#13141f');
-    else if (viewName === 'shopify') themeMeta.setAttribute('content', '#1a1a1a');
+    else if (viewName === 'shopify') {
+      themeMeta.setAttribute('content', '#000000');
+      renderShopifyDesktop();
+    }
     else themeMeta.setAttribute('content', '#09090b');
   }
 }
@@ -1084,72 +1101,378 @@ function savePhantomSettings() {
 }
 
 // --------------------------------------------------------------------------
-// SHOPIFY DASHBOARD LOGIC
+// SHOPIFY DESKTOP DASHBOARD LOGIC (Desktop Admin Simulator)
 // --------------------------------------------------------------------------
-function setShopifyTimeframe(timeframe) {
-  state.shopify.timeframe = timeframe;
-  const d = state.shopify.data[timeframe] || state.shopify.data.today;
-
-  document.querySelectorAll('.shopify-date-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.timeframe === timeframe);
-  });
-
-  const salesAmountEl = document.getElementById('shopify-sales-amount');
-  const salesGrowthEl = document.getElementById('shopify-sales-growth');
-  const kpiSessionsEl = document.getElementById('shopify-kpi-sessions');
-  const kpiOrdersEl = document.getElementById('shopify-kpi-orders');
-  const kpiConvEl = document.getElementById('shopify-kpi-conv');
-  const kpiAovEl = document.getElementById('shopify-kpi-aov');
-
-  if (salesAmountEl) salesAmountEl.textContent = d.sales;
-  if (salesGrowthEl) salesGrowthEl.textContent = d.growth;
-  if (kpiSessionsEl) kpiSessionsEl.textContent = d.sessions;
-  if (kpiOrdersEl) kpiOrdersEl.textContent = d.orders;
-  if (kpiConvEl) kpiConvEl.textContent = d.conv;
-  if (kpiAovEl) kpiAovEl.textContent = d.aov;
-
-  // Render randomized dynamic curve for SVG chart
-  renderShopifyChart(timeframe);
+function updateShopifyGreeting() {
+  const greetingEl = document.getElementById('shopify-greeting-heading');
+  if (!greetingEl) return;
+  const hour = new Date().getHours();
+  let text = 'Good afternoon!';
+  if (hour < 12) text = 'Good morning!';
+  else if (hour >= 18) text = 'Good evening!';
+  greetingEl.textContent = text;
 }
 
-function renderShopifyChart(timeframe) {
-  const chartPath = document.getElementById('shopify-chart-path');
-  const chartArea = document.getElementById('shopify-chart-area');
-  if (!chartPath || !chartArea) return;
+function renderShopifyDesktop() {
+  updateShopifyGreeting();
 
-  const curves = {
-    today: {
-      line: 'M0,90 Q50,75 100,82 T200,45 T300,55 T400,18',
-      area: 'M0,90 Q50,75 100,82 T200,45 T300,55 T400,18 L400,120 L0,120 Z'
-    },
-    yesterday: {
-      line: 'M0,95 Q50,85 100,70 T200,60 T300,40 T400,30',
-      area: 'M0,95 Q50,85 100,70 T200,60 T300,40 T400,30 L400,120 L0,120 Z'
-    },
-    week: {
-      line: 'M0,80 Q50,65 100,45 T200,70 T300,30 T400,10',
-      area: 'M0,80 Q50,65 100,45 T200,70 T300,30 T400,10 L400,120 L0,120 Z'
-    },
-    month: {
-      line: 'M0,100 Q50,90 100,60 T200,50 T300,25 T400,5',
-      area: 'M0,100 Q50,90 100,60 T200,50 T300,25 T400,5 L400,120 L0,120 Z'
-    }
+  // Store name and avatar initials
+  const storeNameDisplay = document.getElementById('shopify-display-store-name');
+  const avatarLetters = document.getElementById('shopify-avatar-letters');
+  const storeName = state.shopify.storeName || 'Shop Name';
+
+  if (storeNameDisplay) storeNameDisplay.textContent = storeName;
+  if (avatarLetters) {
+    const parts = storeName.trim().split(/\s+/);
+    const initials = parts.length > 1
+      ? (parts[0][0] + parts[1][0]).toUpperCase()
+      : parts[0].slice(0, 2).toUpperCase();
+    avatarLetters.textContent = initials || 'SN';
+  }
+
+  // Metrics
+  const salesEl = document.getElementById('shopify-display-sales');
+  const salesGrowthEl = document.getElementById('shopify-display-growth-sales');
+  const ordersEl = document.getElementById('shopify-display-orders');
+  const ordersGrowthEl = document.getElementById('shopify-display-growth-orders');
+  const sessionsEl = document.getElementById('shopify-display-sessions');
+  const sessionsGrowthEl = document.getElementById('shopify-display-growth-sessions');
+  const convEl = document.getElementById('shopify-display-conv');
+  const convGrowthEl = document.getElementById('shopify-display-growth-conv');
+  const visitorsEl = document.getElementById('shopify-display-visitors');
+  const fulfillCountEl = document.getElementById('shopify-display-fulfill-count');
+  const sideOrdersBadge = document.getElementById('shopify-side-orders-badge');
+
+  if (salesEl) salesEl.textContent = state.shopify.sales;
+  if (salesGrowthEl) salesGrowthEl.textContent = state.shopify.salesGrowth;
+  if (ordersEl) ordersEl.textContent = state.shopify.orders;
+  if (ordersGrowthEl) ordersGrowthEl.textContent = state.shopify.ordersGrowth;
+  if (sessionsEl) sessionsEl.textContent = state.shopify.sessions;
+  if (sessionsGrowthEl) sessionsGrowthEl.textContent = state.shopify.sessionsGrowth;
+  if (convEl) convEl.textContent = state.shopify.conv;
+  if (convGrowthEl) convGrowthEl.textContent = state.shopify.convGrowth;
+  if (visitorsEl) visitorsEl.textContent = state.shopify.visitors;
+  if (fulfillCountEl) fulfillCountEl.textContent = state.shopify.fulfillOrders;
+  if (sideOrdersBadge) sideOrdersBadge.textContent = state.shopify.orders === '0' ? '4' : state.shopify.orders;
+}
+
+function openShopifySettingsModal() {
+  const modal = document.getElementById('shopify-settings-modal');
+  if (!modal) return;
+
+  const inputName = document.getElementById('shopify-input-store-name');
+  const inputSales = document.getElementById('shopify-input-sales');
+  const inputGrowth = document.getElementById('shopify-input-sales-growth');
+  const inputOrders = document.getElementById('shopify-input-orders');
+  const inputSessions = document.getElementById('shopify-input-sessions');
+  const inputConv = document.getElementById('shopify-input-conv');
+  const inputLive = document.getElementById('shopify-input-live');
+  const inputFulfill = document.getElementById('shopify-input-fulfill');
+
+  if (inputName) inputName.value = state.shopify.storeName;
+  if (inputSales) inputSales.value = state.shopify.sales;
+  if (inputGrowth) inputGrowth.value = state.shopify.salesGrowth;
+  if (inputOrders) inputOrders.value = state.shopify.orders;
+  if (inputSessions) inputSessions.value = state.shopify.sessions;
+  if (inputConv) inputConv.value = state.shopify.conv;
+  if (inputLive) inputLive.value = state.shopify.visitors;
+  if (inputFulfill) inputFulfill.value = state.shopify.fulfillOrders;
+
+  modal.classList.add('active');
+}
+
+function closeShopifySettingsModal() {
+  const modal = document.getElementById('shopify-settings-modal');
+  if (modal) modal.classList.remove('active');
+}
+
+// Dynamic auto-estimation across all Shopify metrics
+let isAutoEstimatingFigures = false;
+
+function setupShopifyAutoEstimation() {
+  const inputSales = document.getElementById('shopify-input-sales');
+  const inputGrowth = document.getElementById('shopify-input-sales-growth');
+  const inputOrders = document.getElementById('shopify-input-orders');
+  const inputSessions = document.getElementById('shopify-input-sessions');
+  const inputConv = document.getElementById('shopify-input-conv');
+  const inputLive = document.getElementById('shopify-input-live');
+  const inputFulfill = document.getElementById('shopify-input-fulfill');
+
+  if (!inputSales || !inputOrders) return;
+
+  const parseNum = (val) => {
+    if (!val) return 0;
+    const clean = String(val).replace(/[^0-9.]/g, '');
+    const num = parseFloat(clean);
+    return isNaN(num) ? 0 : num;
   };
 
-  const selected = curves[timeframe] || curves.today;
-  chartPath.setAttribute('d', selected.line);
-  chartArea.setAttribute('d', selected.area);
+  const formatCurrency = (val) => {
+    return '$' + Math.round(val).toLocaleString();
+  };
+
+  const formatNumber = (val) => {
+    return Math.round(val).toLocaleString();
+  };
+
+  // 1. Sales changed
+  inputSales.addEventListener('input', () => {
+    if (isAutoEstimatingFigures) return;
+    isAutoEstimatingFigures = true;
+    try {
+      const sales = parseNum(inputSales.value);
+      if (sales <= 0) {
+        if (inputOrders) inputOrders.value = 0;
+        if (inputSessions) inputSessions.value = 0;
+        if (inputConv) inputConv.value = '0%';
+        if (inputLive) inputLive.value = 0;
+        if (inputFulfill) inputFulfill.value = 0;
+      } else {
+        const aov = 85; // Standard benchmark Average Order Value ($85)
+        const orders = Math.max(1, Math.round(sales / aov));
+        const convRate = 0.032; // Standard ~3.2% conversion rate
+        const sessions = Math.max(orders, Math.round(orders / convRate));
+        const live = Math.max(1, Math.round(sessions * 0.012));
+        const fulfill = Math.max(1, Math.min(orders, Math.round(orders * 0.2)));
+
+        if (inputOrders) inputOrders.value = orders;
+        if (inputSessions) inputSessions.value = formatNumber(sessions);
+        if (inputConv && (!inputConv.value || inputConv.value === '0%')) inputConv.value = '3.2%';
+        if (inputLive) inputLive.value = live;
+        if (inputFulfill) inputFulfill.value = fulfill;
+        if (inputGrowth && (!inputGrowth.value || inputGrowth.value === '0%' || inputGrowth.value === '0')) {
+          inputGrowth.value = '+14.2%';
+        }
+      }
+    } finally {
+      isAutoEstimatingFigures = false;
+    }
+  });
+
+  // 2. Orders changed
+  inputOrders.addEventListener('input', () => {
+    if (isAutoEstimatingFigures) return;
+    isAutoEstimatingFigures = true;
+    try {
+      const orders = parseNum(inputOrders.value);
+      if (orders <= 0) {
+        if (inputSales) inputSales.value = '$0';
+        if (inputSessions) inputSessions.value = 0;
+        if (inputConv) inputConv.value = '0%';
+        if (inputLive) inputLive.value = 0;
+        if (inputFulfill) inputFulfill.value = 0;
+      } else {
+        const aov = 85;
+        const sales = orders * aov;
+        const convRate = 0.032;
+        const sessions = Math.max(orders, Math.round(orders / convRate));
+        const live = Math.max(1, Math.round(sessions * 0.012));
+        const fulfill = Math.max(1, Math.min(orders, Math.round(orders * 0.2)));
+
+        if (inputSales) inputSales.value = formatCurrency(sales);
+        if (inputSessions) inputSessions.value = formatNumber(sessions);
+        if (inputConv && (!inputConv.value || inputConv.value === '0%')) inputConv.value = '3.2%';
+        if (inputLive) inputLive.value = live;
+        if (inputFulfill) inputFulfill.value = fulfill;
+        if (inputGrowth && (!inputGrowth.value || inputGrowth.value === '0%' || inputGrowth.value === '0')) {
+          inputGrowth.value = '+14.2%';
+        }
+      }
+    } finally {
+      isAutoEstimatingFigures = false;
+    }
+  });
+
+  // 3. Sessions changed
+  inputSessions.addEventListener('input', () => {
+    if (isAutoEstimatingFigures) return;
+    isAutoEstimatingFigures = true;
+    try {
+      const sessions = parseNum(inputSessions.value);
+      if (sessions <= 0) {
+        if (inputSales) inputSales.value = '$0';
+        if (inputOrders) inputOrders.value = 0;
+        if (inputConv) inputConv.value = '0%';
+        if (inputLive) inputLive.value = 0;
+        if (inputFulfill) inputFulfill.value = 0;
+      } else {
+        const convRate = 0.032;
+        const orders = Math.max(1, Math.round(sessions * convRate));
+        const aov = 85;
+        const sales = orders * aov;
+        const live = Math.max(1, Math.round(sessions * 0.012));
+        const fulfill = Math.max(1, Math.min(orders, Math.round(orders * 0.2)));
+
+        if (inputSales) inputSales.value = formatCurrency(sales);
+        if (inputOrders) inputOrders.value = orders;
+        if (inputConv && (!inputConv.value || inputConv.value === '0%')) inputConv.value = '3.2%';
+        if (inputLive) inputLive.value = live;
+        if (inputFulfill) inputFulfill.value = fulfill;
+      }
+    } finally {
+      isAutoEstimatingFigures = false;
+    }
+  });
+
+  // 4. Conversion Rate changed
+  inputConv.addEventListener('input', () => {
+    if (isAutoEstimatingFigures) return;
+    isAutoEstimatingFigures = true;
+    try {
+      let cr = parseNum(inputConv.value);
+      if (cr > 0) {
+        const rate = cr / 100;
+        let currentSessions = parseNum(inputSessions.value);
+        if (!currentSessions || currentSessions <= 0) currentSessions = 500;
+        const orders = Math.max(1, Math.round(currentSessions * rate));
+        const sales = orders * 85;
+        const live = Math.max(1, Math.round(currentSessions * 0.012));
+        const fulfill = Math.max(1, Math.min(orders, Math.round(orders * 0.2)));
+
+        if (inputSales) inputSales.value = formatCurrency(sales);
+        if (inputOrders) inputOrders.value = orders;
+        if (inputSessions && parseNum(inputSessions.value) === 0) inputSessions.value = formatNumber(currentSessions);
+        if (inputLive) inputLive.value = live;
+        if (inputFulfill) inputFulfill.value = fulfill;
+      }
+    } finally {
+      isAutoEstimatingFigures = false;
+    }
+  });
+
+  // 5. Live Visitors changed
+  inputLive.addEventListener('input', () => {
+    if (isAutoEstimatingFigures) return;
+    isAutoEstimatingFigures = true;
+    try {
+      const live = parseNum(inputLive.value);
+      if (live > 0) {
+        const sessions = Math.max(50, Math.round(live / 0.012));
+        const orders = Math.max(1, Math.round(sessions * 0.032));
+        const sales = orders * 85;
+        const fulfill = Math.max(1, Math.min(orders, Math.round(orders * 0.2)));
+
+        if (inputSales) inputSales.value = formatCurrency(sales);
+        if (inputOrders) inputOrders.value = orders;
+        if (inputSessions) inputSessions.value = formatNumber(sessions);
+        if (inputConv && (!inputConv.value || inputConv.value === '0%')) inputConv.value = '3.2%';
+        if (inputFulfill) inputFulfill.value = fulfill;
+      }
+    } finally {
+      isAutoEstimatingFigures = false;
+    }
+  });
+
+  // 6. Orders to Fulfill changed
+  inputFulfill.addEventListener('input', () => {
+    if (isAutoEstimatingFigures) return;
+    isAutoEstimatingFigures = true;
+    try {
+      const fulfill = parseNum(inputFulfill.value);
+      const currentOrders = parseNum(inputOrders.value);
+      if (fulfill > currentOrders) {
+        const orders = Math.round(fulfill / 0.2);
+        const sales = orders * 85;
+        const sessions = Math.round(orders / 0.032);
+        const live = Math.max(1, Math.round(sessions * 0.012));
+
+        if (inputOrders) inputOrders.value = orders;
+        if (inputSales) inputSales.value = formatCurrency(sales);
+        if (inputSessions) inputSessions.value = formatNumber(sessions);
+        if (inputLive) inputLive.value = live;
+      }
+    } finally {
+      isAutoEstimatingFigures = false;
+    }
+  });
+
+  // Clean blur formatters
+  inputSales.addEventListener('blur', () => {
+    const s = parseNum(inputSales.value);
+    if (s > 0 && !inputSales.value.includes('$')) {
+      inputSales.value = formatCurrency(s);
+    }
+  });
+
+  inputConv.addEventListener('blur', () => {
+    const c = parseNum(inputConv.value);
+    if (c > 0 && !inputConv.value.includes('%')) {
+      inputConv.value = c.toFixed(1) + '%';
+    }
+  });
+
+  inputGrowth.addEventListener('blur', () => {
+    const g = parseNum(inputGrowth.value);
+    if (g > 0 && !inputGrowth.value.includes('%')) {
+      inputGrowth.value = '+' + g.toFixed(1) + '%';
+    }
+  });
 }
 
-// Live visitor pulse simulator
-setInterval(() => {
-  const delta = Math.floor(Math.random() * 5) - 2; // -2 to +2
-  state.shopify.visitors = Math.max(24, Math.min(68, state.shopify.visitors + delta));
-  const visCountEl = document.getElementById('shopify-visitor-count');
-  if (visCountEl) {
-    visCountEl.textContent = state.shopify.visitors;
+function saveShopifySettings() {
+  const inputName = document.getElementById('shopify-input-store-name');
+  const inputSales = document.getElementById('shopify-input-sales');
+  const inputGrowth = document.getElementById('shopify-input-sales-growth');
+  const inputOrders = document.getElementById('shopify-input-orders');
+  const inputSessions = document.getElementById('shopify-input-sessions');
+  const inputConv = document.getElementById('shopify-input-conv');
+  const inputLive = document.getElementById('shopify-input-live');
+  const inputFulfill = document.getElementById('shopify-input-fulfill');
+
+  if (inputName && inputName.value.trim()) state.shopify.storeName = inputName.value.trim();
+  if (inputSales) {
+    let s = inputSales.value.trim();
+    if (s && !s.startsWith('$')) s = '$' + s;
+    state.shopify.sales = s || '$0';
   }
-}, 4000);
+  if (inputGrowth) {
+    let g = inputGrowth.value.trim() || '0%';
+    if (g && !g.endsWith('%')) g = g + '%';
+    state.shopify.salesGrowth = g;
+    state.shopify.ordersGrowth = g;
+    state.shopify.sessionsGrowth = g;
+    state.shopify.convGrowth = g;
+  }
+  if (inputOrders) state.shopify.orders = inputOrders.value.trim() || '0';
+  if (inputSessions) state.shopify.sessions = inputSessions.value.trim() || '0';
+  if (inputConv) {
+    let c = inputConv.value.trim() || '0%';
+    if (c && !c.endsWith('%')) c = c + '%';
+    state.shopify.conv = c;
+  }
+  if (inputLive) state.shopify.visitors = inputLive.value.trim() || '0';
+  if (inputFulfill) state.shopify.fulfillOrders = parseInt(inputFulfill.value, 10) || 2;
+
+  try {
+    localStorage.setItem('larpkit_shopify', JSON.stringify(state.shopify));
+  } catch (e) {}
+
+  renderShopifyDesktop();
+  closeShopifySettingsModal();
+  showToast('Shopify figures updated!');
+}
+
+function resetShopifySettings() {
+  state.shopify = {
+    storeName: 'Shop Name',
+    sales: '$0',
+    salesGrowth: '0%',
+    orders: '0',
+    ordersGrowth: '0%',
+    sessions: '0',
+    sessionsGrowth: '0%',
+    conv: '0%',
+    convGrowth: '0%',
+    visitors: '0',
+    fulfillOrders: 2
+  };
+  try {
+    localStorage.removeItem('larpkit_shopify');
+  } catch (e) {}
+  renderShopifyDesktop();
+  closeShopifySettingsModal();
+  showToast('Shopify figures reset to zero');
+}
 
 // --------------------------------------------------------------------------
 // EVENT LISTENERS INITIALIZATION
@@ -1307,12 +1630,74 @@ document.addEventListener('DOMContentLoaded', () => {
   // Render initial Phantom UI
   renderPhantomUI();
 
-  // Shopify Date Filter Buttons
-  document.querySelectorAll('.shopify-date-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      setShopifyTimeframe(btn.dataset.timeframe);
-    });
+  // Shopify Desktop Simulator Event Listeners
+  const shopifyTriggers = [
+    'shopify-profile-trigger',
+    'shopify-settings-trigger-btn',
+    'shopify-kpi-sales-click',
+    'shopify-kpi-orders-click',
+    'shopify-kpi-sessions-click',
+    'shopify-kpi-conv-click',
+    'shopify-kpi-live-click'
+  ];
+  shopifyTriggers.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('click', () => {
+        openShopifySettingsModal();
+      });
+    }
   });
+
+  const shopifyModalClose = document.getElementById('shopify-modal-close-btn');
+  if (shopifyModalClose) shopifyModalClose.addEventListener('click', closeShopifySettingsModal);
+
+  const shopifyModalBackdrop = document.getElementById('shopify-modal-backdrop');
+  if (shopifyModalBackdrop) shopifyModalBackdrop.addEventListener('click', closeShopifySettingsModal);
+
+  const shopifyModalDone = document.getElementById('shopify-modal-done-btn');
+  if (shopifyModalDone) shopifyModalDone.addEventListener('click', saveShopifySettings);
+
+  const shopifyModalReset = document.getElementById('shopify-modal-reset-btn');
+  if (shopifyModalReset) shopifyModalReset.addEventListener('click', resetShopifySettings);
+
+  // Initialize dynamic auto-estimation across all editable metrics
+  setupShopifyAutoEstimation();
+
+  // Fulfill orders quick button
+  const fulfillBtn = document.getElementById('shopify-fulfill-trigger');
+  if (fulfillBtn) {
+    fulfillBtn.addEventListener('click', () => {
+      if (state.shopify.fulfillOrders > 0) {
+        state.shopify.fulfillOrders = Math.max(0, state.shopify.fulfillOrders - 1);
+        const countEl = document.getElementById('shopify-display-fulfill-count');
+        if (countEl) countEl.textContent = state.shopify.fulfillOrders;
+        showToast('1 order marked as fulfilled!');
+      } else {
+        showToast('All orders fulfilled!');
+      }
+    });
+  }
+
+  // Shopify Magic AI Assistant Bar
+  const magicInput = document.getElementById('shopify-magic-input');
+  const magicSubmit = document.getElementById('shopify-magic-submit-btn');
+  const handleMagicQuery = () => {
+    if (magicInput && magicInput.value.trim()) {
+      const q = magicInput.value.trim();
+      magicInput.value = '';
+      showToast(`Sidekick: Processing "${q}"...`);
+    }
+  };
+  if (magicSubmit) magicSubmit.addEventListener('click', handleMagicQuery);
+  if (magicInput) {
+    magicInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleMagicQuery();
+    });
+  }
+
+  // Initial render of Shopify Desktop UI
+  renderShopifyDesktop();
 
   // Cash App Pay Sheet Listeners
   const paySheetCloseBtn = document.getElementById('cashapp-pay-sheet-close');

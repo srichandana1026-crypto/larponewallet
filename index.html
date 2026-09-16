@@ -93,7 +93,7 @@
         <div class="hero-content">
           <h1 class="hero-title">You don't need to pinterest your figures like these cars anymore.</h1>
           <p class="hero-subtitle">
-            Stop larping your numbers with Pinterest screenshots like you do with cars. Access shopify, phantom wallet plus cash app and create your balances.
+            Stop larping your numbers with Pinterest screenshots like you do with cars. Access $h0pify, ph4ntom w4llet plus ca$h app and create your balances.
           </p>
         </div>
       </div>
@@ -114,21 +114,21 @@
           <!-- Card 1: Shopify -->
           <article class="sim-preview-card scroll-reveal" data-navigate="shopify">
             <div class="sim-card-top-row">
-              <h3 class="sim-card-title">Shopify</h3>
+              <h3 class="sim-card-title">$h0pify</h3>
               <span class="sim-card-pill-btn">Get started +</span>
             </div>
             <p class="sim-card-description">
               Simulate a live e-commerce dashboard with real-time orders, analytics, and sales telemetry.
             </p>
             <div class="sim-card-logo-wrap">
-              <img src="./shopify%20logo.png" alt="Shopify" class="sim-card-logo-img">
+              <img src="./shopify%20logo.png" alt="$h0pify" class="sim-card-logo-img">
             </div>
           </article>
 
           <!-- Card 2: Phantom -->
           <article class="sim-preview-card scroll-reveal reveal-delay-1" data-navigate="phantom">
             <div class="sim-card-top-row">
-              <h3 class="sim-card-title">Phantom</h3>
+              <h3 class="sim-card-title">Ph4ntom</h3>
               <span class="sim-card-pill-btn">Get started +</span>
             </div>
             <p class="sim-card-description">
@@ -142,7 +142,7 @@
           <!-- Card 3: Cash App -->
           <article class="sim-preview-card scroll-reveal reveal-delay-2" data-navigate="cashapp">
             <div class="sim-card-top-row">
-              <h3 class="sim-card-title">Cash App</h3>
+              <h3 class="sim-card-title">Ca$h App</h3>
               <span class="sim-card-pill-btn">Get started +</span>
             </div>
             <p class="sim-card-description">
@@ -1128,263 +1128,578 @@
        4. SHOPIFY STORE DASHBOARD SIMULATOR VIEW (Admin Analytics)
        ====================================================================== -->
   <section id="view-shopify" class="view-panel">
-    <!-- Back to Home Navigation Pill -->
-    <nav class="sim-top-nav">
-      <button type="button" class="back-to-hub-btn" data-navigate="landing" aria-label="Go Back to Home">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-          stroke-linecap="round" stroke-linejoin="round">
-          <path d="m15 18-6-6 6-6" />
-        </svg>
-        <span>Back to Home</span>
-      </button>
-    </nav>
-
-    <!-- Shopify Frame Container -->
-    <div class="shopify-phone-frame">
-
-      <!-- Top Brand & Store Header -->
-      <header class="shopify-header">
-        <div class="shopify-brand-wrap">
-          <img src="./shopify_text_logo.svg" alt="Shopify" class="shopify-logo-img">
-          <div class="shopify-store-selector">
-            <span class="shopify-store-dot"></span>
-            <span>Aesthetic Drops</span>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="m6 9 6 6 6-6" />
+    <div class="shopify-desktop-layout">
+      <!-- 1. TOP BLACK NAVIGATION BAR -->
+      <header class="shopify-desktop-top-bar">
+        <div class="shopify-top-left">
+          <!-- Back to Home Button -->
+          <button type="button" class="shopify-desktop-back-btn" data-navigate="landing" aria-label="Back to Home" title="Back to Home">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m15 18-6-6 6-6" />
             </svg>
+            <span>Home</span>
+          </button>
+
+          <!-- Shopify Brand: Spring Icon + Shopify Text Logo -->
+          <div class="shopify-desktop-brand" title="Shopify Admin">
+            <div class="shopify-desktop-logo-wrap">
+              <img src="./spring_shopify_logo.avif" alt="Shopify" class="shopify-desktop-spring-logo">
+              <img src="./shopify_text_logo.svg" alt="Shopify" class="shopify-desktop-text-logo">
+            </div>
           </div>
         </div>
 
-        <button type="button" style="background:none; border:none; color:#9ca3af; cursor:pointer;"
-          aria-label="Notifications">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-          </svg>
-        </button>
+        <!-- Center Global Search Input -->
+        <div class="shopify-desktop-search-wrap">
+          <div class="shopify-desktop-search-inner">
+            <svg class="shopify-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8a8a8a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input type="text" class="shopify-desktop-search-input" id="shopify-main-search-input" placeholder="Search" autocomplete="off">
+            <div class="shopify-desktop-search-kbd">
+              <span class="shopify-kbd">CTRL</span>
+              <span class="shopify-kbd">K</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right User Actions -->
+        <div class="shopify-desktop-top-right">
+          <!-- Chat / Support Icon -->
+          <button type="button" class="shopify-top-icon-btn" aria-label="Chat messages" title="Messages">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </button>
+
+          <!-- Notifications Bell Icon -->
+          <button type="button" class="shopify-top-icon-btn" aria-label="Notifications" title="Alerts">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+              <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+            </svg>
+          </button>
+
+          <!-- Store Avatar & Name -->
+          <button type="button" class="shopify-desktop-profile-btn" id="shopify-profile-trigger" title="Click to customize store figures">
+            <div class="shopify-desktop-avatar" id="shopify-avatar-letters">SN</div>
+            <span class="shopify-desktop-store-name" id="shopify-display-store-name">Shop Name</span>
+          </button>
+        </div>
       </header>
 
-      <!-- Live Visitors Pulse Banner -->
-      <div class="shopify-live-banner">
-        <div class="shopify-live-left">
-          <span class="live-green-pulse"></span>
-          <span><strong id="shopify-visitor-count">38</strong> visitors right now</span>
-        </div>
-        <span class="shopify-live-tag">Live View</span>
-      </div>
+      <!-- 2. DESKTOP BODY (Sidebar + Main Dashboard) -->
+      <div class="shopify-desktop-body">
+        <!-- Left Sidebar Navigation -->
+        <aside class="shopify-desktop-sidebar">
+          <div class="shopify-sidebar-top-group">
+            <nav class="shopify-sidebar-nav">
+              <button type="button" class="shopify-sidebar-item active">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                  <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <span>Home</span>
+              </button>
 
-      <!-- Scrollable Dashboard Content -->
-      <div class="shopify-content">
+              <button type="button" class="shopify-sidebar-item">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="20" height="14" x="2" y="5" rx="2"/>
+                  <line x1="2" x2="22" y1="10" y2="10"/>
+                </svg>
+                <span>Orders</span>
+                <span class="shopify-sidebar-badge" id="shopify-side-orders-badge">4</span>
+              </button>
 
-        <!-- Date Range Filter Pills -->
-        <div class="shopify-date-filter">
-          <button type="button" class="shopify-date-btn active" data-timeframe="today">Today</button>
-          <button type="button" class="shopify-date-btn" data-timeframe="yesterday">Yesterday</button>
-          <button type="button" class="shopify-date-btn" data-timeframe="week">Last 7 days</button>
-          <button type="button" class="shopify-date-btn" data-timeframe="month">Last 30 days</button>
-        </div>
+              <button type="button" class="shopify-sidebar-item">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/>
+                  <path d="M7 7h.01"/>
+                </svg>
+                <span>Products</span>
+              </button>
 
-        <!-- Total Sales Metric Card with SVG Trendline -->
-        <div class="shopify-sales-card">
-          <div class="sales-card-header">
-            <div>
-              <h3 class="sales-card-title">Total sales</h3>
-              <div id="shopify-sales-amount" class="sales-card-amount">$18,429.50</div>
+              <button type="button" class="shopify-sidebar-item">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>Customers</span>
+              </button>
+
+              <button type="button" class="shopify-sidebar-item">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="7" y1="17" x2="17" y2="7"/>
+                  <polyline points="7 7 17 7 17 17"/>
+                </svg>
+                <span>Growth</span>
+              </button>
+
+              <button type="button" class="shopify-sidebar-item">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m19 5-7 7-7-7"/>
+                  <path d="m12 19 7-7H5"/>
+                  <circle cx="9" cy="9" r="1.5"/>
+                  <circle cx="15" cy="15" r="1.5"/>
+                </svg>
+                <span>Discounts</span>
+              </button>
+
+              <button type="button" class="shopify-sidebar-item">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+                  <circle cx="9" cy="9" r="2"/>
+                  <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+                </svg>
+                <span>Content</span>
+              </button>
+
+              <button type="button" class="shopify-sidebar-item">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="2" y1="12" x2="22" y2="12"/>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+                <span>Markets</span>
+              </button>
+
+              <button type="button" class="shopify-sidebar-item">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="3" y1="21" x2="21" y2="21"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                  <polyline points="5 6 12 3 19 6"/>
+                  <line x1="4" y1="10" x2="4" y2="21"/>
+                  <line x1="20" y1="10" x2="20" y2="21"/>
+                  <line x1="8" y1="14" x2="8" y2="17"/>
+                  <line x1="12" y1="14" x2="12" y2="17"/>
+                  <line x1="16" y1="14" x2="16" y2="17"/>
+                </svg>
+                <span>Finance</span>
+              </button>
+
+              <button type="button" class="shopify-sidebar-item">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10"/>
+                  <line x1="12" y1="20" x2="12" y2="4"/>
+                  <line x1="6" y1="20" x2="6" y2="14"/>
+                </svg>
+                <span>Analytics</span>
+              </button>
+            </nav>
+
+            <!-- Sales channels sub-group -->
+            <div class="shopify-sidebar-section">
+              <div class="shopify-sidebar-heading">
+                <span>Sales channels</span>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                  <path d="m9 18 6-6-6-6"/>
+                </svg>
+              </div>
+              <button type="button" class="shopify-sidebar-item">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/>
+                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                  <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/>
+                  <path d="M2 7h20"/>
+                </svg>
+                <span>Online Store</span>
+              </button>
             </div>
-            <div id="shopify-sales-growth" class="sales-growth-pill">↑ 28.4%</div>
+
+            <!-- Apps sub-group -->
+            <div class="shopify-sidebar-section">
+              <div class="shopify-sidebar-heading">
+                <span>Apps</span>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                  <path d="m9 18 6-6-6-6"/>
+                </svg>
+              </div>
+              <button type="button" class="shopify-sidebar-item">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                <span>Messaging</span>
+                <span class="shopify-sidebar-unread-dot"></span>
+              </button>
+            </div>
           </div>
 
-          <!-- Dynamic SVG Chart -->
-          <div class="shopify-chart-wrap">
-            <svg viewBox="0 0 400 120" preserveAspectRatio="none">
+          <!-- Sidebar Footer Settings -->
+          <div class="shopify-sidebar-bottom">
+            <button type="button" class="shopify-sidebar-item" id="shopify-settings-trigger-btn">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <span>Settings</span>
+            </button>
+          </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="shopify-desktop-main">
+          <!-- Decorative Top Right Halftone Dot Radial Accent (matching screenshot) -->
+          <div class="shopify-hero-dots-wrap" aria-hidden="true">
+            <svg class="shopify-hero-dots-svg" width="460" height="460" viewBox="0 0 460 460" fill="none">
               <defs>
-                <linearGradient id="shopifyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stop-color="#10b981" stop-opacity="0.35" />
-                  <stop offset="100%" stop-color="#10b981" stop-opacity="0.0" />
-                </linearGradient>
+                <pattern id="shopifyDotPattern" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
+                  <circle cx="2" cy="2" r="1.3" fill="#cfcfd4" opacity="0.55" />
+                </pattern>
+                <mask id="shopifyDotMask">
+                  <circle cx="460" cy="0" r="420" fill="white" />
+                  <circle cx="460" cy="0" r="180" fill="black" opacity="0.3" />
+                </mask>
               </defs>
-              <path id="shopify-chart-area" d="M0,90 Q50,75 100,82 T200,45 T300,55 T400,18 L400,120 L0,120 Z"
-                fill="url(#shopifyGrad)" />
-              <path id="shopify-chart-path" d="M0,90 Q50,75 100,82 T200,45 T300,55 T400,18" fill="none" stroke="#34d399"
-                stroke-width="3" stroke-linecap="round" />
+              <rect width="460" height="460" fill="url(#shopifyDotPattern)" mask="url(#shopifyDotMask)" />
             </svg>
-            <div class="chart-axis-labels">
-              <span>12:00 AM</span>
-              <span>6:00 AM</span>
-              <span>12:00 PM</span>
-              <span>6:00 PM</span>
-              <span>Now</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- KPI 2x2 Grid -->
-        <div class="shopify-kpi-grid">
-          <div class="shopify-kpi-item">
-            <div class="kpi-title">Online store sessions</div>
-            <div id="shopify-kpi-sessions" class="kpi-val">3,140</div>
-            <div class="kpi-change">↑ 18.2%</div>
-          </div>
-          <div class="shopify-kpi-item">
-            <div class="kpi-title">Total orders</div>
-            <div id="shopify-kpi-orders" class="kpi-val">142</div>
-            <div class="kpi-change">↑ 22.5%</div>
-          </div>
-          <div class="shopify-kpi-item">
-            <div class="kpi-title">Conversion rate</div>
-            <div id="shopify-kpi-conv" class="kpi-val">4.52%</div>
-            <div class="kpi-change">↑ 0.8%</div>
-          </div>
-          <div class="shopify-kpi-item">
-            <div class="kpi-title">Average order value</div>
-            <div id="shopify-kpi-aov" class="kpi-val">$129.78</div>
-            <div class="kpi-change">↑ 3.1%</div>
-          </div>
-        </div>
-
-        <!-- Recent Orders Live Feed -->
-        <div class="shopify-orders-card">
-          <div class="orders-card-head">
-            <h4 class="orders-head-title">Recent orders</h4>
-            <a href="#shopify" class="orders-head-link">View all</a>
           </div>
 
-          <div class="shopify-order-row">
-            <div>
-              <div class="order-user-name">#1092 • Liam K.</div>
-              <div class="order-meta">2 items • Express shipping</div>
+          <!-- TOP KPI STRIP (All channels, Today, Sessions, Total sales, Orders, Conv rate, Live visitors) -->
+          <section class="shopify-desktop-kpi-bar" aria-label="Store Performance Summary">
+            <!-- Channel & Date -->
+            <div class="shopify-kpi-channel-box">
+              <span class="shopify-kpi-channel-sub">All channels</span>
+              <span class="shopify-kpi-channel-main">Today</span>
             </div>
-            <div class="order-right">
-              <div class="order-price">$185.00</div>
-              <span class="order-badge-paid">Paid • 2m ago</span>
-            </div>
-          </div>
 
-          <div class="shopify-order-row">
-            <div>
-              <div class="order-user-name">#1091 • Sophia M.</div>
-              <div class="order-meta">1 item • Standard delivery</div>
-            </div>
-            <div class="order-right">
-              <div class="order-price">$129.00</div>
-              <span class="order-badge-paid">Paid • 7m ago</span>
-            </div>
-          </div>
+            <!-- KPI Columns (Clickable to edit numbers) -->
+            <div class="shopify-kpi-metrics-row">
+              <!-- Sessions -->
+              <div class="shopify-desktop-kpi-item" id="shopify-kpi-sessions-click" title="Click to edit sessions">
+                <span class="shopify-kpi-title">Sessions</span>
+                <div class="shopify-kpi-val-group">
+                  <span class="shopify-kpi-val" id="shopify-display-sessions">0</span>
+                  <span class="shopify-kpi-up-badge">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+                      <polyline points="18 15 12 9 6 15"/>
+                    </svg>
+                    <span id="shopify-display-growth-sessions">0%</span>
+                  </span>
+                </div>
+              </div>
 
-          <div class="shopify-order-row">
-            <div>
-              <div class="order-user-name">#1090 • Ethan R.</div>
-              <div class="order-meta">3 items • Express shipping</div>
-            </div>
-            <div class="order-right">
-              <div class="order-price">$245.50</div>
-              <span class="order-badge-paid">Paid • 14m ago</span>
-            </div>
-          </div>
-        </div>
+              <!-- Total sales -->
+              <div class="shopify-desktop-kpi-item" id="shopify-kpi-sales-click" title="Click to edit total sales">
+                <span class="shopify-kpi-title">Total sales</span>
+                <div class="shopify-kpi-val-group">
+                  <span class="shopify-kpi-val" id="shopify-display-sales">$0</span>
+                  <span class="shopify-kpi-up-badge">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+                      <polyline points="18 15 12 9 6 15"/>
+                    </svg>
+                    <span id="shopify-display-growth-sales">0%</span>
+                  </span>
+                </div>
+              </div>
 
+              <!-- Orders -->
+              <div class="shopify-desktop-kpi-item" id="shopify-kpi-orders-click" title="Click to edit orders">
+                <span class="shopify-kpi-title">Orders</span>
+                <div class="shopify-kpi-val-group">
+                  <span class="shopify-kpi-val" id="shopify-display-orders">0</span>
+                  <span class="shopify-kpi-up-badge">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+                      <polyline points="18 15 12 9 6 15"/>
+                    </svg>
+                    <span id="shopify-display-growth-orders">0%</span>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Conversion rate -->
+              <div class="shopify-desktop-kpi-item" id="shopify-kpi-conv-click" title="Click to edit conversion rate">
+                <span class="shopify-kpi-title">Conversion rate</span>
+                <div class="shopify-kpi-val-group">
+                  <span class="shopify-kpi-val" id="shopify-display-conv">0%</span>
+                  <span class="shopify-kpi-up-badge">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+                      <polyline points="18 15 12 9 6 15"/>
+                    </svg>
+                    <span id="shopify-display-growth-conv">0%</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Live Visitors -->
+            <div class="shopify-desktop-kpi-live" id="shopify-kpi-live-click" title="Click to edit live visitors">
+              <span class="shopify-kpi-title">Live visitors</span>
+              <div class="shopify-kpi-val-group">
+                <span class="shopify-kpi-val" id="shopify-display-visitors">0</span>
+                <span class="shopify-live-green-dot"></span>
+              </div>
+            </div>
+          </section>
+
+          <!-- HERO SECTION (Greeting + AI Bar + Action Pill) -->
+          <section class="shopify-desktop-hero">
+            <div class="shopify-hero-text-block">
+              <h2 class="shopify-hero-greeting" id="shopify-greeting-heading">Good afternoon!</h2>
+              <p class="shopify-hero-subline">Let's continue growing your business.</p>
+            </div>
+
+            <!-- Shopify Magic AI Search Bar -->
+            <div class="shopify-ai-bar-wrap">
+              <div class="shopify-ai-bar-inner">
+                <div class="shopify-magic-badge" title="Shopify Magic Sidekick">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2L13.8 8.2L20 10L13.8 11.8L12 18L10.2 11.8L4 10L10.2 8.2L12 2Z" fill="#ffffff"/>
+                    <circle cx="18.5" cy="5.5" r="1.5" fill="#ffffff"/>
+                    <circle cx="6.5" cy="17.5" r="1.5" fill="#ffffff"/>
+                  </svg>
+                </div>
+                <input type="text" class="shopify-ai-input" id="shopify-magic-input" placeholder="Ask anything..." autocomplete="off">
+                <div class="shopify-ai-actions">
+                  <button type="button" class="shopify-ai-plus-btn" aria-label="Add context" title="Attach context">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                      <line x1="12" y1="5" x2="12" y2="19"/>
+                      <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                  </button>
+                  <button type="button" class="shopify-ai-submit-btn" aria-label="Submit prompt" id="shopify-magic-submit-btn">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="12" y1="19" x2="12" y2="5"/>
+                      <polyline points="5 12 12 5 19 12"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fulfill Orders Quick Action Pill -->
+            <div class="shopify-hero-action-pill-row">
+              <button type="button" class="shopify-fulfill-pill-btn" id="shopify-fulfill-trigger">
+                <span>Fulfill orders</span>
+                <span class="shopify-fulfill-badge-pill" id="shopify-display-fulfill-count">2</span>
+              </button>
+            </div>
+          </section>
+
+          <!-- CARDS GRID (Exact match to Screenshots 1 & 2) -->
+          <section class="shopify-desktop-cards-grid">
+            <!-- CARD 1: Shopify Editions | Spring '26 (Using shopify_editions.png) -->
+            <article class="shopify-card shopify-card-editions">
+              <div class="shopify-card-header">
+                <h3 class="shopify-card-title">Shopify Editions | Spring '26</h3>
+                <p class="shopify-card-desc">150+ updates to sell, shop, and build everywhere</p>
+              </div>
+              <div class="shopify-card-visual shopify-card-visual-editions">
+                <img src="./shopify_editions.png" alt="Shopify Editions Spring '26" class="shopify-editions-artwork">
+              </div>
+            </article>
+
+            <!-- CARD 2: Get intelligence-powered insights to grow your business -->
+            <article class="shopify-card shopify-card-insights">
+              <div class="shopify-card-header">
+                <h3 class="shopify-card-title">Get intelligence-powered insights to grow your business</h3>
+                <p class="shopify-card-desc">Discover next steps to attract more customers, improve conversion and drive repeat purchases.</p>
+              </div>
+              <div class="shopify-card-visual shopify-card-visual-insights">
+                <div class="shopify-insights-gradient-box">
+                  <div class="shopify-insights-lock-badge">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1c1c1e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="4" y="10" width="16" height="11" rx="2" ry="2"/>
+                      <path d="M7 10V6.5a5 5 0 0 1 10 0V10"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- CARD 3: Prepare your store for EU right of withdrawal -->
+            <article class="shopify-card shopify-card-withdrawal">
+              <div class="shopify-card-header">
+                <div class="shopify-task-stepper">
+                  <span class="shopify-task-circle-open"></span>
+                  <span>0 of 5 tasks completed</span>
+                </div>
+                <h3 class="shopify-card-title">Prepare your store for EU right of withdrawal</h3>
+                <p class="shopify-card-desc">Set up return and cancellation options for EU orders. <a href="javascript:void(0)" class="shopify-inline-link">Learn more</a> about EU right of withdrawal requirements.</p>
+              </div>
+              <div class="shopify-card-visual shopify-card-visual-withdrawal">
+                <div class="shopify-withdrawal-art">
+                  <div class="shopify-art-circle-left"></div>
+                  <div class="shopify-art-desk-bar"></div>
+                  <div class="shopify-art-circle-right"></div>
+                </div>
+              </div>
+            </article>
+
+            <!-- CARD 4: Get enterprise-ready apps (Wide 2-column landscape card) -->
+            <article class="shopify-card shopify-card-enterprise">
+              <div class="shopify-card-header">
+                <h3 class="shopify-card-title">Get enterprise-ready apps</h3>
+                <p class="shopify-card-desc">Keep your site fast as your business grows with Built for Shopify apps.</p>
+              </div>
+              <div class="shopify-card-visual shopify-card-visual-enterprise">
+                <div class="shopify-mountain-landscape">
+                  <svg viewBox="0 0 700 240" preserveAspectRatio="none" class="shopify-mountain-svg">
+                    <defs>
+                      <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#e0edff"/>
+                        <stop offset="100%" stop-color="#edf4ff"/>
+                      </linearGradient>
+                      <linearGradient id="backMtnGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#93c5fd"/>
+                        <stop offset="100%" stop-color="#60a5fa"/>
+                      </linearGradient>
+                      <linearGradient id="midMtnGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#3b82f6"/>
+                        <stop offset="100%" stop-color="#2563eb"/>
+                      </linearGradient>
+                      <linearGradient id="frontMtnGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#2563eb"/>
+                        <stop offset="100%" stop-color="#1d4ed8"/>
+                      </linearGradient>
+                    </defs>
+                    <rect width="700" height="240" fill="url(#skyGrad)"/>
+                    <!-- Back Peaks -->
+                    <polygon points="0,240 70,180 180,210 320,130 450,180 580,140 700,190 700,240" fill="url(#backMtnGrad)" opacity="0.6"/>
+                    <!-- Mid Peaks -->
+                    <polygon points="0,240 80,200 220,215 340,110 490,165 620,160 700,200 700,240" fill="url(#midMtnGrad)"/>
+                    <!-- Front Slope -->
+                    <polygon points="0,240 140,225 280,185 410,210 560,170 700,220 700,240" fill="url(#frontMtnGrad)"/>
+                    <!-- Red Target Pin Marker on Peak -->
+                    <circle cx="340" cy="110" r="10" fill="#ef4444" stroke="#ffffff" stroke-width="3.5" filter="drop-shadow(0 2px 5px rgba(0,0,0,0.2))"/>
+                    <circle cx="340" cy="110" r="4" fill="#ffffff"/>
+                  </svg>
+                </div>
+              </div>
+            </article>
+
+            <!-- CARD 5: Move stock and grow profit with Smart Pricing -->
+            <article class="shopify-card shopify-card-pricing">
+              <div class="shopify-card-header">
+                <h3 class="shopify-card-title">Move stock and grow profit with Smart Pricing</h3>
+                <p class="shopify-card-desc">See which products to discount or mark up, based on your sales, inventory, and cost data.</p>
+              </div>
+              <div class="shopify-card-visual shopify-card-visual-pricing">
+                <div class="shopify-smart-pricing-art">
+                  <div class="shopify-pricing-spotlight-circle"></div>
+                  <div class="shopify-pricing-purple-star">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 2L14.2 9.8L22 12L14.2 14.2L12 22L9.8 14.2L2 12L9.8 9.8L12 2Z" fill="#ffffff"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </section>
+        </main>
       </div>
+    </div>
 
-      <!-- Shopify Bottom Navigation Bar -->
-      <nav class="shopify-bottom-bar">
-        <button type="button" class="shopify-nav-btn active">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-            <polyline points="9 22 9 12 15 12 15 22" />
-          </svg>
-          <span>Home</span>
-        </button>
-        <button type="button" class="shopify-nav-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <rect width="20" height="14" x="2" y="5" rx="2" />
-            <line x1="2" x2="22" y1="10" y2="10" />
-          </svg>
-          <span>Orders</span>
-        </button>
-        <button type="button" class="shopify-nav-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="m7.5 4.27 9 5.15" />
-            <path
-              d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
-            <path d="m3.3 7 8.7 5 8.7-5" />
-            <path d="M12 22V12" />
-          </svg>
-          <span>Products</span>
-        </button>
-        <button type="button" class="shopify-nav-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-            <circle cx="9" cy="7" r="4" />
-            <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-          </svg>
-          <span>Customers</span>
-        </button>
-        <button type="button" class="shopify-nav-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" x2="18" y1="20" y2="10" />
-            <line x1="12" x2="12" y1="20" y2="4" />
-            <line x1="6" x2="6" y1="20" y2="14" />
-          </svg>
-          <span>Analytics</span>
-        </button>
-      </nav>
+    <!-- 3. SHOPIFY SIMULATOR SETTINGS MODAL (For Larping Numbers) -->
+    <div id="shopify-settings-modal" class="shopify-modal-overlay">
+      <div class="shopify-modal-backdrop" id="shopify-modal-backdrop"></div>
+      <div class="shopify-modal-card">
+        <div class="shopify-modal-top">
+          <div class="shopify-modal-title-wrap">
+            <h3 class="shopify-modal-heading">Simulate Shopify Admin Figures</h3>
+            <p class="shopify-modal-subheading">Customize your store telemetry. Edit any figure and all other metrics will auto-estimate automatically.</p>
+          </div>
+          <button type="button" class="shopify-modal-close-btn" id="shopify-modal-close-btn" aria-label="Close modal">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
 
+        <div class="shopify-modal-body">
+          <div class="shopify-modal-field">
+            <label for="shopify-input-store-name">Store Name</label>
+            <input type="text" id="shopify-input-store-name" class="shopify-form-input" placeholder="Shop Name" value="Shop Name">
+          </div>
+
+          <div class="shopify-modal-row">
+            <div class="shopify-modal-field">
+              <label for="shopify-input-sales">Total Sales ($)</label>
+              <input type="text" id="shopify-input-sales" class="shopify-form-input" placeholder="$0" value="$0">
+            </div>
+            <div class="shopify-modal-field">
+              <label for="shopify-input-sales-growth">Growth Rate</label>
+              <input type="text" id="shopify-input-sales-growth" class="shopify-form-input" placeholder="0%" value="0%">
+            </div>
+          </div>
+
+          <div class="shopify-modal-row">
+            <div class="shopify-modal-field">
+              <label for="shopify-input-orders">Total Orders</label>
+              <input type="number" id="shopify-input-orders" class="shopify-form-input" placeholder="0" value="0">
+            </div>
+            <div class="shopify-modal-field">
+              <label for="shopify-input-sessions">Sessions</label>
+              <input type="text" id="shopify-input-sessions" class="shopify-form-input" placeholder="0" value="0">
+            </div>
+          </div>
+
+          <div class="shopify-modal-row">
+            <div class="shopify-modal-field">
+              <label for="shopify-input-conv">Conversion Rate</label>
+              <input type="text" id="shopify-input-conv" class="shopify-form-input" placeholder="0%" value="0%">
+            </div>
+            <div class="shopify-modal-field">
+              <label for="shopify-input-live">Live Visitors</label>
+              <input type="number" id="shopify-input-live" class="shopify-form-input" placeholder="0" value="0">
+            </div>
+          </div>
+
+          <div class="shopify-modal-field">
+            <label for="shopify-input-fulfill">Orders to Fulfill</label>
+            <input type="number" id="shopify-input-fulfill" class="shopify-form-input" placeholder="2" value="2">
+          </div>
+        </div>
+
+        <div class="shopify-modal-actions">
+          <button type="button" class="shopify-modal-reset-btn" id="shopify-modal-reset-btn">Reset</button>
+          <button type="button" class="shopify-modal-done-btn" id="shopify-modal-done-btn">Apply Figures</button>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- ======================================================================
-       CUSTOM CONTEXT MENU (Right Click anywhere or Back/Forward/Reload)
+       CUSTOM CONTEXT MENU (Jet Black Ultra-Premium Floating Menu)
        ====================================================================== -->
-  <div id="custom-context-menu" role="menu"
-    class="fixed z-[9999] w-[184px] rounded-xl border border-white/10 bg-black/90 bg-gradient-to-b from-white/[0.05] to-transparent p-1.5 shadow-2xl backdrop-blur-xl text-white select-none"
-    style="display: none; top: 120px; left: 120px;">
-    <button type="button" id="menu-item-back" role="menuitem"
-      class="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-xs text-white/90 transition-colors hover:bg-white/10 cursor-pointer">
-      <span class="text-white/70">
+  <div id="custom-context-menu" role="menu" class="custom-context-menu" style="display: none; top: 120px; left: 120px;">
+    <button type="button" id="menu-item-back" role="menuitem" class="custom-context-item">
+      <span class="custom-context-icon">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="m15 18-6-6 6-6" />
         </svg>
       </span>
       <span>Back to Home</span>
     </button>
-    <button type="button" id="menu-item-forward" role="menuitem"
-      class="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-xs text-white/90 transition-colors hover:bg-white/10 cursor-pointer">
-      <span class="text-white/70">
+    <button type="button" id="menu-item-forward" role="menuitem" class="custom-context-item">
+      <span class="custom-context-icon">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="m9 18 6-6-6-6" />
         </svg>
       </span>
       <span>Forward</span>
     </button>
-    <button type="button" id="menu-item-reload" role="menuitem"
-      class="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-xs text-white/90 transition-colors hover:bg-white/10 cursor-pointer">
-      <span class="text-white/70">
+    <button type="button" id="menu-item-reload" role="menuitem" class="custom-context-item">
+      <span class="custom-context-icon">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
           <path d="M21 3v5h-5" />
         </svg>
       </span>
       <span>Reload</span>
     </button>
-    <div class="my-1.5 h-px bg-white/10"></div>
-    <a href="https://discord.com" target="_blank" rel="noopener noreferrer"
-      class="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-xs text-white/90 transition-colors hover:bg-white/10 cursor-pointer text-decoration-none">
-      <span class="text-white/70">
-        <img alt="Discord" class="h-3.5 w-3.5 opacity-80" src="./discord_logo.webp">
+    <div class="custom-context-divider"></div>
+    <a href="https://discord.com" target="_blank" rel="noopener noreferrer" class="custom-context-item">
+      <span class="custom-context-icon">
+        <img alt="Discord" class="custom-context-discord-img" src="./discord_logo.webp">
       </span>
       <span>Discord Server</span>
     </a>
-    <div class="mt-1.5 border-t border-white/10 pt-1.5 pb-1 text-center text-[9px] text-white/40">
+    <div class="custom-context-footer">
       LarpKit © 2026
     </div>
   </div>

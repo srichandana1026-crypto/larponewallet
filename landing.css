@@ -1789,3 +1789,91 @@ h2, h3, h4, h5, h6,
   }
 }
 
+/* ==========================================================================
+   GLOBAL CUSTOM CONTEXT MENU (Jet Black Ultra-Premium Floating Menu)
+   ========================================================================== */
+.custom-context-menu {
+  position: fixed !important;
+  z-index: 999999 !important;
+  width: 196px !important;
+  background-color: #000000 !important;
+  background: #000000 !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 14px !important;
+  padding: 6px !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  color: #ffffff !important;
+  user-select: none !important;
+  font-family: inherit !important;
+  box-sizing: border-box !important;
+}
+
+.custom-context-item {
+  display: flex !important;
+  width: 100% !important;
+  align-items: center !important;
+  gap: 10px !important;
+  border-radius: 9px !important;
+  padding: 8px 10px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  box-sizing: border-box !important;
+  transition: background 0.12s ease, color 0.12s ease, transform 0.1s ease !important;
+}
+
+.custom-context-item:hover {
+  background: rgba(255, 255, 255, 0.14) !important;
+  color: #ffffff !important;
+}
+
+.custom-context-item:active {
+  background: rgba(255, 255, 255, 0.22) !important;
+  transform: scale(0.98);
+}
+
+.custom-context-icon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: rgba(255, 255, 255, 0.75) !important;
+  width: 16px !important;
+  height: 16px !important;
+  flex-shrink: 0 !important;
+}
+
+.custom-context-item:hover .custom-context-icon {
+  color: #ffffff !important;
+}
+
+.custom-context-discord-img {
+  width: 14px !important;
+  height: 14px !important;
+  display: block !important;
+  opacity: 0.85 !important;
+}
+
+.custom-context-divider {
+  height: 1px !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  margin: 5px 2px !important;
+}
+
+.custom-context-footer {
+  margin-top: 4px !important;
+  padding-top: 5px !important;
+  padding-bottom: 2px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  text-align: center !important;
+  font-size: 10px !important;
+  letter-spacing: 0.04em !important;
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
