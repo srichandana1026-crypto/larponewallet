@@ -57,14 +57,14 @@ body {
 
 /* View Container Management */
 .view-panel {
-  display: none;
+  display: none !important;
   width: 100%;
   min-height: 100vh;
   animation: fadeIn 0.25s ease-out forwards;
 }
 
 .view-panel.active {
-  display: flex;
+  display: flex !important;
 }
 
 @keyframes fadeIn {
@@ -438,7 +438,7 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   PHANTOM WALLET SIMULATOR VIEW (Inter)
+   PHANTOM WALLET SIMULATOR VIEW (Exact Mobile Web3 Replica)
    -------------------------------------------------------------------------- */
 #view-phantom,
 #view-phantom *,
@@ -446,281 +446,789 @@ body {
 .phantom-phone-frame * {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
   letter-spacing: normal;
+  box-sizing: border-box;
 }
 
 #view-phantom {
   justify-content: center;
   align-items: center;
-  background: #0e0f17;
-  padding: 40px 16px;
+  background: #000000;
+  padding: 24px 16px;
   min-height: 100vh;
 }
 
 .phantom-phone-frame {
   width: 100%;
-  max-width: 400px;
-  background: var(--phantom-bg);
-  border-radius: 36px;
-  border: 2px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(171, 159, 242, 0.08);
+  max-width: 390px;
+  background: #000000;
+  border-radius: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.98), 0 0 0 1px rgba(255, 255, 255, 0.05);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   position: relative;
-  min-height: 720px;
+  height: 780px;
 }
 
-/* Phantom Top Header */
-.phantom-header {
-  padding: 20px 20px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-}
-
-.phantom-wallet-select {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.06);
-  padding: 6px 14px;
-  border-radius: 9999px;
-  cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: background 0.15s ease;
-}
-
-.phantom-wallet-select:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.phantom-ghost-mini {
-  width: 18px;
-  height: 18px;
-  object-fit: contain;
-}
-
-.phantom-wallet-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: #fff;
-}
-
-.phantom-address-pill {
-  font-size: 11px;
-  color: #ab9ff2;
-  background: rgba(171, 159, 242, 0.12);
-  padding: 2px 6px;
-  border-radius: 6px;
-  font-family: monospace;
-}
-
-/* Phantom Balance Hero */
-.phantom-balance-hero {
-  padding: 28px 20px 20px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.phantom-total-balance {
-  font-size: 40px;
-  font-weight: 700;
-  letter-spacing: normal;
-  color: #fff;
-  margin: 0;
-  line-height: 1.1;
-}
-
-.phantom-change-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #22c55e;
-}
-
-/* Phantom Quick Action Buttons */
-.phantom-actions {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  padding: 10px 20px 24px;
-}
-
-.phantom-action-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: #fff;
-}
-
-.phantom-action-circle {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ab9ff2;
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.phantom-action-item:hover .phantom-action-circle {
-  background: rgba(171, 159, 242, 0.2);
-  color: #fff;
-  transform: scale(1.08);
-}
-
-.phantom-action-label {
-  font-size: 12px;
-  font-weight: 500;
-  color: #9496a8;
-}
-
-/* Phantom Tabs */
-.phantom-tabs {
-  display: flex;
-  padding: 0 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  gap: 20px;
-}
-
-.phantom-tab-btn {
-  background: none;
-  border: none;
-  padding: 10px 0;
-  color: #717388;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  position: relative;
-  transition: color 0.15s ease;
-}
-
-.phantom-tab-btn.active {
-  color: #ab9ff2;
-}
-
-.phantom-tab-btn.active::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: #ab9ff2;
-  border-radius: 2px;
-}
-
-/* Tokens List */
-.phantom-tab-content {
+/* Scrollable container */
+.phantom-main-content {
   flex: 1;
-  padding: 12px 16px 80px;
   overflow-y: auto;
+  overflow-x: hidden;
+  padding: 22px 18px 95px;
+  display: flex;
+  flex-direction: column;
 }
 
-.token-row {
+.phantom-main-content::-webkit-scrollbar {
+  width: 4px;
+}
+.phantom-main-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+/* Top Header */
+.phantom-top-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 8px;
-  border-radius: 14px;
-  cursor: pointer;
-  transition: background 0.15s ease;
+  margin-bottom: 24px;
 }
 
-.token-row:hover {
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.token-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.token-icon {
+.phantom-top-lock-btn {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  object-fit: cover;
-  background: rgba(255, 255, 255, 0.05);
+  background: #1c1c1e;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.15s ease, background 0.15s ease;
 }
 
-.token-title {
+.phantom-top-lock-btn:hover {
+  background: #252528;
+  transform: scale(1.04);
+}
+
+.phantom-header-lock-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.phantom-nav-pills {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: #18181b;
+  padding: 4px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.phantom-pill-btn {
+  background: transparent;
+  border: none;
+  color: #8e8e93;
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.phantom-pill-btn:hover {
+  color: #ffffff;
+}
+
+.phantom-pill-btn.active {
+  background: #ab9ff2;
+  color: #000000;
+  font-weight: 700;
+}
+
+/* Wallet Name Selector */
+.phantom-wallet-select-wrap {
+  margin-bottom: 8px;
+}
+
+.phantom-wallet-name-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 2px 0;
+  transition: opacity 0.15s ease;
+}
+
+.phantom-wallet-name-btn:hover {
+  opacity: 0.8;
+}
+
+.phantom-wallet-name-btn svg {
+  color: #8e8e93;
+}
+
+/* Big Balance Display */
+.phantom-hero-balance {
+  margin-bottom: 24px;
+}
+
+.phantom-big-val {
+  font-size: 42px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -1.2px;
+  margin: 0 0 6px 0;
+  line-height: 1.08;
+  word-break: break-word;
+}
+
+.phantom-change-strip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.phantom-change-green {
+  color: #00e676;
   font-size: 15px;
   font-weight: 600;
-  color: #fff;
-  margin: 0 0 2px;
 }
 
-.token-price {
-  font-size: 12px;
-  color: #8b8ea3;
-  margin: 0;
+.phantom-gain-badge {
+  background: #00e676;
+  color: #000000;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2.5px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.3px;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
 }
 
-.token-price-gain {
-  color: #22c55e;
-  margin-left: 4px;
+/* Cash Row Card */
+.phantom-asset-card {
+  background: #18181a;
+  border-radius: 20px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  margin-bottom: 24px;
+  transition: background 0.15s ease, transform 0.15s ease;
+  cursor: pointer;
 }
 
-.token-right {
+.phantom-asset-card:hover {
+  background: #1e1e21;
+}
+
+.phantom-asset-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.phantom-cash-icon-box {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.phantom-cash-svg {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.phantom-asset-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.phantom-asset-right {
   text-align: right;
 }
 
-.token-amount-fiat {
-  font-size: 15px;
-  font-weight: 600;
-  color: #fff;
-  margin: 0 0 2px;
+.phantom-asset-fiat {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
 }
 
-.token-amount-crypto {
-  font-size: 12px;
-  color: #8b8ea3;
+/* Section Title */
+.phantom-section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  cursor: pointer;
+}
+
+.phantom-section-title svg {
+  color: #8e8e93;
+}
+
+/* Tokens List */
+.phantom-tokens-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.phantom-token-card {
+  background: #18181a;
+  border-radius: 20px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.phantom-token-card:hover {
+  background: #1e1e21;
+}
+
+.phantom-token-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.phantom-token-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.phantom-token-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.phantom-token-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.phantom-token-symbol {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.phantom-verified-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ab9ff2;
+  color: #000000;
+  flex-shrink: 0;
+}
+
+.phantom-token-qty {
+  font-size: 13px;
+  color: #8e8e93;
+  font-weight: 500;
+}
+
+.phantom-token-right {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.phantom-token-fiat {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.phantom-token-change {
+  font-size: 13px;
+  color: #8e8e93;
+  font-weight: 500;
+}
+
+.phantom-token-change.green {
+  color: #00e676;
+}
+
+/* Floating Bottom Search & Action Bar */
+.phantom-bottom-floating-bar {
+  position: absolute;
+  bottom: 18px;
+  left: 18px;
+  right: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 20;
+}
+
+.phantom-search-box {
+  flex: 1;
+  background: #1c1c1e;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 9999px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.15s ease;
+}
+
+.phantom-search-box:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.phantom-search-placeholder {
+  color: #636366;
+  font-size: 14.5px;
+  font-weight: 500;
+  user-select: none;
+}
+
+.phantom-fab-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #ab9ff2;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(171, 159, 242, 0.35);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.15s ease;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.phantom-fab-btn:hover {
+  transform: scale(1.08);
+  background: #baaef8;
+}
+
+/* ==========================================================================
+   SPEED DIAL OVERLAY (Screenshot 2)
+   ========================================================================== */
+.phantom-speed-dial-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: none;
+}
+
+.phantom-speed-dial-overlay.active {
+  display: block;
+}
+
+.phantom-speed-dial-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.phantom-speed-dial-stack {
+  position: absolute;
+  bottom: 18px;
+  right: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+  z-index: 101;
+}
+
+.phantom-dial-option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(14px);
+  animation: dialItemIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.phantom-dial-option:nth-child(1) { animation-delay: 0.12s; }
+.phantom-dial-option:nth-child(2) { animation-delay: 0.09s; }
+.phantom-dial-option:nth-child(3) { animation-delay: 0.06s; }
+.phantom-dial-option:nth-child(4) { animation-delay: 0.03s; }
+
+@keyframes dialItemIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.phantom-dial-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  user-select: none;
+}
+
+.phantom-dial-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #ab9ff2;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000000;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(171, 159, 242, 0.25);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.15s ease;
+  padding: 0;
+}
+
+.phantom-dial-btn:hover {
+  transform: scale(1.08);
+  background: #baaef8;
+}
+
+.phantom-dial-btn-active {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3), 0 8px 25px rgba(171, 159, 242, 0.4);
+}
+
+.phantom-dial-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
+.phantom-dial-icon-send {
+  width: 36px;
+  height: 36px;
+}
+
+.phantom-dial-icon-add-cash {
+  width: 38px;
+  height: 38px;
+}
+
+.phantom-dial-close-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #222225;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.15s ease;
+  margin-top: 2px;
+  padding: 0;
+}
+
+.phantom-dial-close-btn:hover {
+  transform: scale(1.06);
+  background: #2a2a2e;
+}
+
+/* ==========================================================================
+   SETTINGS MODAL (Screenshot 3 & 4)
+   ========================================================================== */
+.phantom-settings-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 150;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.phantom-settings-overlay.active {
+  display: flex;
+}
+
+.phantom-settings-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.phantom-settings-card {
+  position: relative;
+  z-index: 151;
+  width: 100%;
+  max-height: 94%;
+  background: #161618;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 20px 18px 22px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.95);
+  animation: modalPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.phantom-settings-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.phantom-settings-heading {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
   margin: 0;
 }
 
-/* Phantom Bottom Navbar */
-.phantom-bottom-bar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(19, 20, 31, 0.95);
-  backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+.phantom-settings-x-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #28282b;
+  border: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   align-items: center;
-  justify-content: space-around;
-  padding: 12px 10px 18px;
-  z-index: 10;
-}
-
-.phantom-nav-btn {
-  background: none;
-  border: none;
-  color: #717388;
+  justify-content: center;
+  color: #ffffff;
   cursor: pointer;
-  padding: 6px;
-  border-radius: 12px;
-  transition: color 0.15s ease;
+  padding: 0;
+  transition: background 0.15s ease, transform 0.15s ease;
 }
 
-.phantom-nav-btn.active {
-  color: #ab9ff2;
+.phantom-settings-x-btn:hover {
+  background: #343438;
+  transform: scale(1.05);
+}
+
+.phantom-settings-rows {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 4px;
+  max-height: 480px;
+}
+
+.phantom-settings-rows::-webkit-scrollbar {
+  width: 4px;
+}
+.phantom-settings-rows::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+}
+
+.phantom-input-row {
+  background: #1c1c1f;
+  border-radius: 16px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.phantom-input-row-wallet {
+  padding: 8px 12px;
+}
+
+.phantom-lock-squircle {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #26262a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.phantom-lock-squircle img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.phantom-name-field {
+  flex: 1;
+  background: #111113;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 11px 14px;
+  outline: none;
+  margin-left: 12px;
+  transition: border-color 0.15s ease;
+}
+
+.phantom-name-field:focus {
+  border-color: #ab9ff2;
+}
+
+.phantom-row-label-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.phantom-field-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.phantom-field-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.phantom-num-field {
+  width: 96px;
+  background: #111113;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: right;
+  padding: 9px 12px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.phantom-num-field:focus {
+  border-color: #ab9ff2;
+}
+
+/* Chrome, Safari, Edge, Opera remove arrows */
+.phantom-num-field::-webkit-outer-spin-button,
+.phantom-num-field::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.phantom-num-field[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Modal Buttons */
+.phantom-settings-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.phantom-btn-reset {
+  width: 100%;
+  height: 48px;
+  border-radius: 16px;
+  background: #ff3b30;
+  color: #ffffff;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+}
+
+.phantom-btn-reset:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.phantom-btn-reset:active {
+  transform: translateY(0);
+}
+
+.phantom-btn-done {
+  width: 100%;
+  height: 48px;
+  border-radius: 16px;
+  background: #ab9ff2;
+  color: #000000;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+}
+
+.phantom-btn-done:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.phantom-btn-done:active {
+  transform: translateY(0);
 }
 
 /* --------------------------------------------------------------------------

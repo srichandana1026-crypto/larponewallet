@@ -13,8 +13,24 @@ const state = {
   phantom: {
     address: '9WzQ...7k2q',
     fullAddress: '9WzQxR64mY8cK3eN2uFpLt5J8vG1mZbAo41P7k2q',
-    balance: '$42,891.45',
-    activeTab: 'tokens'
+    walletName: 'Wallet Name',
+    cash: 0,
+    tokens: {
+      btc: 0,
+      usdt: 0,
+      solana: 0,
+      ethereum: 0,
+      usdc: 0,
+      polygon: 0
+    },
+    prices: {
+      btc: 66192.75,
+      solana: 143.50,
+      ethereum: 3350.00,
+      usdt: 1.00,
+      usdc: 1.00,
+      polygon: 0.45
+    }
   },
   shopify: {
     timeframe: 'today',
@@ -39,6 +55,19 @@ try {
     if (parsed && parsed.isLoggedIn) {
       state.isLoggedIn = true;
       state.userEmail = parsed.email || 'creator@larpkit.io';
+    }
+  }
+} catch (e) {}
+
+// Restore Phantom state
+try {
+  const savedPhantom = localStorage.getItem('larpkit_phantom');
+  if (savedPhantom) {
+    const parsedP = JSON.parse(savedPhantom);
+    if (parsedP) {
+      if (parsedP.walletName !== undefined) state.phantom.walletName = parsedP.walletName;
+      if (parsedP.cash !== undefined) state.phantom.cash = parsedP.cash;
+      if (parsedP.tokens) state.phantom.tokens = { ...state.phantom.tokens, ...parsedP.tokens };
     }
   }
 } catch (e) {}
@@ -866,34 +895,192 @@ function triggerCashAppAction(actionType) {
 // --------------------------------------------------------------------------
 // PHANTOM WALLET LOGIC
 // --------------------------------------------------------------------------
-function switchPhantomTab(tabName) {
-  state.phantom.activeTab = tabName;
-  document.querySelectorAll('.phantom-tab-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.tab === tabName);
-  });
-
-  const tokensSection = document.getElementById('phantom-tokens-section');
-  const nftsSection = document.getElementById('phantom-nfts-section');
-  const activitySection = document.getElementById('phantom-activity-section');
-
-  if (tokensSection) tokensSection.style.display = tabName === 'tokens' ? 'block' : 'none';
-  if (nftsSection) nftsSection.style.display = tabName === 'nfts' ? 'block' : 'none';
-  if (activitySection) activitySection.style.display = tabName === 'activity' ? 'block' : 'none';
+function formatPhantomCurrency(val) {
+  const num = typeof val === 'number' ? val : parseFloat(val) || 0;
+  return '$' + num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-function copyPhantomAddress() {
-  navigator.clipboard.writeText(state.phantom.fullAddress).catch(() => { });
-  showToast('Copied Phantom address to clipboard!');
-}
+function renderPhantomUI() {
+  const walletNameEl = document.getElementById('phantom-display-wallet-name');
+  const portfolioValEl = document.getElementById('phantom-portfolio-val');
+  const changeAmtEl = document.getElementById('phantom-change-amt');
+  const changeBadgeEl = document.getElementById('phantom-change-badge');
+  const cashValEl = document.getElementById('phantom-cash-val');
+  const tokensListEl = document.getElementById('phantom-tokens-list');
 
-function promptEditPhantomBalance() {
-  const newBal = prompt('Enter custom portfolio balance:', state.phantom.balance);
-  if (newBal && newBal.trim() !== '') {
-    state.phantom.balance = newBal.startsWith('$') ? newBal : `$${newBal}`;
-    const balEl = document.getElementById('phantom-portfolio-val');
-    if (balEl) balEl.textContent = state.phantom.balance;
-    showToast('Balance updated');
+  if (walletNameEl) {
+    walletNameEl.textContent = state.phantom.walletName || 'Wallet Name';
   }
+
+  // Calculate total balance
+  const cashAmt = parseFloat(state.phantom.cash) || 0;
+  let totalCrypto = 0;
+  Object.entries(state.phantom.tokens).forEach(([k, qty]) => {
+    const q = parseFloat(qty) || 0;
+    const price = state.phantom.prices[k] || 0;
+    totalCrypto += q * price;
+  });
+  const totalVal = cashAmt + totalCrypto;
+
+  if (portfolioValEl) {
+    portfolioValEl.textContent = formatPhantomCurrency(totalVal);
+  }
+  if (changeAmtEl) {
+    changeAmtEl.textContent = '+' + formatPhantomCurrency(totalVal);
+  }
+  if (changeBadgeEl) {
+    changeBadgeEl.textContent = '+0.00%';
+  }
+  if (cashValEl) {
+    cashValEl.textContent = formatPhantomCurrency(cashAmt);
+  }
+
+  if (tokensListEl) {
+    const tokenDefs = [
+      { key: 'btc', name: 'BTC', logo: './bitcoin-logo.png', ticker: 'BTC' },
+      { key: 'usdt', name: 'USDT', logo: './usdt-logo.png', ticker: 'USDT' },
+      { key: 'solana', name: 'Solana', logo: './solana-logo.png', ticker: 'SOL' },
+      { key: 'ethereum', name: 'Ethereum', logo: './ethereum-logo.png', ticker: 'ETH' },
+      { key: 'usdc', name: 'USDC', logo: './usdc-logo.png', ticker: 'USDC' },
+      { key: 'polygon', name: 'Polygon', logo: './polygon-logo.png', ticker: 'POL' }
+    ];
+
+    // Order tokens: positive balances first (sorted by fiat value desc), then the rest in default order
+    const tokensWithBalances = [];
+    const tokensZero = [];
+
+    tokenDefs.forEach(t => {
+      const q = parseFloat(state.phantom.tokens[t.key]) || 0;
+      const fiat = q * (state.phantom.prices[t.key] || 0);
+      if (q > 0) {
+        tokensWithBalances.push({ ...t, qty: q, fiat });
+      } else {
+        tokensZero.push({ ...t, qty: 0, fiat: 0 });
+      }
+    });
+
+    tokensWithBalances.sort((a, b) => b.fiat - a.fiat);
+    const sortedTokens = [...tokensWithBalances, ...tokensZero];
+
+    tokensListEl.innerHTML = sortedTokens.map(t => {
+      const changeStr = t.qty > 0 ? '+' + formatPhantomCurrency(t.fiat) : '$0.00';
+      const changeClass = t.qty > 0 ? 'phantom-token-change green' : 'phantom-token-change';
+      return `
+        <div class="phantom-token-card" data-token="${t.key}">
+          <div class="phantom-token-left">
+            <img src="${t.logo}" alt="${t.name}" class="phantom-token-logo">
+            <div class="phantom-token-info">
+              <div class="phantom-token-name-row">
+                <span class="phantom-token-symbol">${t.name}</span>
+                <span class="phantom-verified-badge" title="Verified Token">
+                  <svg viewBox="0 0 24 24" width="9" height="9" fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </span>
+              </div>
+              <div class="phantom-token-qty">${t.qty} ${t.ticker}</div>
+            </div>
+          </div>
+          <div class="phantom-token-right">
+            <div class="phantom-token-fiat">${formatPhantomCurrency(t.fiat)}</div>
+            <div class="${changeClass}">${changeStr}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+function openPhantomSpeedDial() {
+  const dial = document.getElementById('phantom-speed-dial');
+  if (dial) dial.classList.add('active');
+}
+
+function closePhantomSpeedDial() {
+  const dial = document.getElementById('phantom-speed-dial');
+  if (dial) dial.classList.remove('active');
+}
+
+function openPhantomSettingsModal() {
+  const modal = document.getElementById('phantom-settings-modal');
+  if (!modal) return;
+
+  const nameInput = document.getElementById('phantom-input-wallet-name');
+  const cashInput = document.getElementById('phantom-input-cash');
+  const usdtInput = document.getElementById('phantom-input-usdt');
+  const solInput = document.getElementById('phantom-input-solana');
+  const ethInput = document.getElementById('phantom-input-ethereum');
+  const btcInput = document.getElementById('phantom-input-btc');
+  const usdcInput = document.getElementById('phantom-input-usdc');
+  const polyInput = document.getElementById('phantom-input-polygon');
+
+  if (nameInput) nameInput.value = state.phantom.walletName || 'Wallet Name';
+  if (cashInput) cashInput.value = state.phantom.cash !== undefined ? state.phantom.cash : 0;
+  if (usdtInput) usdtInput.value = state.phantom.tokens.usdt !== undefined ? state.phantom.tokens.usdt : 0;
+  if (solInput) solInput.value = state.phantom.tokens.solana !== undefined ? state.phantom.tokens.solana : 0;
+  if (ethInput) ethInput.value = state.phantom.tokens.ethereum !== undefined ? state.phantom.tokens.ethereum : 0;
+  if (btcInput) btcInput.value = state.phantom.tokens.btc !== undefined ? state.phantom.tokens.btc : 0;
+  if (usdcInput) usdcInput.value = state.phantom.tokens.usdc !== undefined ? state.phantom.tokens.usdc : 0;
+  if (polyInput) polyInput.value = state.phantom.tokens.polygon !== undefined ? state.phantom.tokens.polygon : 0;
+
+  modal.classList.add('active');
+}
+
+function closePhantomSettingsModal() {
+  const modal = document.getElementById('phantom-settings-modal');
+  if (modal) modal.classList.remove('active');
+}
+
+function resetPhantomSettingsInputs() {
+  const cashInput = document.getElementById('phantom-input-cash');
+  const usdtInput = document.getElementById('phantom-input-usdt');
+  const solInput = document.getElementById('phantom-input-solana');
+  const ethInput = document.getElementById('phantom-input-ethereum');
+  const btcInput = document.getElementById('phantom-input-btc');
+  const usdcInput = document.getElementById('phantom-input-usdc');
+  const polyInput = document.getElementById('phantom-input-polygon');
+
+  if (cashInput) cashInput.value = 0;
+  if (usdtInput) usdtInput.value = 0;
+  if (solInput) solInput.value = 0;
+  if (ethInput) ethInput.value = 0;
+  if (btcInput) btcInput.value = 0;
+  if (usdcInput) usdcInput.value = 0;
+  if (polyInput) polyInput.value = 0;
+
+  showToast('Numbers reset to 0. Click Done to apply.');
+}
+
+function savePhantomSettings() {
+  const nameInput = document.getElementById('phantom-input-wallet-name');
+  const cashInput = document.getElementById('phantom-input-cash');
+  const usdtInput = document.getElementById('phantom-input-usdt');
+  const solInput = document.getElementById('phantom-input-solana');
+  const ethInput = document.getElementById('phantom-input-ethereum');
+  const btcInput = document.getElementById('phantom-input-btc');
+  const usdcInput = document.getElementById('phantom-input-usdc');
+  const polyInput = document.getElementById('phantom-input-polygon');
+
+  if (nameInput) state.phantom.walletName = nameInput.value.trim() || 'Wallet Name';
+  if (cashInput) state.phantom.cash = parseFloat(cashInput.value) || 0;
+  if (usdtInput) state.phantom.tokens.usdt = parseFloat(usdtInput.value) || 0;
+  if (solInput) state.phantom.tokens.solana = parseFloat(solInput.value) || 0;
+  if (ethInput) state.phantom.tokens.ethereum = parseFloat(ethInput.value) || 0;
+  if (btcInput) state.phantom.tokens.btc = parseFloat(btcInput.value) || 0;
+  if (usdcInput) state.phantom.tokens.usdc = parseFloat(usdcInput.value) || 0;
+  if (polyInput) state.phantom.tokens.polygon = parseFloat(polyInput.value) || 0;
+
+  try {
+    localStorage.setItem('larpkit_phantom', JSON.stringify({
+      walletName: state.phantom.walletName,
+      cash: state.phantom.cash,
+      tokens: state.phantom.tokens
+    }));
+  } catch (e) {}
+
+  renderPhantomUI();
+  closePhantomSettingsModal();
+  showToast('Balance updated!');
 }
 
 // --------------------------------------------------------------------------
@@ -1025,55 +1212,100 @@ document.addEventListener('DOMContentLoaded', () => {
   const poolBtn = document.getElementById('cashapp-pool-btn');
   if (poolBtn) poolBtn.addEventListener('click', () => triggerCashAppAction('pool'));
 
-  // Phantom Wallet Tabs
-  document.querySelectorAll('.phantom-tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      switchPhantomTab(btn.dataset.tab);
+  // Phantom FAB (+) Button -> Opens Speed Dial
+  const phantomFabBtn = document.getElementById('phantom-fab-btn');
+  if (phantomFabBtn) {
+    phantomFabBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openPhantomSpeedDial();
     });
-  });
-
-  // Phantom Action Buttons (Send, Receive, Swap, Buy)
-  document.querySelectorAll('.phantom-action-item').forEach(item => {
-    item.addEventListener('click', () => {
-      const act = item.dataset.phantomAction;
-      if (act === 'receive') {
-        showSimModal({
-          iconSvg: '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ab9ff2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="7" y="7" width="3" height="3"/><rect x="14" y="7" width="3" height="3"/><rect x="7" y="14" width="3" height="3"/></svg>',
-          iconBg: 'rgba(171, 159, 242, 0.15)',
-          title: 'Receive Crypto',
-          desc: `Deposit Solana or SPL tokens to your address:\n\n${state.phantom.fullAddress}`,
-          actionText: 'Copy Address & Close'
-        });
-      } else if (act === 'send') {
-        showSimModal({
-          iconSvg: '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ab9ff2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>',
-          iconBg: 'rgba(171, 159, 242, 0.15)',
-          title: 'Send Tokens',
-          desc: 'Select token and enter recipient Solana address to simulate transfer.',
-          actionText: 'Close'
-        });
-      } else if (act === 'swap') {
-        showSimModal({
-          iconSvg: '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ab9ff2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></svg>',
-          iconBg: 'rgba(171, 159, 242, 0.15)',
-          title: 'Phantom Instant Swap',
-          desc: 'Simulate cross-token swaps on Jupiter liquidity aggregator with 0% slippage.',
-          actionText: 'Done'
-        });
-      } else if (act === 'buy') {
-        showToast('Redirecting to Onramper fiat gateway...');
-      }
-    });
-  });
-
-  // Copy Phantom Address Pill
-  const phantomCopyPill = document.getElementById('phantom-copy-address');
-  if (phantomCopyPill) phantomCopyPill.addEventListener('click', copyPhantomAddress);
-
-  const phantomBalHero = document.getElementById('phantom-portfolio-val');
-  if (phantomBalHero) {
-    phantomBalHero.addEventListener('click', promptEditPhantomBalance);
   }
+
+  // Phantom Speed Dial Close Button & Backdrop
+  const phantomDialCloseBtn = document.getElementById('phantom-dial-close-btn');
+  if (phantomDialCloseBtn) {
+    phantomDialCloseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closePhantomSpeedDial();
+    });
+  }
+
+  const phantomDialBackdrop = document.getElementById('phantom-dial-backdrop');
+  if (phantomDialBackdrop) {
+    phantomDialBackdrop.addEventListener('click', () => {
+      closePhantomSpeedDial();
+    });
+  }
+
+  // Speed Dial: Add Cash Button (The only functional action) -> Opens Settings Modal
+  const phantomDialAddCash = document.getElementById('phantom-dial-add-cash');
+  if (phantomDialAddCash) {
+    phantomDialAddCash.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closePhantomSpeedDial();
+      openPhantomSettingsModal();
+    });
+  }
+
+  // Wallet Name Dropdown Trigger & Hero Balance click -> Also allow opening Settings Modal
+  const phantomWalletTrigger = document.getElementById('phantom-wallet-name-trigger');
+  if (phantomWalletTrigger) {
+    phantomWalletTrigger.addEventListener('click', () => {
+      openPhantomSettingsModal();
+    });
+  }
+
+  const phantomHeroBal = document.getElementById('phantom-portfolio-val');
+  if (phantomHeroBal) {
+    phantomHeroBal.addEventListener('click', () => {
+      openPhantomSettingsModal();
+    });
+  }
+
+  // Settings Modal Close Buttons & Backdrop
+  const phantomSettingsCloseBtn = document.getElementById('phantom-settings-close-btn');
+  if (phantomSettingsCloseBtn) {
+    phantomSettingsCloseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closePhantomSettingsModal();
+    });
+  }
+
+  const phantomSettingsBackdrop = document.getElementById('phantom-settings-backdrop');
+  if (phantomSettingsBackdrop) {
+    phantomSettingsBackdrop.addEventListener('click', () => {
+      closePhantomSettingsModal();
+    });
+  }
+
+  // Settings Reset Button
+  const phantomSettingsResetBtn = document.getElementById('phantom-settings-reset-btn');
+  if (phantomSettingsResetBtn) {
+    phantomSettingsResetBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      resetPhantomSettingsInputs();
+    });
+  }
+
+  // Settings Done Button
+  const phantomSettingsDoneBtn = document.getElementById('phantom-settings-done-btn');
+  if (phantomSettingsDoneBtn) {
+    phantomSettingsDoneBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      savePhantomSettings();
+    });
+  }
+
+  // Cash Card click -> Opens Settings Modal
+  const phantomCashCard = document.querySelector('.phantom-cash-card');
+  if (phantomCashCard) {
+    phantomCashCard.addEventListener('click', () => {
+      openPhantomSettingsModal();
+    });
+  }
+
+  // Render initial Phantom UI
+  renderPhantomUI();
 
   // Shopify Date Filter Buttons
   document.querySelectorAll('.shopify-date-btn').forEach(btn => {

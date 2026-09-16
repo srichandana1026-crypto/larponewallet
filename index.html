@@ -898,295 +898,228 @@
     </nav>
 
     <!-- Phantom Mobile Mockup Container -->
-    <div class="phantom-phone-frame">
+    <div class="phantom-phone-frame" id="phantom-phone-frame">
 
-      <!-- Top Account Header -->
-      <header class="phantom-header">
-        <div class="phantom-wallet-select">
-          <img src="./phantom-icon.png" alt="Phantom" class="phantom-ghost-mini">
-          <span class="phantom-wallet-name">Wallet 1</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="m6 9 6 6 6-6" />
-          </svg>
-        </div>
+      <!-- Phantom Scrollable Content -->
+      <div class="phantom-main-content">
+        <!-- Top Nav Bar (Lock icon & Home, Trade, Explore pills) -->
+        <header class="phantom-top-header">
+          <button type="button" class="phantom-top-lock-btn" aria-label="Wallet Lock">
+            <img src="./lock-key-placeholder.png" alt="Lock" class="phantom-header-lock-icon">
+          </button>
+          <div class="phantom-nav-pills">
+            <button type="button" class="phantom-pill-btn active">Home</button>
+            <button type="button" class="phantom-pill-btn">Trade</button>
+            <button type="button" class="phantom-pill-btn">Explore</button>
+          </div>
+          <div style="width: 36px;"></div>
+        </header>
 
-        <div id="phantom-copy-address" class="phantom-address-pill" title="Click to copy address">
-          9WzQ...7k2q
-        </div>
-
-        <button type="button" style="background:none; border:none; color:#a1a1aa; cursor:pointer;"
-          aria-label="Settings">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="3" />
-            <path
-              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
-          </svg>
-        </button>
-      </header>
-
-      <!-- Portfolio Balance Display -->
-      <section class="phantom-balance-hero">
-        <h2 id="phantom-portfolio-val" class="phantom-total-balance" title="Click to edit balance">$42,891.45</h2>
-        <div class="phantom-change-badge">
-          <span>+$3,410.20 (+8.62%)</span>
-        </div>
-      </section>
-
-      <!-- Action Buttons (Receive, Send, Swap, Buy) -->
-      <div class="phantom-actions">
-        <button type="button" class="phantom-action-item" data-phantom-action="receive">
-          <div class="phantom-action-circle">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 5v14M5 12l7 7 7-7" />
+        <!-- Wallet Name Dropdown Trigger -->
+        <div class="phantom-wallet-select-wrap">
+          <button type="button" class="phantom-wallet-name-btn" id="phantom-wallet-name-trigger">
+            <span id="phantom-display-wallet-name">Wallet Name</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m6 9 6 6 6-6" />
             </svg>
-          </div>
-          <span class="phantom-action-label">Receive</span>
-        </button>
+          </button>
+        </div>
 
-        <button type="button" class="phantom-action-item" data-phantom-action="send">
-          <div class="phantom-action-circle">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 19V5M5 12l7-7 7 7" />
+        <!-- Portfolio Total Balance Display -->
+        <section class="phantom-hero-balance">
+          <h1 id="phantom-portfolio-val" class="phantom-big-val">$0.00</h1>
+          <div class="phantom-change-strip">
+            <span id="phantom-change-amt" class="phantom-change-green">+$0.00</span>
+            <span id="phantom-change-badge" class="phantom-gain-badge">+0.00%</span>
+          </div>
+        </section>
+
+        <!-- Cash Row Card -->
+        <div class="phantom-asset-card phantom-cash-card">
+          <div class="phantom-asset-left">
+            <div class="phantom-cash-icon-box">
+              <img src="./money_icon-2.svg" alt="Cash" class="phantom-cash-svg">
+            </div>
+            <span class="phantom-asset-title">Cash</span>
+          </div>
+          <div class="phantom-asset-right">
+            <span id="phantom-cash-val" class="phantom-asset-fiat">$0.00</span>
+          </div>
+        </div>
+
+        <!-- Tokens Section Header -->
+        <div class="phantom-section-title">
+          <span>Tokens</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        </div>
+
+        <!-- Tokens Dynamic List -->
+        <div id="phantom-tokens-list" class="phantom-tokens-list">
+          <!-- Token cards dynamically populated by app.js -->
+        </div>
+      </div>
+
+      <!-- Floating Bottom Search Bar & Plus Action Button -->
+      <div class="phantom-bottom-floating-bar">
+        <div class="phantom-search-box">
+          <svg class="phantom-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#717388" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+          <span class="phantom-search-placeholder">Search Phantom</span>
+        </div>
+        <button type="button" id="phantom-fab-btn" class="phantom-fab-btn" aria-label="Open Actions">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.4" stroke-linecap="round">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- SPEED DIAL OVERLAY (Screenshot 2) -->
+      <div id="phantom-speed-dial" class="phantom-speed-dial-overlay">
+        <div class="phantom-speed-dial-backdrop" id="phantom-dial-backdrop"></div>
+        <div class="phantom-speed-dial-stack">
+          <!-- Option 1: Send -->
+          <div class="phantom-dial-option">
+            <span class="phantom-dial-text">Send</span>
+            <button type="button" class="phantom-dial-btn" aria-label="Send">
+              <img src="./phantom%20share%20send%20icon.png" alt="Send" class="phantom-dial-icon phantom-dial-icon-send">
+            </button>
+          </div>
+
+          <!-- Option 2: Receive -->
+          <div class="phantom-dial-option">
+            <span class="phantom-dial-text">Receive</span>
+            <button type="button" class="phantom-dial-btn" aria-label="Receive">
+              <img src="./phantom%20receive%20icon.png" alt="Receive" class="phantom-dial-icon">
+            </button>
+          </div>
+
+          <!-- Option 3: Add Cash (ACTIVE - Opens Settings Modal) -->
+          <div class="phantom-dial-option" id="phantom-dial-add-cash">
+            <span class="phantom-dial-text">Add Cash</span>
+            <button type="button" class="phantom-dial-btn phantom-dial-btn-active" aria-label="Add Cash">
+              <img src="./phantom%20add%20cash%20icon.png" alt="Add Cash" class="phantom-dial-icon phantom-dial-icon-add-cash">
+            </button>
+          </div>
+
+          <!-- Option 4: Trade -->
+          <div class="phantom-dial-option">
+            <span class="phantom-dial-text">Trade</span>
+            <button type="button" class="phantom-dial-btn" aria-label="Trade">
+              <img src="./phantom%20trade%20icon.png" alt="Trade" class="phantom-dial-icon">
+            </button>
+          </div>
+
+          <!-- Dial Close Button (✕) positioned over FAB -->
+          <button type="button" id="phantom-dial-close-btn" class="phantom-dial-close-btn" aria-label="Close Dial">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
-          </div>
-          <span class="phantom-action-label">Send</span>
-        </button>
-
-        <button type="button" class="phantom-action-item" data-phantom-action="swap">
-          <div class="phantom-action-circle">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="m16 3 4 4-4 4" />
-              <path d="M20 7H4" />
-              <path d="m8 21-4-4 4-4" />
-              <path d="M4 17h16" />
-            </svg>
-          </div>
-          <span class="phantom-action-label">Swap</span>
-        </button>
-
-        <button type="button" class="phantom-action-item" data-phantom-action="buy">
-          <div class="phantom-action-circle">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-              stroke-linecap="round" stroke-linejoin="round">
-              <rect width="20" height="14" x="2" y="5" rx="2" />
-              <line x1="2" x2="22" y1="10" y2="10" />
-            </svg>
-          </div>
-          <span class="phantom-action-label">Buy</span>
-        </button>
-      </div>
-
-      <!-- Phantom Tabs -->
-      <div class="phantom-tabs">
-        <button type="button" class="phantom-tab-btn active" data-tab="tokens">Tokens</button>
-        <button type="button" class="phantom-tab-btn" data-tab="nfts">Collectibles</button>
-        <button type="button" class="phantom-tab-btn" data-tab="activity">Activity</button>
-      </div>
-
-      <!-- Phantom Tab 1: Tokens List -->
-      <div id="phantom-tokens-section" class="phantom-tab-content">
-        <!-- Solana -->
-        <div class="token-row">
-          <div class="token-left">
-            <img src="./solana-logo.png" alt="Solana" class="token-icon">
-            <div>
-              <div class="token-title">Solana</div>
-              <div class="token-price">$143.50 <span class="token-price-gain">+12.4%</span></div>
-            </div>
-          </div>
-          <div class="token-right">
-            <div class="token-amount-fiat">$20,448.75</div>
-            <div class="token-amount-crypto">142.50 SOL</div>
-          </div>
-        </div>
-
-        <!-- Bitcoin -->
-        <div class="token-row">
-          <div class="token-left">
-            <img src="./bitcoin-logo.png" alt="Bitcoin" class="token-icon">
-            <div>
-              <div class="token-title">Bitcoin</div>
-              <div class="token-price">$64,000.00 <span class="token-price-gain">+4.8%</span></div>
-            </div>
-          </div>
-          <div class="token-right">
-            <div class="token-amount-fiat">$18,240.00</div>
-            <div class="token-amount-crypto">0.285 BTC</div>
-          </div>
-        </div>
-
-        <!-- Ethereum -->
-        <div class="token-row">
-          <div class="token-left">
-            <img src="./ethereum-logo.png" alt="Ethereum" class="token-icon">
-            <div>
-              <div class="token-title">Ethereum</div>
-              <div class="token-price">$3,350.00 <span class="token-price-gain">+3.2%</span></div>
-            </div>
-          </div>
-          <div class="token-right">
-            <div class="token-amount-fiat">$2,847.50</div>
-            <div class="token-amount-crypto">0.85 ETH</div>
-          </div>
-        </div>
-
-        <!-- USDC -->
-        <div class="token-row">
-          <div class="token-left">
-            <img src="./usdc-logo.png" alt="USDC" class="token-icon">
-            <div>
-              <div class="token-title">USD Coin</div>
-              <div class="token-price">$1.00 <span style="color:#9496a8;">0.0%</span></div>
-            </div>
-          </div>
-          <div class="token-right">
-            <div class="token-amount-fiat">$1,250.00</div>
-            <div class="token-amount-crypto">1,250 USDC</div>
-          </div>
-        </div>
-
-        <!-- USDT -->
-        <div class="token-row">
-          <div class="token-left">
-            <img src="./usdt-logo.png" alt="USDT" class="token-icon">
-            <div>
-              <div class="token-title">Tether USD</div>
-              <div class="token-price">$1.00 <span style="color:#9496a8;">0.0%</span></div>
-            </div>
-          </div>
-          <div class="token-right">
-            <div class="token-amount-fiat">$105.20</div>
-            <div class="token-amount-crypto">105.20 USDT</div>
-          </div>
-        </div>
-
-        <!-- Polygon -->
-        <div class="token-row">
-          <div class="token-left">
-            <img src="./polygon-logo.png" alt="Polygon" class="token-icon">
-            <div>
-              <div class="token-title">Polygon</div>
-              <div class="token-price">$0.45 <span class="token-price-gain">+6.1%</span></div>
-            </div>
-          </div>
-          <div class="token-right">
-            <div class="token-amount-fiat">$0.00</div>
-            <div class="token-amount-crypto">0 POL</div>
-          </div>
+          </button>
         </div>
       </div>
 
-      <!-- Phantom Tab 2: NFTs / Collectibles -->
-      <div id="phantom-nfts-section" class="phantom-tab-content" style="display:none;">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-          <div
-            style="background:#1f1e2e; border-radius:14px; overflow:hidden; border:1px solid rgba(255,255,255,0.06);">
-            <div
-              style="height:120px; background:linear-gradient(135deg, #7928CA, #FF0080); display:flex; align-items:center; justify-content:center; font-size:32px;">
-              🦊</div>
-            <div style="padding:10px;">
-              <div style="font-size:13px; font-weight:700; color:#fff;">Famous Fox #182</div>
-              <div style="font-size:11px; color:#ab9ff2;">Floor: 24.5 SOL</div>
+      <!-- SETTINGS MODAL (Screenshot 3 & 4) -->
+      <div id="phantom-settings-modal" class="phantom-settings-overlay">
+        <div class="phantom-settings-backdrop" id="phantom-settings-backdrop"></div>
+        <div class="phantom-settings-card">
+          <!-- Header -->
+          <div class="phantom-settings-top">
+            <h3 class="phantom-settings-heading">Settings</h3>
+            <button type="button" id="phantom-settings-close-btn" class="phantom-settings-x-btn" aria-label="Close Settings">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Settings Input Rows Container -->
+          <div class="phantom-settings-rows">
+            <!-- Row 1: Wallet Name -->
+            <div class="phantom-input-row phantom-input-row-wallet">
+              <div class="phantom-lock-squircle">
+                <img src="./lock-key-placeholder.png" alt="Lock">
+              </div>
+              <input type="text" id="phantom-input-wallet-name" class="phantom-name-field" placeholder="Wallet Name" value="Wallet Name">
+            </div>
+
+            <!-- Row 2: Cash -->
+            <div class="phantom-input-row">
+              <div class="phantom-row-label-group">
+                <img src="./money_icon-2.svg" alt="Cash" class="phantom-field-icon">
+                <span class="phantom-field-name">Cash</span>
+              </div>
+              <input type="number" id="phantom-input-cash" class="phantom-num-field" placeholder="0" value="0" min="0" step="any">
+            </div>
+
+            <!-- Row 3: USDT -->
+            <div class="phantom-input-row">
+              <div class="phantom-row-label-group">
+                <img src="./usdt-logo.png" alt="USDT" class="phantom-field-icon">
+                <span class="phantom-field-name">USDT</span>
+              </div>
+              <input type="number" id="phantom-input-usdt" class="phantom-num-field" placeholder="0" value="0" min="0" step="any">
+            </div>
+
+            <!-- Row 4: Solana -->
+            <div class="phantom-input-row">
+              <div class="phantom-row-label-group">
+                <img src="./solana-logo.png" alt="Solana" class="phantom-field-icon">
+                <span class="phantom-field-name">Solana</span>
+              </div>
+              <input type="number" id="phantom-input-solana" class="phantom-num-field" placeholder="0" value="0" min="0" step="any">
+            </div>
+
+            <!-- Row 5: Ethereum -->
+            <div class="phantom-input-row">
+              <div class="phantom-row-label-group">
+                <img src="./ethereum-logo.png" alt="Ethereum" class="phantom-field-icon">
+                <span class="phantom-field-name">Ethereum</span>
+              </div>
+              <input type="number" id="phantom-input-ethereum" class="phantom-num-field" placeholder="0" value="0" min="0" step="any">
+            </div>
+
+            <!-- Row 6: BTC -->
+            <div class="phantom-input-row">
+              <div class="phantom-row-label-group">
+                <img src="./bitcoin-logo.png" alt="BTC" class="phantom-field-icon">
+                <span class="phantom-field-name">BTC</span>
+              </div>
+              <input type="number" id="phantom-input-btc" class="phantom-num-field" placeholder="0" value="0" min="0" step="any">
+            </div>
+
+            <!-- Row 7: USDC -->
+            <div class="phantom-input-row">
+              <div class="phantom-row-label-group">
+                <img src="./usdc-logo.png" alt="USDC" class="phantom-field-icon">
+                <span class="phantom-field-name">USDC</span>
+              </div>
+              <input type="number" id="phantom-input-usdc" class="phantom-num-field" placeholder="0" value="0" min="0" step="any">
+            </div>
+
+            <!-- Row 8: Polygon -->
+            <div class="phantom-input-row">
+              <div class="phantom-row-label-group">
+                <img src="./polygon-logo.png" alt="Polygon" class="phantom-field-icon">
+                <span class="phantom-field-name">Polygon</span>
+              </div>
+              <input type="number" id="phantom-input-polygon" class="phantom-num-field" placeholder="0" value="0" min="0" step="any">
             </div>
           </div>
-          <div
-            style="background:#1f1e2e; border-radius:14px; overflow:hidden; border:1px solid rgba(255,255,255,0.06);">
-            <div
-              style="height:120px; background:linear-gradient(135deg, #FF4B4B, #FF8533); display:flex; align-items:center; justify-content:center; font-size:32px;">
-              💀</div>
-            <div style="padding:10px;">
-              <div style="font-size:13px; font-weight:700; color:#fff;">Mad Lads #420</div>
-              <div style="font-size:11px; color:#ab9ff2;">Floor: 88.0 SOL</div>
-            </div>
+
+          <!-- Bottom Action Buttons (Screenshot 4) -->
+          <div class="phantom-settings-actions">
+            <button type="button" id="phantom-settings-reset-btn" class="phantom-btn-reset">Reset</button>
+            <button type="button" id="phantom-settings-done-btn" class="phantom-btn-done">Done</button>
           </div>
         </div>
       </div>
-
-      <!-- Phantom Tab 3: Recent Activity -->
-      <div id="phantom-activity-section" class="phantom-tab-content" style="display:none;">
-        <div class="token-row">
-          <div class="token-left">
-            <div
-              style="width:40px; height:40px; border-radius:50%; background:rgba(34,197,94,0.15); display:flex; align-items:center; justify-content:center; color:#22c55e;">
-              ↓
-            </div>
-            <div>
-              <div class="token-title">Received SOL</div>
-              <div class="token-price">From Binance • 2h ago</div>
-            </div>
-          </div>
-          <div class="token-right">
-            <div class="token-amount-fiat" style="color:#22c55e;">+25.00 SOL</div>
-            <div class="token-amount-crypto">+$3,587.50</div>
-          </div>
-        </div>
-        <div class="token-row">
-          <div class="token-left">
-            <div
-              style="width:40px; height:40px; border-radius:50%; background:rgba(171,159,242,0.15); display:flex; align-items:center; justify-content:center; color:#ab9ff2;">
-              ⇄
-            </div>
-            <div>
-              <div class="token-title">Swapped Jupiter</div>
-              <div class="token-price">SOL → USDC • Yesterday</div>
-            </div>
-          </div>
-          <div class="token-right">
-            <div class="token-amount-fiat">+1,250 USDC</div>
-            <div class="token-amount-crypto">-8.72 SOL</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Bottom Phantom Nav -->
-      <nav class="phantom-bottom-bar">
-        <button type="button" class="phantom-nav-btn active" aria-label="Wallet Tab">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path
-              d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" />
-            <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" />
-          </svg>
-        </button>
-        <button type="button" class="phantom-nav-btn" aria-label="Apps Tab">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="7" height="7" />
-            <rect x="14" y="3" width="7" height="7" />
-            <rect x="14" y="14" width="7" height="7" />
-            <rect x="3" y="14" width="7" height="7" />
-          </svg>
-        </button>
-        <button type="button" class="phantom-nav-btn" aria-label="Swap Tab">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="m16 3 4 4-4 4" />
-            <path d="M20 7H4" />
-            <path d="m8 21-4-4 4-4" />
-            <path d="M4 17h16" />
-          </svg>
-        </button>
-        <button type="button" class="phantom-nav-btn" aria-label="Activity Tab">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10" />
-            <polyline points="12 6 12 12 16 14" />
-          </svg>
-        </button>
-        <button type="button" class="phantom-nav-btn" aria-label="Settings Tab">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="3" />
-            <path
-              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
-          </svg>
-        </button>
-      </nav>
 
     </div>
   </section>
