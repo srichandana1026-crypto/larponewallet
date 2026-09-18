@@ -43,7 +43,9 @@ const state = {
     conv: '0%',
     convGrowth: '0%',
     visitors: '0',
-    fulfillOrders: 2
+    fulfillOrders: 2,
+    notificationsCount: 0,
+    storeLogo: ''
   },
   isLoggedIn: false,
   userEmail: '',
@@ -418,7 +420,7 @@ function shakeCashAppAmount() {
   }
 }
 
-function updateCashAppDisplay() {
+function updateCashAppDisplay(isTyping = false) {
   const displayVal = document.getElementById('cashapp-amount-display');
   const hiddenMeasure = document.getElementById('cashapp-measure-display');
   const minWarning = document.getElementById('cashapp-min-warning');
@@ -426,7 +428,32 @@ function updateCashAppDisplay() {
   const formatted = formatCashAppAmount(state.cashAppAmount);
 
   if (displayVal) {
-    displayVal.innerHTML = `<span>$</span><span>${formatted}</span>`;
+    // Dynamic responsive font sizing so larger numbers scale smoothly
+    const len = formatted.length;
+    let targetSize = '91.8px';
+    if (len >= 8) {
+      targetSize = '56px';
+    } else if (len >= 6) {
+      targetSize = '68px';
+    } else if (len >= 4) {
+      targetSize = '80px';
+    }
+    displayVal.style.fontSize = targetSize;
+
+    // Render characters: newly typed digit blossoms with scale & ease-out transition
+    const chars = formatted.split('');
+    let digitsHtml = '';
+    chars.forEach((ch, idx) => {
+      // Mark last character as pop if typing
+      const isNew = isTyping && (idx === chars.length - 1);
+      if (isNew) {
+        digitsHtml += `<span class="cashapp-digit cashapp-digit-pop">${ch}</span>`;
+      } else {
+        digitsHtml += `<span class="cashapp-digit">${ch}</span>`;
+      }
+    });
+
+    displayVal.innerHTML = `<span class="cashapp-currency-symbol">$</span><span class="cashapp-digits-wrap">${digitsHtml}</span>`;
   }
   if (hiddenMeasure) {
     hiddenMeasure.innerHTML = `<span>$</span>${formatted}`;
@@ -440,6 +467,7 @@ function updateCashAppDisplay() {
 
 function handleCashAppKeyPress(key) {
   let cur = state.cashAppAmount;
+  let isAdd = false;
 
   if (key === 'backspace') {
     if (cur.length > 1) {
@@ -458,6 +486,7 @@ function handleCashAppKeyPress(key) {
       return;
     }
     state.cashAppAmount = candidate;
+    isAdd = true;
   } else {
     // Digits 0-9
     let candidate = '';
@@ -484,9 +513,10 @@ function handleCashAppKeyPress(key) {
     }
 
     state.cashAppAmount = candidate;
+    isAdd = true;
   }
 
-  updateCashAppDisplay();
+  updateCashAppDisplay(isAdd);
 }
 
 // --------------------------------------------------------------------------
@@ -1154,6 +1184,356 @@ function renderShopifyDesktop() {
   if (visitorsEl) visitorsEl.textContent = state.shopify.visitors;
   if (fulfillCountEl) fulfillCountEl.textContent = state.shopify.fulfillOrders;
   if (sideOrdersBadge) sideOrdersBadge.textContent = state.shopify.orders === '0' ? '4' : state.shopify.orders;
+
+  renderShopifyStoreProfile();
+  updateShopifyNotificationBadge();
+}
+
+// --------------------------------------------------------------------------
+// SHOPIFY REAL-TIME NOTIFICATIONS & LOGO CONTROLLER
+// --------------------------------------------------------------------------
+let shopifyNotifItems = [];
+
+// Synthesize authentic Shopify Cash Register Cha-Ching sound via Web Audio API
+function playShopifyChaChing() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    if (ctx.state === 'suspended') ctx.resume();
+    const now = ctx.currentTime;
+
+    // 1. Mechanical clink / latch
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = 'triangle';
+    osc1.frequency.setValueAtTime(1200, now);
+    osc1.frequency.exponentialRampToValueAtTime(3200, now + 0.07);
+    gain1.gain.setValueAtTime(0.25, now);
+    gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+    osc1.connect(gain1);
+    gain1.connect(ctx.destination);
+    osc1.start(now);
+    osc1.stop(now + 0.1);
+
+    // 2. High metallic "Ching!" brass bell chime (E7)
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(2489.02, now + 0.05);
+    gain2.gain.setValueAtTime(0.35, now + 0.05);
+    gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.65);
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    osc2.start(now + 0.05);
+    osc2.stop(now + 0.65);
+
+    // 3. Shimmer overtone (B7)
+    const osc3 = ctx.createOscillator();
+    const gain3 = ctx.createGain();
+    osc3.type = 'sine';
+    osc3.frequency.setValueAtTime(3951.07, now + 0.07);
+    gain3.gain.setValueAtTime(0.22, now + 0.07);
+    gain3.gain.exponentialRampToValueAtTime(0.0001, now + 0.7);
+    osc3.connect(gain3);
+    gain3.connect(ctx.destination);
+    osc3.start(now + 0.07);
+    osc3.stop(now + 0.7);
+  } catch (e) {
+    // AudioContext silenced or not supported
+  }
+}
+
+let shopifyAudioInstance = null;
+try {
+  shopifyAudioInstance = new Audio('./shopify_sale_sound.mp3');
+  shopifyAudioInstance.preload = 'auto';
+} catch (e) {
+  shopifyAudioInstance = null;
+}
+
+function playShopifySaleSound() {
+  try {
+    const sound = shopifyAudioInstance ? shopifyAudioInstance.cloneNode() : new Audio('./shopify_sale_sound.mp3');
+    sound.volume = 1.0;
+    const playPromise = sound.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        playShopifyChaChing();
+      });
+    }
+  } catch (e) {
+    playShopifyChaChing();
+  }
+}
+
+function updateShopifyNotificationBadge() {
+  const badge = document.getElementById('shopify-notif-badge');
+  const dropdownCount = document.getElementById('shopify-dropdown-count');
+  const count = parseInt(state.shopify.notificationsCount, 10) || 0;
+
+  if (badge) {
+    if (count > 0) {
+      badge.textContent = count > 99 ? '99+' : count;
+      badge.style.display = 'flex';
+      badge.classList.remove('badge-pop');
+      void badge.offsetWidth;
+      badge.classList.add('badge-pop');
+    } else {
+      badge.style.display = 'none';
+      badge.textContent = '0';
+    }
+  }
+  if (dropdownCount) {
+    dropdownCount.textContent = count;
+  }
+}
+
+function renderShopifyNotificationDropdown() {
+  const listEl = document.getElementById('shopify-notif-dropdown-list');
+  const countEl = document.getElementById('shopify-dropdown-count');
+  if (!listEl) return;
+
+  const count = parseInt(state.shopify.notificationsCount, 10) || 0;
+  if (countEl) countEl.textContent = count;
+
+  if (!shopifyNotifItems.length) {
+    listEl.innerHTML = '<div class="shopify-notif-empty">No unread notifications</div>';
+    return;
+  }
+
+  const store = (state.shopify && state.shopify.storeName && state.shopify.storeName.trim())
+    ? state.shopify.storeName.trim()
+    : 'Online Store';
+
+  listEl.innerHTML = shopifyNotifItems.map(item => `
+    <div class="shopify-notif-item">
+      <div class="shopify-order-toast-icon" style="width: 32px; height: 32px; border-radius: 8px;">
+        <img src="./shopify green logo.webp" alt="Shopify" class="shopify-ios-notif-img">
+      </div>
+      <div class="shopify-notif-item-info">
+        <div class="shopify-notif-item-title">Order #${item.id}</div>
+        <div class="shopify-notif-item-desc">${item.amount}, ${item.itemsCount || 3} items from ${store}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function spawnShopifyOrderToast(orderNum, customer, product, amount, itemsCount) {
+  const stream = document.getElementById('shopify-toast-stream');
+  if (!stream) return;
+
+  const store = (state.shopify && state.shopify.storeName && state.shopify.storeName.trim())
+    ? state.shopify.storeName.trim()
+    : 'Online Store';
+
+  const count = itemsCount || Math.floor(Math.random() * 3 + 1);
+
+  const toast = document.createElement('div');
+  toast.className = 'shopify-order-toast';
+  toast.setAttribute('role', 'alert');
+  toast.innerHTML = `
+    <div class="shopify-order-toast-icon">
+      <img src="./shopify green logo.webp" alt="Shopify" class="shopify-ios-notif-img">
+    </div>
+    <div class="shopify-order-toast-content">
+      <div class="shopify-order-toast-header-row">
+        <span class="shopify-order-toast-title">Order #${orderNum}</span>
+        <span class="shopify-order-toast-time">now</span>
+      </div>
+      <div class="shopify-order-toast-sub">${amount}, ${count} item${count > 1 ? 's' : ''} from ${store}</div>
+    </div>
+  `;
+
+  // Dismiss on click
+  toast.addEventListener('click', () => {
+    toast.classList.add('dismissing');
+    setTimeout(() => toast.remove(), 250);
+  });
+
+  stream.appendChild(toast);
+
+  // Auto remove after 5.5s
+  setTimeout(() => {
+    if (toast.parentNode) {
+      toast.classList.add('dismissing');
+      setTimeout(() => toast.remove(), 250);
+    }
+  }, 5500);
+}
+
+function triggerShopifyRealtimeNotifications(rawCount) {
+  const count = Math.min(Math.max(parseInt(rawCount, 10) || 1, 1), 30);
+
+  closeShopifySettingsModal();
+  showToast(`Streaming ${count} live notification${count > 1 ? 's' : ''}...`);
+
+  const customers = [
+    { name: 'Emma Watson', city: 'London' },
+    { name: 'Alex Turner', city: 'Sheffield' },
+    { name: 'Marcus Thomas', city: 'Atlanta' },
+    { name: 'Liam Kelly', city: 'Dublin' },
+    { name: 'Devin Parker', city: 'Austin' },
+    { name: 'Sarah Jenkins', city: 'Chicago' },
+    { name: 'Michael Chen', city: 'San Francisco' },
+    { name: 'Chloe Bennett', city: 'Sydney' },
+    { name: 'Sophia Miller', city: 'Toronto' },
+    { name: 'Ethan Ross', city: 'New York' }
+  ];
+
+  const items = [
+    'Oversized Vintage Hoodie',
+    'Leather Chelsea Boots',
+    'Minimalist Ceramic Vase',
+    'Matte Black Watch',
+    'Cashmere Knit Sweater',
+    'Heavyweight Cotton Tee',
+    'Japanese Denim Jacket'
+  ];
+
+  let currentCount = parseInt(state.shopify.notificationsCount, 10) || 0;
+  let sent = 0;
+
+  function sendNext() {
+    if (sent >= count) return;
+    sent++;
+
+    const cust = customers[Math.floor(Math.random() * customers.length)];
+    const product = items[Math.floor(Math.random() * items.length)];
+    const orderNum = Math.floor(1000 + Math.random() * 9000);
+    const amountNum = (Math.random() * 180 + 35).toFixed(2);
+    const orderAmount = `$${amountNum}`;
+    const itemsCount = Math.floor(Math.random() * 3 + 1);
+
+    // 1. Play real-time cash register chime from mp3
+    playShopifySaleSound();
+
+    // 2. Increment badge count and shake bell
+    currentCount++;
+    state.shopify.notificationsCount = currentCount;
+    try {
+      localStorage.setItem('larpkit_shopify', JSON.stringify(state.shopify));
+    } catch (e) {}
+    updateShopifyNotificationBadge();
+
+    const bellBtn = document.getElementById('shopify-notifications-btn');
+    if (bellBtn) {
+      bellBtn.classList.remove('bell-ringing');
+      void bellBtn.offsetWidth;
+      bellBtn.classList.add('bell-ringing');
+      setTimeout(() => bellBtn.classList.remove('bell-ringing'), 600);
+    }
+
+    // 3. Add to dropdown history
+    shopifyNotifItems.unshift({
+      id: orderNum,
+      customer: cust.name,
+      product: product,
+      amount: orderAmount,
+      itemsCount: itemsCount,
+      time: 'Just now'
+    });
+    renderShopifyNotificationDropdown();
+
+    // 4. Spawn floating order toast matching iOS screenshot design
+    spawnShopifyOrderToast(orderNum, cust.name, product, orderAmount, itemsCount);
+
+    if (sent < count) {
+      const delay = Math.floor(Math.random() * 350 + 700);
+      setTimeout(sendNext, delay);
+    }
+  }
+
+  sendNext();
+}
+
+function handleShopifyNotifDone() {
+  const inputNotifs = document.getElementById('shopify-input-notifs');
+  const count = Math.max(0, parseInt(inputNotifs?.value, 10) || 0);
+  state.shopify.notificationsCount = count;
+  try {
+    localStorage.setItem('larpkit_shopify', JSON.stringify(state.shopify));
+  } catch (e) {}
+  updateShopifyNotificationBadge();
+  showToast(`Notification badge updated to ${count}`);
+  closeShopifySettingsModal();
+}
+
+function handleShopifyLogoUpload(file) {
+  if (!file) return;
+  if (!file.type.startsWith('image/')) {
+    showToast('Please select a valid image file');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    state.shopify.storeLogo = e.target.result;
+    try {
+      localStorage.setItem('larpkit_shopify', JSON.stringify(state.shopify));
+    } catch (err) {}
+    renderShopifyStoreProfile();
+    showToast('Store logo updated!');
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleShopifyLogoRemove() {
+  state.shopify.storeLogo = '';
+  try {
+    localStorage.setItem('larpkit_shopify', JSON.stringify(state.shopify));
+  } catch (err) {}
+  renderShopifyStoreProfile();
+  showToast('Store logo removed');
+}
+
+function renderShopifyStoreProfile() {
+  const avatarLetters = document.getElementById('shopify-avatar-letters');
+  const avatarImg = document.getElementById('shopify-avatar-img');
+  const modalLetters = document.getElementById('shopify-modal-avatar-letters');
+  const modalImg = document.getElementById('shopify-modal-avatar-img');
+  const removeBtn = document.getElementById('shopify-logo-remove-btn');
+  const displayStoreName = document.getElementById('shopify-display-store-name');
+
+  // Compute initials from storeName
+  const storeName = state.shopify.storeName || 'Shop Name';
+  if (displayStoreName) displayStoreName.textContent = storeName;
+
+  const parts = storeName.trim().split(/\s+/);
+  let initials = parts[0] ? parts[0].charAt(0).toUpperCase() : 'S';
+  if (parts.length > 1 && parts[1]) {
+    initials += parts[1].charAt(0).toUpperCase();
+  }
+
+  if (avatarLetters) avatarLetters.textContent = initials;
+  if (modalLetters) modalLetters.textContent = initials;
+
+  if (state.shopify.storeLogo) {
+    if (avatarImg) {
+      avatarImg.src = state.shopify.storeLogo;
+      avatarImg.style.display = 'block';
+    }
+    if (avatarLetters) avatarLetters.style.display = 'none';
+
+    if (modalImg) {
+      modalImg.src = state.shopify.storeLogo;
+      modalImg.style.display = 'block';
+    }
+    if (modalLetters) modalLetters.style.display = 'none';
+    if (removeBtn) removeBtn.style.display = 'inline-flex';
+  } else {
+    if (avatarImg) {
+      avatarImg.style.display = 'none';
+      avatarImg.src = '';
+    }
+    if (avatarLetters) avatarLetters.style.display = 'block';
+
+    if (modalImg) {
+      modalImg.style.display = 'none';
+      modalImg.src = '';
+    }
+    if (modalLetters) modalLetters.style.display = 'block';
+    if (removeBtn) removeBtn.style.display = 'none';
+  }
 }
 
 function openShopifySettingsModal() {
@@ -1168,6 +1548,7 @@ function openShopifySettingsModal() {
   const inputConv = document.getElementById('shopify-input-conv');
   const inputLive = document.getElementById('shopify-input-live');
   const inputFulfill = document.getElementById('shopify-input-fulfill');
+  const inputNotifs = document.getElementById('shopify-input-notifs');
 
   if (inputName) inputName.value = state.shopify.storeName;
   if (inputSales) inputSales.value = state.shopify.sales;
@@ -1177,6 +1558,9 @@ function openShopifySettingsModal() {
   if (inputConv) inputConv.value = state.shopify.conv;
   if (inputLive) inputLive.value = state.shopify.visitors;
   if (inputFulfill) inputFulfill.value = state.shopify.fulfillOrders;
+  if (inputNotifs) inputNotifs.value = state.shopify.notificationsCount !== undefined ? state.shopify.notificationsCount : 3;
+
+  renderShopifyStoreProfile();
 
   modal.classList.add('active');
 }
@@ -1442,6 +1826,10 @@ function saveShopifySettings() {
   }
   if (inputLive) state.shopify.visitors = inputLive.value.trim() || '0';
   if (inputFulfill) state.shopify.fulfillOrders = parseInt(inputFulfill.value, 10) || 2;
+  const inputNotifs = document.getElementById('shopify-input-notifs');
+  if (inputNotifs) {
+    state.shopify.notificationsCount = Math.max(0, parseInt(inputNotifs.value, 10) || 0);
+  }
 
   try {
     localStorage.setItem('larpkit_shopify', JSON.stringify(state.shopify));
@@ -1464,7 +1852,9 @@ function resetShopifySettings() {
     conv: '0%',
     convGrowth: '0%',
     visitors: '0',
-    fulfillOrders: 2
+    fulfillOrders: 2,
+    notificationsCount: 0,
+    storeLogo: ''
   };
   try {
     localStorage.removeItem('larpkit_shopify');
@@ -1523,6 +1913,40 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => {
       handleCashAppKeyPress(btn.dataset.cashkey);
     });
+  });
+
+  // Cash App Physical Keyboard Support (Numbers, Decimal, Backspace)
+  window.addEventListener('keydown', (e) => {
+    if (state.currentView !== 'cashapp') return;
+    const keypadTab = document.getElementById('cashapp-tab-keypad');
+    if (!keypadTab || keypadTab.style.display === 'none') return;
+    if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
+
+    if (e.key >= '0' && e.key <= '9') {
+      e.preventDefault();
+      handleCashAppKeyPress(e.key);
+      const btn = document.querySelector(`[data-cashkey="${e.key}"]`);
+      if (btn) {
+        btn.classList.add('cashapp-key-pressed');
+        setTimeout(() => btn.classList.remove('cashapp-key-pressed'), 200);
+      }
+    } else if (e.key === '.' || e.key === ',') {
+      e.preventDefault();
+      handleCashAppKeyPress('.');
+      const btn = document.querySelector('[data-cashkey="."]');
+      if (btn) {
+        btn.classList.add('cashapp-key-pressed');
+        setTimeout(() => btn.classList.remove('cashapp-key-pressed'), 200);
+      }
+    } else if (e.key === 'Backspace') {
+      e.preventDefault();
+      handleCashAppKeyPress('backspace');
+      const btn = document.querySelector('[data-cashkey="backspace"]');
+      if (btn) {
+        btn.classList.add('cashapp-key-pressed');
+        setTimeout(() => btn.classList.remove('cashapp-key-pressed'), 200);
+      }
+    }
   });
 
   // Cash App Pay / Request / Pool
@@ -1660,6 +2084,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const shopifyModalReset = document.getElementById('shopify-modal-reset-btn');
   if (shopifyModalReset) shopifyModalReset.addEventListener('click', resetShopifySettings);
+
+  // Shopify Notification & Logo Controls
+  const btnNotifDone = document.getElementById('shopify-btn-notif-done');
+  if (btnNotifDone) btnNotifDone.addEventListener('click', handleShopifyNotifDone);
+
+  const btnGetNotifs = document.getElementById('shopify-btn-get-notifs');
+  if (btnGetNotifs) {
+    btnGetNotifs.addEventListener('click', () => {
+      const input = document.getElementById('shopify-input-notifs');
+      const val = input ? input.value : 3;
+      triggerShopifyRealtimeNotifications(val);
+    });
+  }
+
+  const notifBellBtn = document.getElementById('shopify-notifications-btn');
+  const notifDropdown = document.getElementById('shopify-notif-dropdown');
+  if (notifBellBtn && notifDropdown) {
+    notifBellBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isVisible = notifDropdown.style.display === 'flex';
+      notifDropdown.style.display = isVisible ? 'none' : 'flex';
+      if (!isVisible) renderShopifyNotificationDropdown();
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.shopify-notif-wrap')) {
+        notifDropdown.style.display = 'none';
+      }
+    });
+  }
+
+  const logoUploadInput = document.getElementById('shopify-logo-upload-input');
+  if (logoUploadInput) {
+    logoUploadInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files[0]) {
+        handleShopifyLogoUpload(e.target.files[0]);
+      }
+    });
+  }
+
+  const logoRemoveBtn = document.getElementById('shopify-logo-remove-btn');
+  if (logoRemoveBtn) logoRemoveBtn.addEventListener('click', handleShopifyLogoRemove);
 
   // Initialize dynamic auto-estimation across all editable metrics
   setupShopifyAutoEstimation();
@@ -2136,15 +2602,13 @@ document.addEventListener('DOMContentLoaded', () => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('is-revealed');
-        } else {
-          // When scrolled out of view, remove the class so it unblurs and scrolls up again when scrolling back
-          entry.target.classList.remove('is-revealed');
+          observer.unobserve(entry.target);
         }
       });
     }, {
       root: null,
       rootMargin: '0px 0px -40px 0px',
-      threshold: 0.12
+      threshold: 0.1
     });
 
     revealElements.forEach(el => observer.observe(el));
