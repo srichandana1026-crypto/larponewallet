@@ -3,7 +3,21 @@
 // Supports Dashboard, Phantom Wallet, Shopify Admin, and Cash App
 // ==========================================================================
 
-// Global App State
+// Global App State & Asset Resolvers
+// Explicit direct literal new URL(..., import.meta.url).href is statically analyzed by Vite during build
+// and natively resolved by the browser relative to app.js on GitHub Pages / subdirectories
+const PHANTOM_COIN_LOGOS = {
+  btc: new URL('./bitcoin-logo.png', import.meta.url).href,
+  usdt: new URL('./usdt-logo.png', import.meta.url).href,
+  solana: new URL('./solana-logo.png', import.meta.url).href,
+  ethereum: new URL('./ethereum-logo.png', import.meta.url).href,
+  usdc: new URL('./usdc-logo.png', import.meta.url).href,
+  polygon: new URL('./polygon-logo.png', import.meta.url).href
+};
+
+const SHOPIFY_NOTIF_LOGO = new URL('./shopify green logo.webp', import.meta.url).href;
+const SHOPIFY_SALE_SOUND_URL = new URL('./shopify_sale_sound.mp3', import.meta.url).href;
+
 const state = {
   currentView: 'landing',
   cashAppAmount: '0',
@@ -321,9 +335,16 @@ function handleHashChange() {
       navigateTo(hash, false);
     }
   } else {
-    let cleanPath = window.location.pathname.replace(/\/index\.html$/, '').replace(/\.html$/, '');
+    let cleanPath = window.location.pathname;
+    if (cleanPath.endsWith('/index.html')) {
+      cleanPath = cleanPath.slice(0, -10) || '/';
+    } else if (cleanPath.endsWith('.html') && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+      cleanPath = cleanPath.replace(/\.html$/, '');
+    }
     if (!cleanPath) cleanPath = '/';
-    window.history.replaceState(null, '', cleanPath);
+    if (cleanPath !== window.location.pathname) {
+      window.history.replaceState(null, '', cleanPath + window.location.search + window.location.hash);
+    }
     navigateTo('landing', false);
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
@@ -1020,13 +1041,24 @@ function renderPhantomUI() {
 
   if (tokensListEl) {
     const tokenDefs = [
-      { key: 'btc', name: 'BTC', logo: './bitcoin-logo.png', ticker: 'BTC' },
-      { key: 'usdt', name: 'USDT', logo: './usdt-logo.png', ticker: 'USDT' },
-      { key: 'solana', name: 'Solana', logo: './solana-logo.png', ticker: 'SOL' },
-      { key: 'ethereum', name: 'Ethereum', logo: './ethereum-logo.png', ticker: 'ETH' },
-      { key: 'usdc', name: 'USDC', logo: './usdc-logo.png', ticker: 'USDC' },
-      { key: 'polygon', name: 'Polygon', logo: './polygon-logo.png', ticker: 'POL' }
+      { key: 'btc', name: 'BTC', logo: PHANTOM_COIN_LOGOS.btc, ticker: 'BTC' },
+      { key: 'usdt', name: 'USDT', logo: PHANTOM_COIN_LOGOS.usdt, ticker: 'USDT' },
+      { key: 'solana', name: 'Solana', logo: PHANTOM_COIN_LOGOS.solana, ticker: 'SOL' },
+      { key: 'ethereum', name: 'Ethereum', logo: PHANTOM_COIN_LOGOS.ethereum, ticker: 'ETH' },
+      { key: 'usdc', name: 'USDC', logo: PHANTOM_COIN_LOGOS.usdc, ticker: 'USDC' },
+      { key: 'polygon', name: 'Polygon', logo: PHANTOM_COIN_LOGOS.polygon, ticker: 'POL' }
     ];
+
+    // Ensure settings modal coin icons also use resolved URLs
+    document.querySelectorAll('.phantom-field-icon').forEach(img => {
+      const src = img.getAttribute('src') || '';
+      if (src.includes('bitcoin-logo.png')) img.src = PHANTOM_COIN_LOGOS.btc;
+      else if (src.includes('usdt-logo.png')) img.src = PHANTOM_COIN_LOGOS.usdt;
+      else if (src.includes('solana-logo.png')) img.src = PHANTOM_COIN_LOGOS.solana;
+      else if (src.includes('ethereum-logo.png')) img.src = PHANTOM_COIN_LOGOS.ethereum;
+      else if (src.includes('usdc-logo.png')) img.src = PHANTOM_COIN_LOGOS.usdc;
+      else if (src.includes('polygon-logo.png')) img.src = PHANTOM_COIN_LOGOS.polygon;
+    });
 
     // Order tokens: positive balances first (sorted by fiat value desc), then the rest in default order
     const tokensWithBalances = [];
@@ -1380,7 +1412,8 @@ async function loadShopifySaleSoundBuffer() {
   try {
     const ctx = getShopifyAudioCtx();
     if (!ctx) return null;
-    const res = await fetch('./shopify_sale_sound.mp3');
+    const res = await fetch(SHOPIFY_SALE_SOUND_URL);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const arrayBuffer = await res.arrayBuffer();
     shopifySoundBuffer = await ctx.decodeAudioData(arrayBuffer);
     return shopifySoundBuffer;
@@ -1418,7 +1451,15 @@ function playShopifySaleSound() {
 
   // HTMLAudioElement fallback playing exclusively the user's shopify_sale_sound.mp3
   try {
-    const audio = new Audio('./shopify_sale_sound.mp3');
+    const existingAudio = document.getElementById('shopify-sale-sound');
+    if (existingAudio) {
+      existingAudio.src = SHOPIFY_SALE_SOUND_URL;
+      existingAudio.currentTime = 0;
+      existingAudio.volume = 1.0;
+      existingAudio.play().catch(() => { });
+      return;
+    }
+    const audio = new Audio(SHOPIFY_SALE_SOUND_URL);
     audio.volume = 1.0;
     audio.play().catch(() => { });
   } catch (e) { }
@@ -1455,7 +1496,7 @@ function generateShopifyNotifItemHtml(item, idx, store) {
   return `
     <div class="shopify-notif-item" data-notif-idx="${idx}">
       <div class="shopify-order-toast-icon" style="width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;">
-        <img src="./shopify green logo.webp" alt="Shopify" class="shopify-ios-notif-img">
+        <img src="${SHOPIFY_NOTIF_LOGO}" alt="Shopify" class="shopify-ios-notif-img">
       </div>
       <div class="shopify-notif-item-info">
         <div class="shopify-notif-item-header-row">
@@ -1547,7 +1588,7 @@ function spawnShopifyOrderToast(orderNum, customer, product, amount, itemsCount)
   toast.setAttribute('role', 'alert');
   toast.innerHTML = `
     <div class="shopify-order-toast-icon">
-      <img src="./shopify green logo.webp" alt="Shopify" class="shopify-ios-notif-img">
+      <img src="${SHOPIFY_NOTIF_LOGO}" alt="Shopify" class="shopify-ios-notif-img">
     </div>
     <div class="shopify-order-toast-content">
       <div class="shopify-order-toast-header-row">

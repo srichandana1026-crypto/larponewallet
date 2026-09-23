@@ -35,6 +35,7 @@ const CORE_ASSETS = [
   './polygon-logo.png',
   './shopify logo.png',
   './shopify green logo.webp',
+  './shopify_sale_sound.mp3',
   './phantom logo.png',
   './cash app.png'
 ];

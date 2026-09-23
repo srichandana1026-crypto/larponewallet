@@ -14,12 +14,14 @@
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
     }
-    // Automatically strip .html and /index.html from URL address bar
+    // Automatically strip .html and /index.html from URL address bar safely
     (function() {
       let path = window.location.pathname;
-      if (path.endsWith('/index.html') || path === '/index.html') {
-        path = path.replace(/\/index\.html$/, '') || '/';
-      } else if (path.endsWith('.html')) {
+      if (path.endsWith('/index.html')) {
+        path = path.slice(0, -10) || '/';
+      } else if (path === '/index.html') {
+        path = '/';
+      } else if (path.endsWith('.html') && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
         path = path.replace(/\.html$/, '');
       }
       if (path !== window.location.pathname) {
