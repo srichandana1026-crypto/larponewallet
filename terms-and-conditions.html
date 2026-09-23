@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="author" content="Larpwallet">
+  <meta name="theme-color" content="#000000">
+  <title>Terms and Conditions — Larpwallet</title>
+  <meta name="description" content="Terms and Conditions for using Larpwallet simulator suite and services.">
+
+  <script>
+    if (window.location.pathname.endsWith('.html')) {
+      const cleanPath = window.location.pathname.replace(/\.html$/, '');
+      window.history.replaceState(null, '', cleanPath + window.location.search + window.location.hash);
+    }
+  </script>
+
+  <!-- Inter & Instrument Sans Google Fonts (Regular 400 & Semi-Bold 600) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,600;1,400;1,600&family=Inter:ital,wght@0,400;0,600;1,400;1,600&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="./landing.css">
+  <link rel="icon" type="image/png" href="./favicon.png">
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #000000;
+      color: #ffffff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-weight: 400;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Minimalist Top Bar (No lines below header) */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #000000;
+      border-bottom: none;
+      padding: 24px 32px;
+    }
+
+    .nav-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 19px;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #ffffff;
+      color: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    /* Complete Solid White CTA (No strokes) */
+    .back-link {
+      background: #ffffff;
+      color: #000000;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 20px;
+      border-radius: 9999px;
+      text-decoration: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .back-link:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    /* Document Body */
+    .doc-container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 56px 32px 96px;
+      flex: 1;
+      width: 100%;
+    }
+
+    .doc-header {
+      margin-bottom: 44px;
+      border-bottom: none;
+    }
+
+    .doc-tag {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      color: #ffffff;
+    }
+
+    .doc-title {
+      font-size: clamp(32px, 4.5vw, 44px);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 12px;
+      color: #ffffff;
+    }
+
+    .doc-date {
+      font-size: 14px;
+      font-weight: 400;
+      color: #ffffff;
+    }
+
+    .doc-body {
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    .doc-section h2 {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+      color: #ffffff;
+      line-height: 1.35;
+    }
+
+    .doc-section p {
+      font-size: 15.5px;
+      line-height: 1.8;
+      color: #ffffff;
+      margin-bottom: 14px;
+      font-weight: 400;
+    }
+
+    .doc-section p:last-child {
+      margin-bottom: 0;
+    }
+
+    .doc-section ul {
+      margin: 14px 0 14px 22px;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .doc-section ul li {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #ffffff;
+      font-weight: 400;
+    }
+
+    .doc-notice-block {
+      border-left: 2px solid #ffffff;
+      padding-left: 18px;
+      margin: 18px 0;
+    }
+
+    .doc-notice-block p {
+      font-size: 15.5px;
+      line-height: 1.75;
+      font-weight: 400;
+    }
+
+    strong {
+      font-weight: 600;
+    }
+
+    /* Homepage Footer Match */
+    .landing-footer {
+      background-color: #000000;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 64px 0 40px;
+      width: 100%;
+    }
+
+    .landing-container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    .footer-main-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 48px;
+      margin-bottom: 56px;
+      flex-wrap: wrap;
+    }
+
+    .footer-brand-wrap {
+      max-width: 360px;
+    }
+
+    .landing-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .landing-brand-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: #ffffff;
+      color: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .footer-brand-desc {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #ffffff;
+      font-weight: 400;
+    }
+
+    .footer-community-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-col-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .footer-col-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 0;
+      margin: 0;
+    }
+
+    .footer-link {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 400;
+      transition: opacity 0.2s ease;
+    }
+
+    .footer-link:hover {
+      opacity: 0.75;
+      text-decoration: underline;
+    }
+
+    .footer-bottom-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 28px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 13.5px;
+      color: #ffffff;
+      font-weight: 400;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Minimalist Pure Black/White Navigation (No border below header) -->
+  <header class="nav-bar">
+    <div class="nav-inner">
+      <a href="./" class="brand-link">
+        <div class="brand-mark">L</div>
+        <span>Larpwallet</span>
+      </a>
+      <a href="./" class="back-link">
+        ← Back to Home
+      </a>
+    </div>
+  </header>
+
+  <!-- Editorial Document Content (Regular and Semi-Bold Fonts Only) -->
+  <main class="doc-container">
+    <div class="doc-header">
+      <div class="doc-tag">Legal &amp; Compliance</div>
+      <h1 class="doc-title">Terms and Conditions</h1>
+      <p class="doc-date">Last Updated: September 2026</p>
+    </div>
+
+    <div class="doc-body">
+      <!-- Section 1 -->
+      <section class="doc-section">
+        <h2>1. Acceptance of Terms</h2>
+        <p>
+          By accessing or using the Larpwallet website, standalone Progressive Web Apps (PWAs), offline simulator environments, and associated software tools (collectively, the "Platform"), you agree to be legally bound by these Terms and Conditions ("Terms"). If you do not agree with all of these terms, you must discontinue use of the Platform immediately.
+        </p>
+      </section>
+
+      <!-- Section 2 -->
+      <section class="doc-section">
+        <h2>2. Simulator &amp; Testing Purpose</h2>
+        <div class="doc-notice-block">
+          <p>
+            <strong>Mandatory Notice:</strong> Larpwallet is strictly a client-side interface simulator and design prototyping suite. All dashboards, balances, numerical counters, sales statistics, crypto tokens, transaction feeds, and checkout screens are completely simulated, fictional, and have zero real-world financial value.
+          </p>
+        </div>
+        <p>
+          Larpwallet is not a bank, licensed financial institution, payment gateway, money services business, or cryptocurrency custodian. No actual money, credit accounts, bank routing networks, or blockchain ledgers are connected, transacted, or transferred.
+        </p>
+      </section>
+
+      <!-- Section 3 -->
+      <section class="doc-section">
+        <h2>3. License &amp; Prohibited Uses</h2>
+        <p>
+          We grant you a non-exclusive, revocable, non-transferable license to access and use the simulators for testing, development, UI/UX evaluation, and entertainment. Under this license, you agree that you will not:
+        </p>
+        <ul>
+          <li>Use simulated captures, recordings, or telemetry to commit financial fraud, deception, extortion, or fraudulent misrepresentation.</li>
+          <li>Submit simulated figures or generated statements to banks, lending institutions, tax authorities, or investors as proof of funds or store earnings.</li>
+          <li>Resell, sublicense, or redistribute the source code or assets without express written consent.</li>
+          <li>Attempt to disrupt or reverse-engineer the underlying application architecture.</li>
+        </ul>
+      </section>
+
+      <!-- Section 4 -->
+      <section class="doc-section">
+        <h2>4. Client-Side Data &amp; Storage</h2>
+        <p>
+          All simulator custom configurations, user inputs, store metrics, wallet figures, and visual customizations are processed entirely within your device's browser memory (localStorage). We do not collect, transmit, or store your customized figures on remote servers.
+        </p>
+      </section>
+
+      <!-- Section 5 -->
+      <section class="doc-section">
+        <h2>5. Intellectual Property &amp; Brand Simulation</h2>
+        <p>
+          All simulated third-party trademarks, service marks, logos, and interface aesthetics (including Shopify, Phantom, and Cash App) belong solely to their respective trademark holders. Reference to these brands is made exclusively for interface demonstration and design simulation. Larpwallet is independent and unaffiliated with these entities.
+        </p>
+      </section>
+
+      <!-- Section 6 -->
+      <section class="doc-section">
+        <h2>6. Disclaimers &amp; Limitation of Liability</h2>
+        <p>
+          The Platform is provided on an "as is" and "as available" basis without warranties of any kind, whether express or implied. In no event shall Larpwallet or its authors be liable for any direct, indirect, incidental, special, or consequential damages resulting from the use or misuse of the simulator suite.
+        </p>
+      </section>
+
+      <!-- Section 7 -->
+      <section class="doc-section">
+        <h2>7. Governing Law &amp; Contact</h2>
+        <p>
+          These Terms are governed by applicable laws. For inquiries regarding these Terms and Conditions or the platform, contact our official Discord community.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <!-- Homepage Matching Footer -->
+  <footer class="landing-footer">
+    <div class="landing-container">
+      <div class="footer-main-row">
+        <div class="footer-brand-wrap">
+          <a href="./" class="landing-brand">
+            <div class="landing-brand-mark">L</div>
+            <span>Larpwallet</span>
+          </a>
+          <p class="footer-brand-desc">
+            Minimalist, high-fidelity interface simulation for digital creators, testers, and developers.
+          </p>
+        </div>
+
+        <div class="footer-community-wrap">
+          <div class="footer-col-title">Legal &amp; Community</div>
+          <ul class="footer-col-list">
+            <li><a href="https://discord.com" target="_blank" rel="noopener noreferrer" class="footer-link">Discord Server</a></li>
+            <li><a href="./terms-and-conditions" class="footer-link">Terms and Conditions</a></li>
+            <li><a href="./privacy-policy" class="footer-link">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom-row">
+        <div class="footer-bottom-left">
+          <div>© 2026 Larpwallet. All rights reserved.</div>
+        </div>
+        <div class="footer-bottom-right">
+          <a href="javascript:void(0)" onclick="window.scrollTo({top:0,behavior:'smooth'})" class="footer-link">Back to Top ↑</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

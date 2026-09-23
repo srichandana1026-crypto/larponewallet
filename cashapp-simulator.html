@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en" data-standalone="cashapp">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="author" content="Cash App">
+  <meta name="theme-color" content="#06ae13">
+  <meta name="application-name" content="Cash App">
+  <title>Cash App</title>
+  <meta name="description" content="Interactive Cash App Digital Wallet Simulator.">
+
+  <script>
+    if (window.location.pathname.endsWith('.html')) {
+      const cleanPath = window.location.pathname.replace(/\.html$/, '');
+      window.history.replaceState(null, '', cleanPath + window.location.search + window.location.hash);
+    }
+  </script>
+
+  <!-- Inter, Inter Tight & Instrument Sans Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Inter:ital,wght@0,300..800;1,300..800&family=Inter+Tight:ital,wght@0,100..800;1,100..800&display=swap"
+    rel="stylesheet">
+
+  <!-- Core & Simulator Stylesheets -->
+  <link rel="stylesheet" href="./styles-BxNiFifO.css">
+  <link rel="stylesheet" href="./larppay.css">
+  <link rel="stylesheet" href="./hub.css">
+  <link rel="stylesheet" href="./landing.css">
+  <link rel="icon" type="image/jpeg" href="./cash app icon.jpg">
+  <link rel="apple-touch-icon" href="./cash app icon.jpg">
+  <link rel="manifest" href="./manifest-cashapp.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Cash App">
+
+  <style>
+    .cashapp-pwa-install-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 10000;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    }
+    .cashapp-pwa-install-btn:hover {
+      background: rgba(0, 0, 0, 0.55);
+      border-color: #ffffff;
+      transform: translateY(-1px);
+    }
+    @media all and (display-mode: standalone) {
+      .cashapp-pwa-install-btn {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body style="background-color: rgb(6, 174, 19); color: #000; margin: 0; padding: 0;">
+
+  <!-- Install App Header Action Pill -->
+  <button type="button" class="cashapp-pwa-install-btn" id="app-pwa-install-btn" title="Install Cash App as Standalone App Window">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="7 10 12 15 17 10"/>
+      <line x1="12" y1="15" x2="12" y2="3"/>
+    </svg>
+    <span id="app-pwa-install-btn-text">Install App Window</span>
+  </button>
+
+  <!-- CASH APP SIMULATOR VIEW (Green Mobile Wallet) -->
+  <section id="view-cashapp" class="view-panel active">
+    <!-- Cash App Phone Frame -->
+    <div id="cashapp-phone-container"
+      class="cashapp-phone-container relative min-h-[100dvh] flex justify-center overflow-hidden overscroll-none w-full"
+      style="height: 641px; background-color: rgb(6, 174, 19); font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-weight: 600; touch-action: none; overscroll-behavior: none; -webkit-font-smoothing: antialiased;">
+      <div class="w-full max-w-[480px] flex flex-col px-[14.8716px] pt-6 pb-16 text-black relative"
+        style="touch-action: none; height: 100%;">
+
+        <!-- Cash App Top Nav Icons (QR beside Smile on left, Search & User on right) -->
+        <div class="cashapp-top-nav-bar flex h-10 items-center justify-between"
+          style="margin-top: 24px; margin-bottom: 12px; z-index: 10;">
+          <div class="flex h-10 items-center" style="gap: 12px;">
+            <!-- Smile -->
+            <div
+              class="cashapp-icon-circle w-[43.77px] h-[43.77px] rounded-full bg-[rgba(0,0,0,0.12)] flex items-center justify-center cursor-pointer hover:bg-[rgba(0,0,0,0.18)] transition-colors">
+              <img alt="Smile" class="cashapp-nav-icon-img w-[26.75px] h-[26.75px] object-contain"
+                src="./smiley_icon.png">
+            </div>
+            <!-- QR Icon -->
+            <div id="cashapp-top-qr-btn"
+              class="cashapp-icon-circle w-[43.77px] h-[43.77px] rounded-full bg-[rgba(0,0,0,0.12)] flex items-center justify-center cursor-pointer hover:bg-[rgba(0,0,0,0.18)] transition-colors">
+              <img alt="QR" aria-hidden="true" width="18.6" height="18.6" src="./qr_icon.png"
+                class="cashapp-nav-icon-img" style="width: 18.6px; height: 18.6px; object-fit: contain;">
+            </div>
+          </div>
+          <div class="flex h-10 items-center" style="gap: 12px;">
+            <!-- Search -->
+            <div id="cashapp-top-search-btn"
+              class="cashapp-icon-circle w-[43.77px] h-[43.77px] rounded-full bg-[rgba(0,0,0,0.12)] flex items-center justify-center cursor-pointer hover:bg-[rgba(0,0,0,0.18)] transition-colors">
+              <img alt="Search" class="cashapp-nav-icon-img w-[22.47px] h-[22.47px] object-contain"
+                src="./magnifying_glass.png">
+            </div>
+            <!-- User -->
+            <div id="cashapp-top-user-btn"
+              class="w-[43.77px] h-[43.77px] rounded-full bg-[#4265f8] flex items-center justify-center overflow-hidden cursor-pointer">
+              <img alt="User" class="w-[21.88px] h-[21.88px] object-contain" src="./user_icon.png">
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 1: KEYPAD VIEW (Default) -->
+        <div id="cashapp-tab-keypad" class="cashapp-tab-pane flex-1 flex flex-col"
+          style="display: flex; justify-content: flex-start; padding-top: 20px;">
+          <!-- Amount Display -->
+          <div class="flex items-center justify-center" style="flex: 0 0 auto; padding: 8px 0 4px;">
+            <div class="relative flex flex-col items-center">
+              <div id="cashapp-min-warning"
+                class="text-black text-[14px] font-semibold transition-opacity duration-300 whitespace-nowrap"
+                style="opacity: 0; position: absolute; top: -55px; pointer-events: none;">
+                $1 is the minimum to send
+              </div>
+              <div id="cashapp-amount-display" class="text-[98px] font-bold leading-none select-none tracking-tight">
+                <span>$</span><span>0</span>
+              </div>
+              <div id="cashapp-measure-display" aria-hidden="true" class="text-[98px] font-bold leading-none"
+                style="position: absolute; visibility: hidden; pointer-events: none; white-space: nowrap;">
+                <span>$</span>0
+              </div>
+            </div>
+          </div>
+
+          <!-- Keypad -->
+          <div class="grid grid-cols-3 text-[32px] font-bold" style="row-gap: 10px; margin-top: 4px;">
+            <button type="button" class="cashapp-keypad-key" data-cashkey="1">1</button>
+            <button type="button" class="cashapp-keypad-key" data-cashkey="2">2</button>
+            <button type="button" class="cashapp-keypad-key" data-cashkey="3">3</button>
+            <button type="button" class="cashapp-keypad-key" data-cashkey="4">4</button>
+            <button type="button" class="cashapp-keypad-key" data-cashkey="5">5</button>
+            <button type="button" class="cashapp-keypad-key" data-cashkey="6">6</button>
+            <button type="button" class="cashapp-keypad-key" data-cashkey="7">7</button>
+            <button type="button" class="cashapp-keypad-key" data-cashkey="8">8</button>
+            <button type="button" class="cashapp-keypad-key" data-cashkey="9">9</button>
+            <button type="button" class="cashapp-keypad-key cashapp-dot-key" data-cashkey=".">.</button>
+            <button type="button" class="cashapp-keypad-key" data-cashkey="0">0</button>
+            <button type="button" class="cashapp-keypad-key" data-cashkey="backspace" aria-label="Backspace">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m15 18-6-6 6-6" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Pool & Request Action Row -->
+          <div class="grid grid-cols-2 gap-3.5" style="margin-top: 10px;">
+            <button type="button" id="cashapp-pool-btn"
+              class="rounded-full text-[16.5px] font-semibold cursor-pointer active:scale-[0.98] transition-transform flex items-center justify-center"
+              style="background-color: rgba(0, 0, 0, 0.15); height: 44px; color: #000000;">
+              Pool
+            </button>
+            <button type="button" id="cashapp-req-btn"
+              class="rounded-full text-[16.5px] font-semibold cursor-pointer active:scale-[0.98] transition-transform flex items-center justify-center"
+              style="background-color: rgba(0, 0, 0, 0.15); height: 44px; color: #000000;">
+              Request
+            </button>
+          </div>
+
+          <!-- Pay Button -->
+          <button type="button" id="cashapp-pay-btn"
+            class="w-full rounded-full bg-black text-white text-[17px] font-semibold cursor-pointer active:scale-[0.98] transition-transform flex items-center justify-center"
+            style="height: 38px; margin-top: 8px;">
+            Pay
+          </button>
+        </div>
+
+        <!-- TAB 2: HOME / BANKING VIEW -->
+        <div id="cashapp-tab-home" class="cashapp-tab-pane cashapp-home-scroll" style="display: none;">
+          <!-- Cash Card Top Peek -->
+          <div class="cashapp-card-peek-tab">
+            <div class="cashapp-peek-pill">
+              <svg width="18" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect width="20" height="14" x="2" y="5" rx="2" />
+                <line x1="2" x2="22" y1="10" y2="10" />
+              </svg>
+              <span>•• 0764</span>
+            </div>
+            <span id="cashapp-peek-username" class="cashapp-peek-username" contenteditable="true" spellcheck="false"
+              title="Click to edit username" role="textbox" aria-label="Edit username">$username</span>
+          </div>
+
+          <!-- Main Balance Card -->
+          <div class="cashapp-home-main-card">
+            <div class="flex items-center justify-between">
+              <button type="button" class="cashapp-balance-routing-btn">
+                <span>Cash balance •• 1605</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              </button>
+              <button type="button" class="cashapp-eye-btn" aria-label="Toggle balance privacy">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+                  <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
+                  <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" />
+                  <line x1="2" x2="22" y1="2" y2="22" />
+                </svg>
+              </button>
+            </div>
+            <div class="cashapp-balance-big" id="cashapp-main-cash-balance" contenteditable="true" spellcheck="false"
+              title="Click to edit balance">$0.00</div>
+            <div class="flex items-center gap-3 mt-4">
+              <button type="button" id="cashapp-home-add-money-btn" class="cashapp-home-pill-btn">Add money</button>
+              <button type="button" id="cashapp-home-withdraw-btn" class="cashapp-home-withdraw-btn">Withdraw</button>
+            </div>
+          </div>
+
+          <!-- Cash App Green Pill Card -->
+          <div class="cashapp-home-subcard flex items-center justify-between">
+            <div class="flex items-center gap-2 font-semibold text-white">
+              <span class="w-1 h-4 rounded-full bg-[#00d632] inline-block"></span>
+              <span class="text-white text-[15px] font-semibold">Cash App Green</span>
+            </div>
+            <span class="text-white text-[14px] font-semibold">Earn status</span>
+          </div>
+
+          <!-- Savings Card -->
+          <div class="cashapp-home-subcard flex items-center justify-between">
+            <div>
+              <div class="text-white text-[15px] font-semibold">Savings</div>
+              <div class="text-white text-[28px] font-bold my-0.5">$0.00</div>
+              <div class="cashapp-subtitle-grey text-[13px] font-medium">Up to 3.25% interest</div>
+            </div>
+            <div class="cashapp-home-circle-badge badge-savings">
+              <span>$</span>
+            </div>
+          </div>
+
+          <!-- Bitcoin Card -->
+          <div class="cashapp-home-subcard flex items-center justify-between">
+            <div>
+              <div class="text-white text-[15px] font-semibold">Bitcoin</div>
+              <div class="text-white text-[28px] font-bold my-0.5">$0.00</div>
+              <div class="cashapp-subtitle-grey text-[13px] font-medium">0% today</div>
+            </div>
+            <div class="cashapp-home-circle-badge badge-bitcoin">
+              <span>₿</span>
+            </div>
+          </div>
+
+          <!-- More for you Section -->
+          <div class="cashapp-home-section-title">More for you</div>
+
+          <!-- Stocks Card -->
+          <div class="cashapp-home-stocks-card">
+            <div class="text-white text-[15px] font-semibold">Stocks</div>
+            <div class="text-white text-[22px] font-bold mt-1.5 mb-5 leading-tight">Buy stocks with no commission fees
+            </div>
+            <div class="cashapp-stocks-tickers">
+              <span class="cashapp-ticker-pill cashapp-ticker-nvda">NVDA</span>
+              <span class="cashapp-ticker-pill cashapp-ticker-aapl">AAPL</span>
+              <span class="cashapp-ticker-pill cashapp-ticker-tsla">T TSLA</span>
+              <span class="cashapp-ticker-pill cashapp-ticker-pltr">Q PLTR</span>
+            </div>
+          </div>
+
+          <!-- Quick Action Rows -->
+          <div class="cashapp-action-list">
+            <div class="cashapp-action-row">
+              <div class="flex items-center gap-3">
+                <div class="cashapp-action-icon">💸</div>
+                <div>
+                  <div class="text-white font-semibold text-[15.5px]">Pools</div>
+                  <div class="cashapp-subtitle-grey text-[13px] font-medium">Collect money with anyone</div>
+                </div>
+              </div>
+              <button type="button" class="cashapp-start-btn">Start</button>
+            </div>
+            <div class="cashapp-action-row">
+              <div class="flex items-center gap-3">
+                <div class="cashapp-action-icon">🔑</div>
+                <div>
+                  <div class="text-white font-semibold text-[15.5px]">Family</div>
+                  <div class="cashapp-subtitle-grey text-[13px] font-medium">Money tools for next gen</div>
+                </div>
+              </div>
+              <button type="button" class="cashapp-start-btn">Start</button>
+            </div>
+            <div class="cashapp-action-row">
+              <div class="flex items-center gap-3">
+                <div class="cashapp-action-icon">📊</div>
+                <div>
+                  <div class="text-white font-semibold text-[15.5px]">Earnings</div>
+                  <div class="cashapp-subtitle-grey text-[13px] font-medium">$0.00 this month</div>
+                </div>
+              </div>
+              <button type="button" class="cashapp-start-btn">Start</button>
+            </div>
+          </div>
+
+          <!-- Add Money Methods -->
+          <div class="cashapp-home-section-title mt-6">Add money</div>
+          <div class="cashapp-deposit-methods">
+            <div class="cashapp-deposit-row">
+              <div class="flex items-center gap-3 text-white">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect width="20" height="12" x="2" y="6" rx="2" />
+                  <circle cx="12" cy="12" r="2" />
+                </svg>
+                <span class="font-semibold text-white text-[16px]">Deposit paper money</span>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="2.5">
+                <path d="m9 18 6-6-6-6" />
+              </svg>
+            </div>
+            <div class="cashapp-deposit-row">
+              <div class="flex items-center gap-3 text-white">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect width="18" height="18" x="3" y="3" rx="2" />
+                  <path d="M7 8h10M7 12h10M7 16h6" />
+                </svg>
+                <span class="font-semibold text-white text-[16px]">Deposit check</span>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="2.5">
+                <path d="m9 18 6-6-6-6" />
+              </svg>
+            </div>
+            <div class="cashapp-deposit-row">
+              <div class="flex items-center gap-3 text-white">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                  <path d="M3 3v5h5" />
+                  <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+                  <path d="M16 21h5v-5" />
+                </svg>
+                <span class="font-semibold text-white text-[16px]">Auto reload</span>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="2.5">
+                <path d="m9 18 6-6-6-6" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- FDIC & Legal Disclaimer Text -->
+          <div class="cashapp-legal-notice">
+            <p>Your balance may be eligible for FDIC pass-through insurance through Larp National Bank, N.A., Larp Trust
+              Bank, and/or Larp Bancorp, N.A., Members FDIC, for up to $250,000 per customer when aggregated with all
+              other deposits held in the same legal capacity at each bank. See the <a href="#"
+                class="underline font-semibold text-white">LarpPay Terms of Service</a>.</p>
+            <p>LarpPay is a financial services platform, and not an FDIC-insured bank. Flex Cards are issued by Larp
+              Bancorp, Member FDIC, and Larp National Bank, N.A., pursuant to a license from Visa U.S.A. Inc.</p>
+            <p>Banking services are provided by LarpPay's banking partners. Brokerage services are provided by LarpPay
+              Investing LLC, member FINRA, a subsidiary of LarpPay, Inc. Digital asset services are provided by LarpPay
+              Digital Assets LLC. Tax filing services are provided by LarpPay Taxes. <a href="#"
+                class="underline font-semibold text-white">Disclosures</a>.</p>
+          </div>
+        </div>
+
+        <!-- TAB 3: ACTIVITY / HISTORY VIEW -->
+        <div id="cashapp-tab-history" class="cashapp-tab-pane cashapp-history-scroll" style="display: none;">
+          <div id="cashapp-history-empty" class="cashapp-empty-history">
+            <h2 class="cashapp-empty-title">Nothing Here!</h2>
+            <p class="cashapp-empty-subtitle">Your future activity will be organized here</p>
+          </div>
+          <div id="cashapp-history-list" class="cashapp-history-list" style="display: none;">
+            <h2 class="cashapp-history-title">Today</h2>
+          </div>
+        </div>
+
+        <!-- Cash App Floating Bottom Nav Bar -->
+        <div class="cashapp-bottom-nav-wrap">
+          <div class="cashapp-bottom-nav-pill">
+            <button type="button" class="cashapp-tab-nav-btn" data-cashapp-tab="home" aria-label="Home / Banking">
+              <img src="./bank_icon.png" alt="Bank" class="cashapp-bottom-nav-bank-img">
+            </button>
+            <button type="button" class="cashapp-tab-nav-btn cashapp-dollar-tab-btn" data-cashapp-tab="keypad"
+              aria-label="Pay Keypad">
+              <span class="cashapp-dollar-symbol">$</span>
+            </button>
+            <button type="button" class="cashapp-tab-nav-btn" data-cashapp-tab="history" aria-label="Activity History">
+              <svg class="cashapp-bottom-nav-clock-svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9.5" />
+                <polyline points="12 7 12 12 16 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Cash App Add Money Sheet Modal -->
+    <div id="cashapp-add-money-sheet" class="cashapp-pay-sheet-overlay" role="dialog" aria-modal="true"
+      style="display: none;">
+      <div class="cashapp-pay-sheet-container cashapp-add-money-container">
+        <div class="cashapp-sheet-grabber"></div>
+        <h2 class="cashapp-add-money-title">Add money</h2>
+        <div id="cashapp-add-money-sub" class="cashapp-add-money-subtitle">Cash balance $0.00</div>
+
+        <div class="cashapp-add-money-grid">
+          <button type="button" class="cashapp-preset-pill" data-add-amount="10">$10</button>
+          <button type="button" class="cashapp-preset-pill active" data-add-amount="25">$25</button>
+          <button type="button" class="cashapp-preset-pill" data-add-amount="50">$50</button>
+          <button type="button" class="cashapp-preset-pill" data-add-amount="100">$100</button>
+          <button type="button" class="cashapp-preset-pill" data-add-amount="200">$200</button>
+          <button type="button" class="cashapp-preset-pill" data-add-amount="custom">•••</button>
+        </div>
+
+        <div class="cashapp-funding-source-row">
+          <span class="text-white font-semibold text-[15px]">From</span>
+          <div class="flex items-center gap-2">
+            <span class="cashapp-card-blue-badge">💳</span>
+            <span class="text-white font-semibold text-[15px]">Debit 6842</span>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="2.5">
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        </div>
+
+        <button type="button" id="cashapp-submit-add-money-btn" class="cashapp-final-pay-btn mt-6">Add</button>
+      </div>
+    </div>
+
+    <!-- Cash App Pay Sheet Modal -->
+    <div id="cashapp-pay-sheet" class="cashapp-pay-sheet-overlay" role="dialog" aria-modal="true"
+      aria-labelledby="pay-sheet-heading">
+      <div class="cashapp-pay-sheet-container">
+        <div class="cashapp-sheet-nav-row">
+          <button type="button" id="cashapp-pay-sheet-back" class="cashapp-sheet-nav-btn" aria-label="Go Back"
+            style="display: none;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="m15 18-6-6 6-6" />
+            </svg>
+          </button>
+          <button type="button" id="cashapp-pay-sheet-close" class="cashapp-sheet-nav-btn" aria-label="Close">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div id="cashapp-view-search" class="cashapp-step-view">
+          <h2 id="pay-sheet-heading" class="cashapp-pay-title">
+            <span class="pay-label-bold">Pay <span id="pay-sheet-amount">$99,999</span></span>
+            <span class="pay-to-dim">to</span>
+          </h2>
+
+          <div class="cashapp-pay-search-wrap">
+            <svg class="cashapp-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.3-4.3" />
+            </svg>
+            <input type="text" id="cashapp-recipient-input" class="cashapp-pay-input"
+              placeholder="Name, $cashtag, or number" autocomplete="off" spellcheck="false">
+            <button type="button" id="cashapp-qr-btn" class="cashapp-qr-scan-btn" aria-label="Scan QR Code">
+              <img src="./qr_icon.png" alt="Scan QR Code" class="cashapp-qr-icon-img"
+                style="width: 20px; height: 20px; object-fit: contain; filter: brightness(0) invert(1);">
+            </button>
+          </div>
+
+          <div id="cashapp-contacts-card" class="cashapp-find-people-card">
+            <h3 class="cashapp-find-title">Find people you know</h3>
+            <p class="cashapp-find-desc">
+              Allow access to your contacts to find friends and make sure you're paying the right person. This won't
+              notify anyone.
+            </p>
+            <button type="button" id="cashapp-sync-contacts-btn" class="cashapp-sync-btn">
+              Sync contacts
+            </button>
+          </div>
+
+          <div id="cashapp-search-spinner" class="cashapp-search-spinner-wrap" style="display: none;">
+            <div class="cashapp-search-spinner"></div>
+          </div>
+
+          <div id="cashapp-results-section" class="cashapp-results-section" style="display: none;">
+            <h3 class="cashapp-results-header">Results</h3>
+            <div id="cashapp-results-list" class="cashapp-results-list">
+            </div>
+          </div>
+        </div>
+
+        <div id="cashapp-view-confirm" class="cashapp-step-view" style="display: none;">
+          <div class="cashapp-confirm-heading-group">
+            <div class="cashapp-confirm-line-1">
+              <span class="pay-label-bold">Pay <span id="cashapp-confirm-amount">$99,999</span></span>
+              <span class="pay-to-dim">to</span>
+            </div>
+            <div class="cashapp-confirm-line-2">
+              <span id="cashapp-confirm-avatar" class="cashapp-mini-avatar-badge">I</span>
+              <span id="cashapp-confirm-short-name" class="cashapp-recipient-title-name">Igbibb H.</span>
+              <span class="pay-to-dim">for</span>
+            </div>
+            <div id="cashapp-confirm-note-display" class="cashapp-confirm-note-display" style="display: none;">
+              MAKE NO MISTAKES
+            </div>
+          </div>
+
+          <hr class="cashapp-sheet-divider">
+
+          <div class="cashapp-note-input-row" id="cashapp-note-input-row">
+            <input type="text" id="cashapp-note-input" class="cashapp-note-input" placeholder="Note (Required)"
+              autocomplete="off" spellcheck="false">
+            <button type="button" id="cashapp-review-btn" class="cashapp-review-btn" disabled>Review</button>
+          </div>
+
+          <div id="cashapp-final-pay-box" class="cashapp-final-pay-box" style="display: none;">
+            <div class="cashapp-funding-pill">
+              <div class="cashapp-funding-left">
+                <span class="cashapp-dollar-icon-badge">$</span>
+                <span class="cashapp-funding-label">Cash balance $0.00</span>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </div>
+            <p class="cashapp-pay-disclaimer">Payments can't be canceled once they're sent.</p>
+            <button type="button" id="cashapp-final-pay-btn" class="cashapp-final-pay-btn">Pay</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Cash App Big Black Screen (Payment Success) -->
+    <div id="cashapp-success-screen" class="cashapp-success-screen" style="display: none;">
+      <div class="cashapp-success-top-bar">
+        <button type="button" id="cashapp-success-close-btn" class="cashapp-success-icon-btn" aria-label="Close">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="cashapp-success-center">
+        <div class="cashapp-success-check-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M20 6 9 17l-5-5" />
+          </svg>
+        </div>
+        <h2 id="cashapp-success-message" class="cashapp-success-title">You sent $99,999 to Igbibb Hayes</h2>
+      </div>
+      <div class="cashapp-success-bottom-bar">
+        <button type="button" id="cashapp-success-done-btn" class="cashapp-success-done-btn">Done</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Simulated Action Modal Dialog -->
+  <div id="sim-modal" class="sim-modal-overlay">
+    <div class="sim-modal-box">
+      <div id="modal-icon" class="sim-modal-icon"></div>
+      <h3 id="modal-title" class="sim-modal-title">Success</h3>
+      <p id="modal-desc" class="sim-modal-desc"></p>
+      <button type="button" id="modal-close-btn" class="sim-modal-close-btn">Done</button>
+    </div>
+  </div>
+
+  <!-- Controller App Module -->
+  <script type="module" src="./app.js"></script>
+
+  <!-- Dedicated Standalone PWA Installation Handler -->
+  <script>
+    let pwaPrompt = null;
+    const installBtn = document.getElementById('app-pwa-install-btn');
+    const installBtnText = document.getElementById('app-pwa-install-btn-text');
+
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    if (isStandalone && installBtn) {
+      installBtn.style.display = 'none';
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      pwaPrompt = e;
+      if (installBtn && !isStandalone) {
+        installBtn.style.display = 'inline-flex';
+        installBtnText.textContent = 'Install App Window';
+      }
+    });
+
+    if (installBtn) {
+      installBtn.addEventListener('click', async () => {
+        if (pwaPrompt) {
+          pwaPrompt.prompt();
+          const { outcome } = await pwaPrompt.userChoice;
+          if (outcome === 'accepted') {
+            installBtn.style.display = 'none';
+          }
+          pwaPrompt = null;
+        } else {
+          alert('To install Cash App as a separate desktop application window:\n\n1. Look at your browser address bar on top right.\n2. Click the ⊕ or "Install Cash App" icon.\n3. Click "Install". It will immediately open as its own standalone green window on your Taskbar/Desktop!');
+        }
+      });
+    }
+
+    window.addEventListener('appinstalled', () => {
+      if (installBtn) installBtn.style.display = 'none';
+    });
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+{
+  "name": "Larpwallet",
+  "short_name": "Larpwallet",
+  "description": "Shopify, Phantom Wallet, and Cash App.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a0b10",
+  "theme_color": "#0a0b10",
+  "categories": ["finance", "utilities", "productivity"],
+  "icons": [
+    {
+      "src": "./favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Shopify",
+      "short_name": "Shopify",
+      "description": "Launch Shopify store admin",
+      "url": "./#shopify",
+      "icons": [{ "src": "./shopify app icon.jpg", "sizes": "96x96" }]
+    },
+    {
+      "name": "Phantom Wallet",
+      "short_name": "Phantom Wallet",
+      "description": "Launch Phantom Wallet",
+      "url": "./#phantom",
+      "icons": [{ "src": "./phantom app icon.jpg", "sizes": "96x96" }]
+    },
+    {
+      "name": "Cash App",
+      "short_name": "Cash App",
+      "description": "Launch Cash App digital wallet",
+      "url": "./#cashapp",
+      "icons": [{ "src": "./cash app icon.jpg", "sizes": "96x96" }]
+    }
+  ]
+}

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="author" content="Larpwallet">
+  <meta name="theme-color" content="#000000">
+  <title>Privacy Policy — Larpwallet</title>
+  <meta name="description" content="Privacy Policy for Larpwallet simulator suite and services.">
+
+  <script>
+    if (window.location.pathname.endsWith('.html')) {
+      const cleanPath = window.location.pathname.replace(/\.html$/, '');
+      window.history.replaceState(null, '', cleanPath + window.location.search + window.location.hash);
+    }
+  </script>
+
+  <!-- Inter & Instrument Sans Google Fonts (Regular 400 & Semi-Bold 600) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,600;1,400;1,600&family=Inter:ital,wght@0,400;0,600;1,400;1,600&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="./landing.css">
+  <link rel="icon" type="image/png" href="./favicon.png">
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #000000;
+      color: #ffffff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-weight: 400;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Minimalist Top Bar (No lines below header) */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #000000;
+      border-bottom: none;
+      padding: 24px 32px;
+    }
+
+    .nav-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 19px;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #ffffff;
+      color: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    /* Complete Solid White CTA (No strokes) */
+    .back-link {
+      background: #ffffff;
+      color: #000000;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 20px;
+      border-radius: 9999px;
+      text-decoration: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .back-link:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    /* Document Body */
+    .doc-container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 56px 32px 96px;
+      flex: 1;
+      width: 100%;
+    }
+
+    .doc-header {
+      margin-bottom: 44px;
+      border-bottom: none;
+    }
+
+    .doc-tag {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      color: #ffffff;
+    }
+
+    .doc-title {
+      font-size: clamp(32px, 4.5vw, 44px);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 12px;
+      color: #ffffff;
+    }
+
+    .doc-date {
+      font-size: 14px;
+      font-weight: 400;
+      color: #ffffff;
+    }
+
+    .doc-body {
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    .doc-section h2 {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+      color: #ffffff;
+      line-height: 1.35;
+    }
+
+    .doc-section p {
+      font-size: 15.5px;
+      line-height: 1.8;
+      color: #ffffff;
+      margin-bottom: 14px;
+      font-weight: 400;
+    }
+
+    .doc-section p:last-child {
+      margin-bottom: 0;
+    }
+
+    .doc-section ul {
+      margin: 14px 0 14px 22px;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .doc-section ul li {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #ffffff;
+      font-weight: 400;
+    }
+
+    .doc-notice-block {
+      border-left: 2px solid #ffffff;
+      padding-left: 18px;
+      margin: 18px 0;
+    }
+
+    .doc-notice-block p {
+      font-size: 15.5px;
+      line-height: 1.75;
+      font-weight: 400;
+    }
+
+    strong {
+      font-weight: 600;
+    }
+
+    /* Homepage Footer Match */
+    .landing-footer {
+      background-color: #000000;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 64px 0 40px;
+      width: 100%;
+    }
+
+    .landing-container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    .footer-main-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 48px;
+      margin-bottom: 56px;
+      flex-wrap: wrap;
+    }
+
+    .footer-brand-wrap {
+      max-width: 360px;
+    }
+
+    .landing-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .landing-brand-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: #ffffff;
+      color: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .footer-brand-desc {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #ffffff;
+      font-weight: 400;
+    }
+
+    .footer-community-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-col-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .footer-col-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 0;
+      margin: 0;
+    }
+
+    .footer-link {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 400;
+      transition: opacity 0.2s ease;
+    }
+
+    .footer-link:hover {
+      opacity: 0.75;
+      text-decoration: underline;
+    }
+
+    .footer-bottom-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 28px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 13.5px;
+      color: #ffffff;
+      font-weight: 400;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Minimalist Pure Black/White Navigation (No border below header) -->
+  <header class="nav-bar">
+    <div class="nav-inner">
+      <a href="./" class="brand-link">
+        <div class="brand-mark">L</div>
+        <span>Larpwallet</span>
+      </a>
+      <a href="./" class="back-link">
+        ← Back to Home
+      </a>
+    </div>
+  </header>
+
+  <!-- Editorial Document Content (Regular and Semi-Bold Fonts Only) -->
+  <main class="doc-container">
+    <div class="doc-header">
+      <div class="doc-tag">Privacy &amp; Security</div>
+      <h1 class="doc-title">Privacy Policy</h1>
+      <p class="doc-date">Last Updated: September 2026</p>
+    </div>
+
+    <div class="doc-body">
+      <!-- Section 1 -->
+      <section class="doc-section">
+        <h2>1. Zero-Log Privacy Standard</h2>
+        <div class="doc-notice-block">
+          <p>
+            <strong>Core Privacy Principle:</strong> Larpwallet operates on a strict zero-tracking, client-side execution architecture. We do not collect, store, sell, or transmit any user information or simulator telemetry to remote databases.
+          </p>
+        </div>
+        <p>
+          This Privacy Policy outlines how data is managed when interacting with the Larpwallet website, standalone Progressive Web Apps (PWAs), and offline simulator tools.
+        </p>
+      </section>
+
+      <!-- Section 2 -->
+      <section class="doc-section">
+        <h2>2. Local Device Storage</h2>
+        <p>
+          All customized simulator configurations (including store titles, custom revenue figures, notification counts, crypto asset balances, and keypad values) are saved strictly inside your local browser memory (localStorage).
+        </p>
+        <ul>
+          <li><strong>Local Persistence:</strong> Settings remain only on your local machine to keep your customized views active between visits.</li>
+          <li><strong>Custom Uploads:</strong> Any custom store icons or avatars are converted to local data strings and never uploaded to remote storage.</li>
+          <li><strong>No Server Analytics:</strong> No tracking cookies, session recorders, or third-party telemetry tools monitor your usage.</li>
+        </ul>
+      </section>
+
+      <!-- Section 3 -->
+      <section class="doc-section">
+        <h2>3. Offline Service Worker Caching</h2>
+        <p>
+          The application uses standard browser Service Worker technology to cache static interface assets (fonts, icons, and scripts). This allows all simulators to launch instantly in independent windows and operate 100% offline without communicating over the network.
+        </p>
+      </section>
+
+      <!-- Section 4 -->
+      <section class="doc-section">
+        <h2>4. Simulated Forms &amp; Checkout</h2>
+        <p>
+          All login screens, password inputs, and checkout forms throughout the platform are visual simulations. Any sample emails, passwords, or test card numbers entered are processed entirely in local JavaScript and are never transmitted to any payment processor or financial gateway.
+        </p>
+      </section>
+
+      <!-- Section 5 -->
+      <section class="doc-section">
+        <h2>5. User Data Erasure</h2>
+        <p>
+          You maintain full ownership and control over your simulator environment. To instantly remove all saved metrics, custom numbers, and cached assets, you can click "Reset" inside any simulator settings panel or clear your browser's local cache and site data.
+        </p>
+      </section>
+
+      <!-- Section 6 -->
+      <section class="doc-section">
+        <h2>6. Policy Updates &amp; Contact</h2>
+        <p>
+          Any revisions to this Privacy Policy will be posted directly to this page. If you have questions regarding our privacy architecture, please contact us via our Discord community.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <!-- Homepage Matching Footer -->
+  <footer class="landing-footer">
+    <div class="landing-container">
+      <div class="footer-main-row">
+        <div class="footer-brand-wrap">
+          <a href="./" class="landing-brand">
+            <div class="landing-brand-mark">L</div>
+            <span>Larpwallet</span>
+          </a>
+          <p class="footer-brand-desc">
+            Minimalist, high-fidelity interface simulation for digital creators, testers, and developers.
+          </p>
+        </div>
+
+        <div class="footer-community-wrap">
+          <div class="footer-col-title">Legal &amp; Community</div>
+          <ul class="footer-col-list">
+            <li><a href="https://discord.com" target="_blank" rel="noopener noreferrer" class="footer-link">Discord Server</a></li>
+            <li><a href="./terms-and-conditions" class="footer-link">Terms and Conditions</a></li>
+            <li><a href="./privacy-policy" class="footer-link">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom-row">
+        <div class="footer-bottom-left">
+          <div>© 2026 Larpwallet. All rights reserved.</div>
+        </div>
+        <div class="footer-bottom-right">
+          <a href="javascript:void(0)" onclick="window.scrollTo({top:0,behavior:'smooth'})" class="footer-link">Back to Top ↑</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

@@ -1,0 +1,28 @@
+{
+  "id": "/cashapp-simulator.html",
+  "name": "Cash App",
+  "short_name": "Cash App",
+  "description": "Interactive Cash App Digital Wallet Simulator.",
+  "start_url": "./cashapp-simulator.html",
+  "scope": "./cashapp-simulator.html",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#06ae13",
+  "theme_color": "#06ae13",
+  "categories": ["finance"],
+  "icons": [
+    {
+      "src": "./cash app icon.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "./cash app icon.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,6 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap');
+
 /* ==========================================================================
    MULTI-SIMULATOR HUB STYLES (Hub, Phantom, Shopify, Cash App)
    ========================================================================== */
+
+@font-face {
+  font-family: 'CashAppNumbers';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/instrumentsans/v4/pximypc9vsFDm051Uf6KVwgkfoSxQ0GsQv8ToedPibnr-yp2JGEJOH9npSQb_gf1.ttf') format('truetype');
+  unicode-range: U+0030-0039, U+0024, U+002E, U+002C, U+0025, U+002B, U+002D;
+}
 
 @font-face {
   font-family: 'PhantomSans';
@@ -65,6 +76,27 @@ body {
 
 .view-panel.active {
   display: flex !important;
+}
+
+/* Standalone Simulator Mode */
+html[data-standalone="shopify"] #view-shopify,
+html[data-standalone="phantom"] #view-phantom,
+html[data-standalone="cashapp"] #view-cashapp {
+  display: flex !important;
+}
+
+html[data-standalone] #view-landing,
+html[data-standalone] .landing-nav,
+html[data-standalone] .footer-brand-section {
+  display: none !important;
+}
+
+/* Hide install trigger button when already running inside installed standalone window */
+@media all and (display-mode: standalone) {
+  .pwa-install-header-btn,
+  .pwa-app-banner {
+    display: none !important;
+  }
 }
 
 @keyframes fadeIn {
@@ -471,6 +503,202 @@ body {
   height: 780px;
 }
 
+/* Phantom Left Sidebar Drawer & Backdrop */
+.phantom-sidebar-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 80;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 44px;
+}
+
+.phantom-sidebar-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.phantom-sidebar-drawer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 300px;
+  max-width: 85%;
+  background: #121215;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  z-index: 85;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 12px 0 32px rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+  border-top-left-radius: 44px;
+  border-bottom-left-radius: 44px;
+}
+
+.phantom-sidebar-drawer.active {
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.phantom-sidebar-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.phantom-sidebar-lock-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #1c1c20;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.phantom-sidebar-lock-btn:hover {
+  background: #27272c;
+  transform: scale(1.05);
+}
+
+.phantom-sidebar-lock-img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  display: block;
+}
+
+.phantom-sidebar-copy-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #1c1c20;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  color: #ffffff;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.phantom-sidebar-copy-btn:hover {
+  background: #27272c;
+  transform: scale(1.05);
+}
+
+.phantom-sidebar-handle {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  margin: 0 0 16px 0;
+}
+
+.phantom-sidebar-wallet-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #1c1c20;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 8px 12px;
+  margin-bottom: 24px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.phantom-sidebar-wallet-pill:hover {
+  background: #242429;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.phantom-sidebar-avatar-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #ab9ff2;
+  color: #000000;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.phantom-sidebar-wallet-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.phantom-sidebar-chevron {
+  color: #8e8e93;
+  flex-shrink: 0;
+}
+
+.phantom-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.phantom-sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 12px 14px;
+  background: transparent;
+  border: none;
+  border-radius: 14px;
+  color: #d4d4d8;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.phantom-sidebar-nav-item:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #ffffff;
+}
+
+.phantom-sidebar-nav-icon {
+  color: #8e8e93;
+  flex-shrink: 0;
+  transition: color 0.15s ease;
+}
+
+.phantom-sidebar-nav-item:hover .phantom-sidebar-nav-icon {
+  color: #ab9ff2;
+}
+
+.phantom-sidebar-nav-label {
+  font-size: 14.5px;
+  font-weight: 500;
+}
+
 /* Scrollable container */
 .phantom-main-content {
   flex: 1;
@@ -484,6 +712,7 @@ body {
 .phantom-main-content::-webkit-scrollbar {
   width: 4px;
 }
+
 .phantom-main-content::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
@@ -890,10 +1119,21 @@ body {
   animation: dialItemIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.phantom-dial-option:nth-child(1) { animation-delay: 0.12s; }
-.phantom-dial-option:nth-child(2) { animation-delay: 0.09s; }
-.phantom-dial-option:nth-child(3) { animation-delay: 0.06s; }
-.phantom-dial-option:nth-child(4) { animation-delay: 0.03s; }
+.phantom-dial-option:nth-child(1) {
+  animation-delay: 0.12s;
+}
+
+.phantom-dial-option:nth-child(2) {
+  animation-delay: 0.09s;
+}
+
+.phantom-dial-option:nth-child(3) {
+  animation-delay: 0.06s;
+}
+
+.phantom-dial-option:nth-child(4) {
+  animation-delay: 0.03s;
+}
 
 @keyframes dialItemIn {
   to {
@@ -1021,6 +1261,7 @@ body {
     opacity: 0;
     transform: scale(0.92) translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
@@ -1074,6 +1315,7 @@ body {
 .phantom-settings-rows::-webkit-scrollbar {
   width: 4px;
 }
+
 .phantom-settings-rows::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.12);
   border-radius: 4px;
@@ -1174,6 +1416,7 @@ body {
   -webkit-appearance: none;
   margin: 0;
 }
+
 .phantom-num-field[type=number] {
   -moz-appearance: textfield;
   appearance: textfield;
@@ -1237,7 +1480,7 @@ body {
 #view-shopify {
   width: 100%;
   min-height: 100vh;
-  background: #000000;
+  background: #f7f7f8;
   display: none !important;
   flex-direction: column;
   color: #1a1a1a;
@@ -1256,6 +1499,10 @@ body {
   min-height: 100vh;
   background: #f7f7f8;
   color: #1a1a1a;
+}
+
+.shopify-mobile-layout {
+  display: none !important;
 }
 
 /* 1. TOP BLACK NAVIGATION BAR */
@@ -1447,9 +1694,17 @@ body {
 }
 
 @keyframes badgePop {
-  0% { transform: scale(0.6); }
-  60% { transform: scale(1.25); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(0.6);
+  }
+
+  60% {
+    transform: scale(1.25);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 .bell-ringing svg {
@@ -1458,12 +1713,31 @@ body {
 }
 
 @keyframes shopifyBellRing {
-  0%, 100% { transform: rotate(0); }
-  15% { transform: rotate(18deg); }
-  30% { transform: rotate(-16deg); }
-  45% { transform: rotate(12deg); }
-  60% { transform: rotate(-8deg); }
-  75% { transform: rotate(4deg); }
+
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+
+  15% {
+    transform: rotate(18deg);
+  }
+
+  30% {
+    transform: rotate(-16deg);
+  }
+
+  45% {
+    transform: rotate(12deg);
+  }
+
+  60% {
+    transform: rotate(-8deg);
+  }
+
+  75% {
+    transform: rotate(4deg);
+  }
 }
 
 /* Notifications Dropdown */
@@ -1836,8 +2110,17 @@ body {
 }
 
 @keyframes pulseDot {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.3); opacity: 0.8; }
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.3);
+    opacity: 0.8;
+  }
 }
 
 /* HERO SECTION */
@@ -2252,8 +2535,15 @@ body {
 }
 
 @keyframes modalScaleIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .shopify-modal-top {
@@ -2449,10 +2739,12 @@ body {
     opacity: 0;
     transform: translateY(-24px) scale(0.95);
   }
+
   60% {
     opacity: 1;
     transform: translateY(2px) scale(1.01);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -2688,6 +2980,7 @@ body {
   .shopify-desktop-cards-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
   .shopify-card-enterprise {
     grid-column: span 2;
   }
@@ -2697,28 +2990,401 @@ body {
   .shopify-desktop-sidebar {
     display: none;
   }
+
   .shopify-desktop-main {
     padding: 20px 16px 60px 16px;
   }
+
   .shopify-desktop-kpi-bar {
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
   }
+
   .shopify-kpi-metrics-row {
     flex-wrap: wrap;
     gap: 20px;
   }
+
   .shopify-desktop-cards-grid {
     grid-template-columns: 1fr;
   }
+
   .shopify-card-enterprise {
     grid-column: span 1;
+  }
+
+  .shopify-desktop-layout {
+    display: none !important;
+  }
+
+  .shopify-mobile-layout {
+    display: flex !important;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100vh;
+    background: #000000;
+    color: #ffffff;
+    padding-bottom: 90px;
+    position: relative;
+  }
+
+  .shopify-mobile-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: #000000;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .shopify-mobile-avatar-btn {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .shopify-mobile-avatar-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    overflow: hidden;
+  }
+
+  .shopify-mobile-store-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+
+  .shopify-mobile-store-badge {
+    background: #95bf47;
+    color: #000000;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 6px;
+  }
+
+  .shopify-mobile-store-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .shopify-mobile-bell-btn {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .shopify-mobile-dark-section {
+    padding: 12px 18px 24px;
+    background: #000000;
+  }
+
+  .shopify-mobile-kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .shopify-mobile-kpi-col {
+    background: #141416;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    padding: 10px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+  }
+
+  .shopify-mobile-kpi-highlighted {
+    background: #1c1c20;
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .shopify-mobile-kpi-label {
+    font-size: 11px;
+    color: #8e8e93;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .shopify-mobile-kpi-val-wrap {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .shopify-mobile-kpi-val {
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .shopify-mobile-kpi-growth {
+    font-size: 10px;
+    color: #22c55e;
+    font-weight: 600;
+  }
+
+  .shopify-mobile-chart-wrap {
+    background: #141416;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    padding: 14px;
+    cursor: pointer;
+  }
+
+  .shopify-mobile-chart-inner {
+    display: flex;
+    gap: 8px;
+    height: 100px;
+  }
+
+  .shopify-mobile-y-axis {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #71717a;
+  }
+
+  .shopify-mobile-svg-container {
+    flex: 1;
+    position: relative;
+  }
+
+  .shopify-mobile-chart-svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .shopify-mobile-x-axis {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #71717a;
+    margin-top: 8px;
+    padding: 0 4px;
+  }
+
+  .shopify-mobile-pills-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .shopify-mobile-pill-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #242428;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 9999px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #ffffff;
+    cursor: pointer;
+  }
+
+  .shopify-mobile-activity-sheet {
+    background: #ffffff;
+    color: #000000;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1;
+  }
+
+  .shopify-mobile-activity-title {
+    font-size: 18px;
+    margin-bottom: 4px;
+  }
+
+  .shopify-mobile-activity-title .title-light {
+    font-weight: 400;
+    color: #71717a;
+  }
+
+  .shopify-mobile-activity-title .title-bold {
+    font-weight: 700;
+    color: #09090b;
+  }
+
+  .shopify-mobile-fulfill-card {
+    background: #f4f4f5;
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+
+  .shopify-mobile-card-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #18181b;
+  }
+
+  .shopify-mobile-card-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .shopify-mobile-editions-banner {
+    background: linear-gradient(135deg, #1e1b4b, #312e81);
+    color: #ffffff;
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+
+  .shopify-mobile-editions-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .shopify-mobile-editions-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .shopify-mobile-editions-headline {
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .shopify-mobile-editions-subline {
+    font-size: 12px;
+    color: #a5b4fc;
+  }
+
+  .shopify-mobile-card-box {
+    background: #f4f4f5;
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .shopify-mobile-ai-text,
+  .shopify-mobile-email-text {
+    flex: 1;
+  }
+
+  .shopify-mobile-box-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #18181b;
+    margin-bottom: 4px;
+  }
+
+  .shopify-mobile-box-desc {
+    font-size: 12px;
+    color: #52525b;
+    line-height: 1.4;
+    margin-bottom: 6px;
+  }
+
+  .shopify-mobile-box-link {
+    font-size: 12px;
+    font-weight: 600;
+    color: #0284c7;
+    text-decoration: none;
+  }
+
+  .shopify-mobile-robot-thumb,
+  .shopify-mobile-email-thumb {
+    width: 72px;
+    height: 72px;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+
+  .shopify-mobile-dock {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(24, 24, 27, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 9999px;
+    padding: 6px 14px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 100;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .shopify-dock-item {
+    background: transparent;
+    border: none;
+    color: #a1a1aa;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .shopify-dock-item.active {
+    color: #ffffff;
+  }
+
+  .shopify-dock-home-bubble {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #95bf47;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
 /* --------------------------------------------------------------------------
-   CASH APP VIEW CONTAINER (Cash Market Light Rounded)
+   CASH APP VIEW CONTAINER (Inter Semi-Bold text, Instrument Sans numbers)
    -------------------------------------------------------------------------- */
 #view-cashapp,
 #view-cashapp *,
@@ -2726,8 +3392,51 @@ body {
 #view-cashapp *::after,
 .cashapp-phone-container,
 .cashapp-phone-container * {
-  font-family: 'InterDisplay', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-family: 'CashAppNumbers', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-weight: 600;
   letter-spacing: normal !important;
+}
+
+#view-cashapp .font-bold,
+#view-cashapp h2,
+#view-cashapp h3 {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-weight: 600;
+}
+
+/* Dedicated numeric elements in Cash App use Instrument Sans */
+#cashapp-amount-display,
+#cashapp-amount-display *,
+#cashapp-measure-display,
+#cashapp-measure-display *,
+.cashapp-digits-wrap,
+.cashapp-digit,
+.cashapp-currency-symbol,
+[data-cashkey],
+.cashapp-balance-big,
+#cashapp-main-cash-balance,
+.cashapp-home-subcard .font-bold,
+.cashapp-home-subcard div[class*="text-[28px]"],
+.cashapp-peek-pill,
+.cashapp-peek-pill span,
+.cashapp-balance-routing-btn span,
+.cashapp-activity-amt,
+.cashapp-activity-item-amount,
+.cashapp-history-amount,
+.cashapp-tx-amt,
+.cashapp-tx-amount,
+.cashapp-pay-sheet-amount,
+.cashapp-pay-sheet-amount *,
+#cashapp-pay-amount-hero,
+#pay-sheet-amount,
+.pay-sheet-amount,
+.cashapp-preset-pill,
+.cashapp-home-circle-badge span,
+.cashapp-tab-nav-btn span,
+.cashapp-num-font,
+#view-cashapp input[type="number"],
+#view-cashapp .numeric-val {
+  font-family: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
 }
 
 #view-cashapp {
@@ -2846,19 +3555,24 @@ body {
 
 /* Moving vibration animation for exceeding max amount (99999) - Slower & Smoother */
 @keyframes cashapp-vibrate-amount {
+
   0%,
   100% {
     transform: translateX(0);
   }
+
   20% {
     transform: translateX(-6px);
   }
+
   40% {
     transform: translateX(6px);
   }
+
   60% {
     transform: translateX(-4px);
   }
+
   80% {
     transform: translateX(4px);
   }
@@ -2879,6 +3593,11 @@ body {
   justify-content: center;
   transition: font-size 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: font-size;
+  font-family: 'Helvetica Neue', 'Instrument Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-weight: 800 !important;
+  color: #000000 !important;
+  letter-spacing: -0.03em;
+  font-size: 98px !important;
 }
 
 .cashapp-currency-symbol {
@@ -2886,12 +3605,16 @@ body {
   margin-right: 2px;
   vertical-align: baseline;
   transition: transform 0.2s ease;
+  font-family: 'Instrument Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-weight: 700 !important;
 }
 
 .cashapp-digits-wrap {
   display: inline-flex;
   align-items: baseline;
   justify-content: center;
+  font-family: 'Instrument Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-weight: 700 !important;
 }
 
 .cashapp-digit {
@@ -2899,6 +3622,46 @@ body {
   vertical-align: baseline;
   transform-origin: center 70%;
   will-change: transform, opacity;
+  font-family: 'Instrument Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-weight: 700 !important;
+}
+
+/* Keypad Keys — no hover effects, only press/active feedback */
+.cashapp-keypad-key {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: #000000;
+  font-family: 'Helvetica Neue', 'Instrument Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-weight: 800 !important;
+  font-size: 34px !important;
+  line-height: 1;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  /* No transition or hover effects on the key itself */
+}
+
+.cashapp-keypad-key:hover {
+  background: transparent !important;
+  color: #000000 !important;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+.cashapp-keypad-key:active {
+  transform: scale(0.88);
+  opacity: 0.75;
+}
+
+.cashapp-dot-key {
+  font-size: 44px !important;
+  line-height: 0.5 !important;
+  padding-bottom: 8px !important;
 }
 
 .cashapp-digit-pop {
@@ -2910,10 +3673,12 @@ body {
     opacity: 0.15;
     transform: scale(0.35);
   }
+
   60% {
     opacity: 0.95;
     transform: scale(1.18);
   }
+
   100% {
     opacity: 1;
     transform: scale(1);
@@ -3460,6 +4225,7 @@ body {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -3625,12 +4391,40 @@ body {
   font-size: 14px;
   font-weight: 700;
   color: #000000;
+  cursor: text;
+  outline: none;
+  border-radius: 4px;
+  padding: 1px 6px;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cashapp-peek-username:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.cashapp-peek-username:focus {
+  background: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0 0 1.5px rgba(0, 0, 0, 0.3);
+}
+
+/* Home Subtitle Grey Text (Matching Screenshot) */
+.cashapp-subtitle-grey,
+#cashapp-tab-home .cashapp-subtitle-grey,
+.cashapp-phone-container.dark-theme .cashapp-subtitle-grey,
+.cashapp-home-subcard .cashapp-subtitle-grey,
+.cashapp-action-row .cashapp-subtitle-grey,
+.cashapp-home-subcard [class*="8e8e93"],
+.cashapp-action-row [class*="8e8e93"] {
+  color: #8e8e93 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  margin-top: 2px;
 }
 
 .cashapp-home-main-card {
   background: #000000;
-  border-radius: 28px;
-  padding: 24px 20px 26px;
+  border-radius: 24px;
+  padding: 24px 24px 28px;
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7);
   position: relative;
   z-index: 2;
@@ -3661,20 +4455,22 @@ body {
 }
 
 .cashapp-balance-big {
-  font-size: 52px;
-  font-weight: 700;
+  font-family: 'Helvetica Neue', 'Instrument Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 48px;
+  font-weight: 800;
   color: #ffffff;
-  margin: 12px 0 16px;
+  margin: 16px 0 20px;
   line-height: 1.05;
-  letter-spacing: normal !important;
+  letter-spacing: -0.02em !important;
 }
 
+/* Add money solid pill button */
 .cashapp-home-pill-btn {
   background: #1c1c1e;
   color: #ffffff;
   font-weight: 700;
-  font-size: 14.5px;
-  padding: 11px 26px;
+  font-size: 15px;
+  padding: 12px 28px;
   border-radius: 9999px;
   border: none;
   cursor: pointer;
@@ -3682,41 +4478,58 @@ body {
 }
 
 .cashapp-home-pill-btn:hover {
-  background: #27272a;
+  background: #2a2a2e;
 }
 
 .cashapp-home-pill-btn:active {
   transform: scale(0.98);
 }
 
+/* Withdraw — plain text link, not a button */
 .cashapp-home-withdraw-btn {
   background: transparent;
   color: #8e8e93;
   font-weight: 600;
-  font-size: 14.5px;
-  padding: 11px 18px;
+  font-size: 15px;
+  padding: 12px 16px;
   border: none;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .cashapp-home-subcard {
   background: #18181b;
-  border-radius: 18px;
-  padding: 18px 20px;
-  margin-top: 12px;
+  border-radius: 22px;
+  padding: 20px 22px;
+  margin-top: 14px;
 }
 
 .cashapp-home-circle-badge {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: #27272a;
+  background: #18181b;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
   color: #00d632;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 20px;
   font-weight: 800;
+}
+
+.cashapp-home-circle-badge.badge-savings {
+  border: 1.5px solid #00d632 !important;
+  background: #151815 !important;
+}
+
+.cashapp-home-circle-badge.badge-bitcoin {
+  border: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+  background: #18181b !important;
+}
+
+.cashapp-home-circle-badge span {
+  color: #00d632 !important;
 }
 
 .cashapp-home-section-title {
@@ -3834,8 +4647,10 @@ body {
 .cashapp-history-scroll {
   overflow-y: auto;
   height: 520px;
-  padding: 16px 0 90px;
+  padding: 0 0 70px;
   -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
 }
 
 .cashapp-history-title {
@@ -3846,11 +4661,29 @@ body {
 }
 
 .cashapp-empty-history {
-  color: #71717a;
-  font-size: 16px;
-  font-weight: 500;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   text-align: center;
-  padding: 100px 0;
+  padding: 160px 20px 0;
+}
+
+.cashapp-empty-title {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 5px;
+}
+
+.cashapp-empty-subtitle {
+  color: #71717a;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .cashapp-history-list {
@@ -3909,16 +4742,17 @@ body {
   font-size: 17px;
 }
 
-/* Floating Bottom Navigation Bar */
+/* ── FLOATING BOTTOM NAVIGATION BAR (pill-within-pill Cash App style) ── */
 .cashapp-bottom-nav-wrap {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 12px;
+  bottom: 14px;
   z-index: 120;
   display: flex;
   justify-content: center;
   pointer-events: none;
+  padding: 0 24px;
 }
 
 .cashapp-bottom-nav-pill {
@@ -3926,59 +4760,170 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(24, 24, 27, 0.95);
-  backdrop-filter: blur(16px);
-  border-radius: 9999px;
-  padding: 4px 6px;
-  width: 250px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  background: #111111;
+  border-radius: 999px;
+  padding: 5px 8px;
   box-sizing: border-box;
+  min-width: 200px;
+  max-width: 280px;
+  height: 58px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 2px 8px rgba(0, 0, 0, 0.35);
+  gap: 2px;
 }
 
+/* Each tab button — equal flex, generously padded */
 .cashapp-tab-nav-btn {
   background: none;
   border: none;
-  color: #71717a;
+  color: rgba(255, 255, 255, 0.6);
   cursor: pointer;
-  padding: 0;
-  height: 42px;
-  border-radius: 9999px;
+  padding: 0 18px;
+  height: 46px;
+  border-radius: 999px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   flex: 1;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
 }
 
+/* Active tab — capsule-within-capsule highlight */
 .cashapp-tab-nav-btn.active {
-  background: #27272a;
-  color: #ffffff;
+  background: rgba(255, 255, 255, 0.18) !important;
+  border-radius: 999px !important;
+  color: #ffffff !important;
 }
 
-/* In green keypad mode */
-.cashapp-phone-container:not(.dark-theme) .cashapp-nav-icon-img {
-  filter: brightness(0);
+/* No hover background changes on keypad nav buttons */
+.cashapp-tab-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 
-.cashapp-phone-container:not(.dark-theme) .cashapp-icon-circle {
-  background-color: rgba(0, 0, 0, 0.12);
+.cashapp-tab-nav-btn.active:hover {
+  background: rgba(255, 255, 255, 0.20) !important;
 }
 
-.cashapp-phone-container:not(.dark-theme) .cashapp-bottom-nav-pill {
-  background: transparent;
-  box-shadow: none;
+.cashapp-bottom-nav-bank-img {
+  width: 22px;
+  height: 20px;
+  object-fit: contain;
+  display: block;
+  filter: brightness(0) invert(0.6);
+  transition: filter 0.15s ease;
 }
 
-.cashapp-phone-container:not(.dark-theme) .cashapp-tab-nav-btn {
-  color: rgba(27, 65, 14, 0.8);
+.cashapp-tab-nav-btn.active .cashapp-bottom-nav-bank-img {
+  filter: brightness(0) invert(1) !important;
 }
 
-.cashapp-phone-container:not(.dark-theme) .cashapp-tab-nav-btn.active {
-  background: rgba(0, 0, 0, 0.12);
-  color: #000000;
+.cashapp-dollar-symbol {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.15s ease;
 }
 
-/* In dark theme (Home & History Views) */
+.cashapp-tab-nav-btn.active .cashapp-dollar-symbol {
+  color: #ffffff !important;
+}
+
+/* Fallback wrapper */
+.cashapp-dollar-nav-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cashapp-bottom-nav-clock-svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+  stroke: rgba(255, 255, 255, 0.6);
+  transition: stroke 0.15s ease;
+}
+
+.cashapp-tab-nav-btn.active .cashapp-bottom-nav-clock-svg {
+  stroke: #ffffff !important;
+}
+
+/* ── GREEN THEME overrides — keep same black pill on green background ── */
+.cashapp-phone-container:not(.dark-theme) .cashapp-bottom-nav-wrap,
+#view-cashapp:not(.dark-theme) .cashapp-bottom-nav-wrap {
+  bottom: 14px !important;
+}
+
+.cashapp-phone-container:not(.dark-theme) .cashapp-bottom-nav-pill,
+#view-cashapp:not(.dark-theme) .cashapp-bottom-nav-pill {
+  background: #111111 !important;
+  border-radius: 999px !important;
+  border: none !important;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 2px 8px rgba(0, 0, 0, 0.35) !important;
+}
+
+.cashapp-phone-container:not(.dark-theme) .cashapp-tab-nav-btn,
+#view-cashapp:not(.dark-theme) .cashapp-tab-nav-btn {
+  color: rgba(255, 255, 255, 0.6) !important;
+  border: none !important;
+  background: none !important;
+  flex: 1 !important;
+  height: 46px !important;
+  border-radius: 999px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 18px !important;
+  transition: all 0.18s ease !important;
+}
+
+.cashapp-phone-container:not(.dark-theme) .cashapp-tab-nav-btn.active,
+#view-cashapp:not(.dark-theme) .cashapp-tab-nav-btn.active {
+  background: rgba(255, 255, 255, 0.18) !important;
+  border-radius: 999px !important;
+  color: #ffffff !important;
+}
+
+.cashapp-phone-container:not(.dark-theme) .cashapp-bottom-nav-bank-img {
+  filter: brightness(0) invert(0.6) !important;
+  width: 22px !important;
+  height: 20px !important;
+}
+
+.cashapp-phone-container:not(.dark-theme) .cashapp-tab-nav-btn.active .cashapp-bottom-nav-bank-img {
+  filter: brightness(0) invert(1) !important;
+}
+
+.cashapp-phone-container:not(.dark-theme) .cashapp-dollar-symbol {
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-size: 22px !important;
+}
+
+.cashapp-phone-container:not(.dark-theme) .cashapp-tab-nav-btn.active .cashapp-dollar-symbol {
+  color: #ffffff !important;
+}
+
+.cashapp-phone-container:not(.dark-theme) .cashapp-bottom-nav-clock-svg {
+  stroke: rgba(255, 255, 255, 0.6) !important;
+  width: 22px !important;
+  height: 22px !important;
+}
+
+.cashapp-phone-container:not(.dark-theme) .cashapp-tab-nav-btn.active .cashapp-bottom-nav-clock-svg {
+  stroke: #ffffff !important;
+}
+
+/* ── DARK THEME (Home & History) — Same black pill nav as green theme ── */
 .cashapp-phone-container.dark-theme .cashapp-nav-icon-img {
   filter: brightness(0) invert(1) !important;
 }

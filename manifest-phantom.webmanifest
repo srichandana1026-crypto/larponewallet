@@ -1,0 +1,28 @@
+{
+  "id": "/phantom-wallet-simulator.html",
+  "name": "Phantom Wallet",
+  "short_name": "Phantom",
+  "description": "Interactive Web3 Multi-Chain Crypto Wallet Simulator.",
+  "start_url": "./phantom-wallet-simulator.html",
+  "scope": "./phantom-wallet-simulator.html",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#13141f",
+  "theme_color": "#13141f",
+  "categories": ["finance", "utilities"],
+  "icons": [
+    {
+      "src": "./phantom app icon.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "./phantom app icon.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}

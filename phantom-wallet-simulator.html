@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en" data-standalone="phantom">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="author" content="Phantom Wallet">
+  <meta name="theme-color" content="#13141f">
+  <meta name="application-name" content="Phantom Wallet">
+  <title>Phantom Wallet</title>
+  <meta name="description" content="Simulate a Phantom multi-chain crypto wallet with Solana, Ethereum, Bitcoin balances and token swaps.">
+
+  <script>
+    if (window.location.pathname.endsWith('.html')) {
+      const cleanPath = window.location.pathname.replace(/\.html$/, '');
+      window.history.replaceState(null, '', cleanPath + window.location.search + window.location.hash);
+    }
+  </script>
+
+  <!-- Inter, Inter Tight & Instrument Sans Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Inter:ital,wght@0,300..800;1,300..800&family=Inter+Tight:ital,wght@0,100..800;1,100..800&display=swap"
+    rel="stylesheet">
+
+  <!-- Core & Simulator Stylesheets -->
+  <link rel="stylesheet" href="./styles-BxNiFifO.css">
+  <link rel="stylesheet" href="./larppay.css">
+  <link rel="stylesheet" href="./hub.css">
+  <link rel="stylesheet" href="./landing.css">
+  <link rel="icon" type="image/jpeg" href="./phantom app icon.jpg">
+  <link rel="apple-touch-icon" href="./phantom app icon.jpg">
+  <link rel="manifest" href="./manifest-phantom.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Phantom Wallet">
+
+  <style>
+    .phantom-pwa-install-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: rgba(171, 159, 242, 0.15);
+      border: 1px solid rgba(171, 159, 242, 0.35);
+      color: #ab9ff2;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 10000;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+    .phantom-pwa-install-btn:hover {
+      background: rgba(171, 159, 242, 0.28);
+      border-color: #ab9ff2;
+      transform: translateY(-1px);
+    }
+    @media all and (display-mode: standalone) {
+      .phantom-pwa-install-btn {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body style="background-color: #0d0e16; color: #fff; margin: 0; padding: 0;">
+
+  <!-- Install App Header Action Pill -->
+  <button type="button" class="phantom-pwa-install-btn" id="app-pwa-install-btn" title="Install Phantom Wallet as Standalone App Window">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="7 10 12 15 17 10"/>
+      <line x1="12" y1="15" x2="12" y2="3"/>
+    </svg>
+    <span id="app-pwa-install-btn-text">Install App Window</span>
+  </button>
+
+  <!-- 3. PHANTOM WALLET SIMULATOR VIEW (Sleek Dark Web3 Wallet) -->
+  <section id="view-phantom" class="view-panel active">
+    <!-- Phantom Mobile Mockup Container -->
+    <div class="phantom-phone-frame" id="phantom-phone-frame">
+
+      <!-- Phantom Left Sidebar Drawer (Opens on Lock Icon Click) -->
+      <div class="phantom-sidebar-backdrop" id="phantom-sidebar-backdrop"></div>
+      <aside class="phantom-sidebar-drawer" id="phantom-sidebar-drawer" aria-label="Wallet menu">
+        <!-- Top Row: Lock Button & Copy Button -->
+        <div class="phantom-sidebar-top-row">
+          <button type="button" class="phantom-sidebar-lock-btn" id="phantom-sidebar-lock-btn" title="Close menu"
+            aria-label="Close menu">
+            <img src="./lock-key-placeholder.png" alt="Lock" class="phantom-sidebar-lock-img">
+          </button>
+          <button type="button" class="phantom-sidebar-copy-btn" id="phantom-sidebar-copy-btn"
+            title="Copy wallet address" aria-label="Copy address">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect width="13" height="13" x="9" y="9" rx="2" ry="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Big Bold Title: @Wallet Name -->
+        <h2 class="phantom-sidebar-handle" id="phantom-sidebar-handle">@Wallet Name</h2>
+
+        <!-- Active Wallet Dropdown / Switcher Pill -->
+        <div class="phantom-sidebar-wallet-pill" id="phantom-sidebar-wallet-trigger" role="button" tabindex="0"
+          title="Switch or edit wallet">
+          <div class="phantom-sidebar-avatar-circle">
+            <span id="phantom-sidebar-avatar-char">W</span>
+          </div>
+          <span class="phantom-sidebar-wallet-text" id="phantom-sidebar-wallet-text">Wallet Name</span>
+          <svg class="phantom-sidebar-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </div>
+
+        <!-- Navigation Menu Items -->
+        <nav class="phantom-sidebar-nav">
+          <!-- Profile -->
+          <button type="button" class="phantom-sidebar-nav-item" id="phantom-sidebar-nav-profile">
+            <svg class="phantom-sidebar-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            <span class="phantom-sidebar-nav-label">Profile</span>
+          </button>
+
+          <!-- Chats -->
+          <button type="button" class="phantom-sidebar-nav-item" id="phantom-sidebar-nav-chats">
+            <svg class="phantom-sidebar-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+            <span class="phantom-sidebar-nav-label">Chats</span>
+          </button>
+
+          <!-- History -->
+          <button type="button" class="phantom-sidebar-nav-item" id="phantom-sidebar-nav-history">
+            <svg class="phantom-sidebar-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+            <span class="phantom-sidebar-nav-label">History</span>
+          </button>
+        </nav>
+      </aside>
+
+      <!-- Phantom Scrollable Content -->
+      <div class="phantom-main-content">
+        <!-- Top Nav Bar (Lock icon & Home, Trade, Explore pills) -->
+        <header class="phantom-top-header">
+          <button type="button" class="phantom-top-lock-btn" id="phantom-top-lock-btn" aria-label="Wallet Lock"
+            title="Open wallet menu">
+            <img src="./lock-key-placeholder.png" alt="Lock" class="phantom-header-lock-icon">
+          </button>
+          <div class="phantom-nav-pills">
+            <button type="button" class="phantom-pill-btn active">Home</button>
+            <button type="button" class="phantom-pill-btn">Trade</button>
+            <button type="button" class="phantom-pill-btn">Explore</button>
+          </div>
+          <div style="width: 36px;"></div>
+        </header>
+
+        <!-- Wallet Name Dropdown Trigger -->
+        <div class="phantom-wallet-select-wrap">
+          <button type="button" class="phantom-wallet-name-btn" id="phantom-wallet-name-trigger">
+            <span id="phantom-display-wallet-name">Wallet Name</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Portfolio Total Balance Display -->
+        <section class="phantom-hero-balance">
+          <h1 id="phantom-portfolio-val" class="phantom-big-val">$0.00</h1>
+          <div class="phantom-change-strip">
+            <span id="phantom-change-amt" class="phantom-change-green">+$0.00</span>
+            <span id="phantom-change-badge" class="phantom-gain-badge">+0.00%</span>
+          </div>
+        </section>
+
+        <!-- Cash Row Card -->
+        <div class="phantom-asset-card phantom-cash-card">
+          <div class="phantom-asset-left">
+            <div class="phantom-cash-icon-box">
+              <img src="./money_icon-2.svg" alt="Cash" class="phantom-cash-svg">
+            </div>
+            <span class="phantom-asset-title">Cash</span>
+          </div>
+          <div class="phantom-asset-right">
+            <span id="phantom-cash-val" class="phantom-asset-fiat">$0.00</span>
+          </div>
+        </div>
+
+        <!-- Tokens Section Header -->
+        <div class="phantom-section-title">
+          <span>Tokens</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        </div>
+
+        <!-- Tokens Dynamic List -->
+        <div id="phantom-tokens-list" class="phantom-tokens-list">
+          <!-- Token cards dynamically populated by app.js -->
+        </div>
+      </div>
+
+      <!-- Floating Bottom Search Bar & Plus Action Button -->
+      <div class="phantom-bottom-floating-bar">
+        <div class="phantom-search-box">
+          <svg class="phantom-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#717388"
+            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+          <span class="phantom-search-placeholder">Search Phantom</span>
+        </div>
+        <button type="button" id="phantom-fab-btn" class="phantom-fab-btn" aria-label="Open Actions">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.4"
+            stroke-linecap="round">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- SPEED DIAL OVERLAY -->
+      <div id="phantom-speed-dial" class="phantom-speed-dial-overlay">
+        <div class="phantom-speed-dial-backdrop" id="phantom-dial-backdrop"></div>
+        <div class="phantom-speed-dial-stack">
+          <!-- Option 1: Send -->
+          <div class="phantom-dial-option">
+            <span class="phantom-dial-text">Send</span>
+            <button type="button" class="phantom-dial-btn" aria-label="Send">
+              <img src="./phantom%20share%20send%20icon.png" alt="Send"
+                class="phantom-dial-icon phantom-dial-icon-send">
+            </button>
+          </div>
+
+          <!-- Option 2: Receive -->
+          <div class="phantom-dial-option">
+            <span class="phantom-dial-text">Receive</span>
+            <button type="button" class="phantom-dial-btn" aria-label="Receive">
+              <img src="./phantom%20receive%20icon.png" alt="Receive" class="phantom-dial-icon">
+            </button>
+          </div>
+
+          <!-- Option 3: Add Cash (ACTIVE - Opens Settings Modal) -->
+          <div class="phantom-dial-option" id="phantom-dial-add-cash">
+            <span class="phantom-dial-text">Add Cash</span>
+            <button type="button" class="phantom-dial-btn phantom-dial-btn-active" aria-label="Add Cash">
+              <img src="./phantom%20add%20cash%20icon.png" alt="Add Cash"
+                class="phantom-dial-icon phantom-dial-icon-add-cash">
+            </button>
+          </div>
+
+          <!-- Option 4: Trade -->
+          <div class="phantom-dial-option">
+            <span class="phantom-dial-text">Trade</span>
+            <button type="button" class="phantom-dial-btn" aria-label="Trade">
+              <img src="./phantom%20trade%20icon.png" alt="Trade" class="phantom-dial-icon">
+            </button>
+          </div>
+
+          <!-- Dial Close Button (✕) positioned over FAB -->
+          <button type="button" id="phantom-dial-close-btn" class="phantom-dial-close-btn" aria-label="Close Dial">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.4"
+              stroke-linecap="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- SETTINGS MODAL -->
+      <div id="phantom-settings-modal" class="phantom-settings-overlay">
+        <div class="phantom-settings-backdrop" id="phantom-settings-backdrop"></div>
+        <div class="phantom-settings-card">
+          <!-- Header -->
+          <div class="phantom-settings-top">
+            <h3 class="phantom-settings-heading">Settings</h3>
+            <button type="button" id="phantom-settings-close-btn" class="phantom-settings-x-btn"
+              aria-label="Close Settings">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"
+                stroke-linecap="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Settings Input Rows Container -->
+          <div class="phantom-settings-rows">
+            <!-- Row 1: Wallet Name -->
+            <div class="phantom-input-row phantom-input-row-wallet">
+              <div class="phantom-lock-squircle">
+                <img src="./lock-key-placeholder.png" alt="Lock">
+              </div>
+              <input type="text" id="phantom-input-wallet-name" class="phantom-name-field" placeholder="Wallet Name"
+                value="Wallet Name">
+            </div>
+
+            <!-- Row 2: Cash -->
+            <div class="phantom-input-row">
+              <div class="phantom-row-label-group">
+                <img src="./money_icon-2.svg" alt="Cash" class="phantom-field-icon">
+                <span class="phantom-field-name">Cash</span>
+              </div>
+              <input type="number" id="phantom-input-cash" class="phantom-num-field" placeholder="0" value="0" min="0"
+                step="any">
+            </div>
+
+            <!-- Row 3: USDT -->
+            <div class="phantom-input-row">
+              <div class="phantom-row-label-group">
+                <img src="./usdt-logo.png" alt="USDT" class="phantom-field-icon">
+                <span class="phantom-field-name">USDT</span>
+              </div>
+              <input type="number" id="phantom-input-usdt" class="phantom-num-field" placeholder="0" value="0" min="0"
+                step="any">
+            </div>
+
+            <!-- Row 4: Solana -->
+            <div class="phantom-input-row">
+              <div class="phantom-row-label-group">
+                <img src="./solana-logo.png" alt="Solana" class="phantom-field-icon">
+                <span class="phantom-field-name">Solana</span>
+              </div>
+              <input type="number" id="phantom-input-solana" class="phantom-num-field" placeholder="0" value="0" min="0"
+                step="any">
+            </div>
+
+            <!-- Row 5: Ethereum -->
+            <div class="phantom-input-row">
+              <div class="phantom-row-label-group">
+                <img src="./ethereum-logo.png" alt="Ethereum" class="phantom-field-icon">
+                <span class="phantom-field-name">Ethereum</span>
+              </div>
+              <input type="number" id="phantom-input-ethereum" class="phantom-num-field" placeholder="0" value="0"
+                min="0" step="any">
+            </div>
+
+            <!-- Row 6: BTC -->
+            <div class="phantom-input-row">
+              <div class="phantom-row-label-group">
+                <img src="./bitcoin-logo.png" alt="BTC" class="phantom-field-icon">
+                <span class="phantom-field-name">BTC</span>
+              </div>
+              <input type="number" id="phantom-input-btc" class="phantom-num-field" placeholder="0" value="0" min="0"
+                step="any">
+            </div>
+
+            <!-- Row 7: USDC -->
+            <div class="phantom-input-row">
+              <div class="phantom-row-label-group">
+                <img src="./usdc-logo.png" alt="USDC" class="phantom-field-icon">
+                <span class="phantom-field-name">USDC</span>
+              </div>
+              <input type="number" id="phantom-input-usdc" class="phantom-num-field" placeholder="0" value="0" min="0"
+                step="any">
+            </div>
+
+            <!-- Row 8: Polygon -->
+            <div class="phantom-input-row">
+              <div class="phantom-row-label-group">
+                <img src="./polygon-logo.png" alt="Polygon" class="phantom-field-icon">
+                <span class="phantom-field-name">Polygon</span>
+              </div>
+              <input type="number" id="phantom-input-polygon" class="phantom-num-field" placeholder="0" value="0"
+                min="0" step="any">
+            </div>
+          </div>
+
+          <!-- Bottom Action Buttons -->
+          <div class="phantom-settings-actions">
+            <button type="button" id="phantom-settings-reset-btn" class="phantom-btn-reset">Reset</button>
+            <button type="button" id="phantom-settings-done-btn" class="phantom-btn-done">Done</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Simulated Action Modal Dialog -->
+  <div id="sim-modal" class="sim-modal-overlay">
+    <div class="sim-modal-box">
+      <div id="modal-icon" class="sim-modal-icon"></div>
+      <h3 id="modal-title" class="sim-modal-title">Success</h3>
+      <p id="modal-desc" class="sim-modal-desc"></p>
+      <button type="button" id="modal-close-btn" class="sim-modal-close-btn">Done</button>
+    </div>
+  </div>
+
+  <!-- Controller App Module -->
+  <script type="module" src="./app.js"></script>
+
+  <!-- Dedicated Standalone PWA Installation Handler -->
+  <script>
+    let pwaPrompt = null;
+    const installBtn = document.getElementById('app-pwa-install-btn');
+    const installBtnText = document.getElementById('app-pwa-install-btn-text');
+
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    if (isStandalone && installBtn) {
+      installBtn.style.display = 'none';
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      pwaPrompt = e;
+      if (installBtn && !isStandalone) {
+        installBtn.style.display = 'inline-flex';
+        installBtnText.textContent = 'Install App Window';
+      }
+    });
+
+    if (installBtn) {
+      installBtn.addEventListener('click', async () => {
+        if (pwaPrompt) {
+          pwaPrompt.prompt();
+          const { outcome } = await pwaPrompt.userChoice;
+          if (outcome === 'accepted') {
+            installBtn.style.display = 'none';
+          }
+          pwaPrompt = null;
+        } else {
+          alert('To install Phantom Wallet as a separate desktop application window:\n\n1. Look at your browser address bar on top right.\n2. Click the ⊕ or "Install Phantom" icon.\n3. Click "Install". It will immediately open as its own standalone dark window on your Taskbar/Desktop!');
+        }
+      });
+    }
+
+    window.addEventListener('appinstalled', () => {
+      if (installBtn) installBtn.style.display = 'none';
+    });
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+  </script>
+</body>
+</html>

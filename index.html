@@ -14,20 +14,39 @@
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
     }
+    // Automatically strip .html and /index.html from URL address bar
+    (function() {
+      let path = window.location.pathname;
+      if (path.endsWith('/index.html') || path === '/index.html') {
+        path = path.replace(/\/index\.html$/, '') || '/';
+      } else if (path.endsWith('.html')) {
+        path = path.replace(/\.html$/, '');
+      }
+      if (path !== window.location.pathname) {
+        window.history.replaceState(null, '', path + window.location.search + window.location.hash);
+      }
+    })();
     window.scrollTo(0, 0);
   </script>
 
-  <!-- Inter & Inter Tight Google Fonts -->
+  <!-- Inter, Inter Tight & Instrument Sans Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Inter:ital,wght@0,300..800;1,300..800&family=Inter+Tight:ital,wght@0,100..800;1,100..800&display=swap"
+    rel="stylesheet">
 
   <!-- Core & Simulator Stylesheets -->
   <link rel="stylesheet" href="./styles-BxNiFifO.css">
   <link rel="stylesheet" href="./larppay.css">
   <link rel="stylesheet" href="./hub.css">
   <link rel="stylesheet" href="./landing.css">
-  <link rel="icon" type="image/png" href="./phantom-icon.png">
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <link rel="apple-touch-icon" href="./favicon.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Larpwallet">
 </head>
 
 <body>
@@ -39,7 +58,7 @@
     <!-- Sticky Minimalist Navigation -->
     <header class="landing-nav">
       <div class="landing-nav-inner">
-        <a href="#hero" class="landing-brand">
+        <a href="./" class="landing-brand">
           <div class="landing-brand-mark">L</div>
           <span>Larpwallet</span>
         </a>
@@ -56,12 +75,14 @@
         <div class="nav-user-dropdown-wrap" id="nav-user-wrap">
           <button type="button" class="nav-user-trigger" id="nav-user-btn" aria-label="User Account">
             <svg class="nav-user-icon" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
             </svg>
           </button>
           <div class="nav-user-arrow" aria-hidden="true">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="m6 9 6 6 6-6"/>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="m6 9 6 6 6-6" />
             </svg>
           </div>
           <div class="nav-user-dropdown" role="menu" id="nav-user-menu">
@@ -69,16 +90,92 @@
             <div id="nav-guest-menu">
               <button type="button" class="dropdown-item primary-item" id="nav-btn-signup">Sign up</button>
               <button type="button" class="dropdown-item" id="nav-btn-login">Log in</button>
+              <div style="height: 1px; background: rgba(255,255,255,0.08); margin: 4px 0;"></div>
+              <!-- Download Apps Expandable -->
+              <button type="button" class="dropdown-item dropdown-download-toggle" id="guest-download-toggle">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                <span>Download Apps</span>
+                <svg class="dl-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                  style="margin-left:auto;transition:transform 0.2s;">
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </button>
+              <div class="dropdown-download-panel" id="guest-download-panel">
+                <div class="dl-sim-row" data-sim="shopify">
+                  <span class="dl-sim-circle" data-sim="shopify"></span>
+                  <img src="./shopify app icon.jpg" width="18" height="18"
+                    style="border-radius:4px;object-fit:cover;flex-shrink:0;" alt="Shopify">
+                  <span class="dl-sim-label">Shopify</span>
+                </div>
+                <div class="dl-sim-row" data-sim="phantom">
+                  <span class="dl-sim-circle" data-sim="phantom"></span>
+                  <img src="./phantom app icon.jpg" width="18" height="18"
+                    style="border-radius:4px;object-fit:cover;flex-shrink:0;" alt="Phantom Wallet">
+                  <span class="dl-sim-label">Phantom Wallet</span>
+                </div>
+                <div class="dl-sim-row" data-sim="cashapp">
+                  <span class="dl-sim-circle" data-sim="cashapp"></span>
+                  <img src="./cash app icon.jpg" width="18" height="18"
+                    style="border-radius:4px;object-fit:cover;flex-shrink:0;" alt="Cash App">
+                  <span class="dl-sim-label">Cash App</span>
+                </div>
+                <button type="button" class="dl-download-selected-btn" id="guest-dl-selected-btn" disabled>Download
+                  Selected</button>
+              </div>
             </div>
             <!-- Authenticated menu items -->
             <div id="nav-auth-menu" style="display: none;">
               <div class="nav-user-status">
                 <div class="nav-user-email" id="nav-user-email-display">user@example.com</div>
-                <div style="font-size: 10px; color: #34d399; margin-top: 2px;">● Simulator Access Active</div>
+                <div style="font-size: 10px; color: #34d399; margin-top: 2px;">● Full Access Active</div>
               </div>
               <button type="button" class="dropdown-item" data-navigate="phantom">Phantom Wallet</button>
-              <button type="button" class="dropdown-item" data-navigate="shopify">Shopify Admin</button>
+              <button type="button" class="dropdown-item" data-navigate="shopify">Shopify</button>
               <button type="button" class="dropdown-item" data-navigate="cashapp">Cash App</button>
+              <div style="height: 1px; background: rgba(255,255,255,0.08); margin: 4px 0;"></div>
+              <!-- Download Apps Expandable (Auth) -->
+              <button type="button" class="dropdown-item dropdown-download-toggle" id="auth-download-toggle">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                <span>Download Apps</span>
+                <svg class="dl-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                  style="margin-left:auto;transition:transform 0.2s;">
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </button>
+              <div class="dropdown-download-panel" id="auth-download-panel">
+                <div class="dl-sim-row" data-sim="shopify">
+                  <span class="dl-sim-circle" data-sim="shopify"></span>
+                  <img src="./shopify app icon.jpg" width="18" height="18"
+                    style="border-radius:4px;object-fit:cover;flex-shrink:0;" alt="Shopify">
+                  <span class="dl-sim-label">Shopify</span>
+                </div>
+                <div class="dl-sim-row" data-sim="phantom">
+                  <span class="dl-sim-circle" data-sim="phantom"></span>
+                  <img src="./phantom app icon.jpg" width="18" height="18"
+                    style="border-radius:4px;object-fit:cover;flex-shrink:0;" alt="Phantom Wallet">
+                  <span class="dl-sim-label">Phantom Wallet</span>
+                </div>
+                <div class="dl-sim-row" data-sim="cashapp">
+                  <span class="dl-sim-circle" data-sim="cashapp"></span>
+                  <img src="./cash app icon.jpg" width="18" height="18"
+                    style="border-radius:4px;object-fit:cover;flex-shrink:0;" alt="Cash App">
+                  <span class="dl-sim-label">Cash App</span>
+                </div>
+                <button type="button" class="dl-download-selected-btn" id="auth-dl-selected-btn" disabled>Download
+                  Selected</button>
+              </div>
               <div style="height: 1px; background: rgba(255,255,255,0.08); margin: 4px 0;"></div>
               <button type="button" class="dropdown-item" id="nav-btn-logout" style="color: #f87171;">Log out</button>
             </div>
@@ -93,7 +190,8 @@
         <div class="hero-content">
           <h1 class="hero-title">You don't need to pinterest your figures like these cars anymore.</h1>
           <p class="hero-subtitle">
-            Stop larping your numbers with Pinterest screenshots like you do with cars. Access customisable dashboards of e-commerce, wallet and transactional ones to create your figures.
+            Stop larping your numbers with Pinterest screenshots like you do with cars. Access customisable dashboards
+            of e-commerce, wallet and transactional ones to create your figures.
           </p>
         </div>
       </div>
@@ -164,6 +262,12 @@
 
     <!-- 3. PRICING SECTION (Single System: $9.99 Lifetime with future updates) -->
     <section id="pricing" class="landing-section">
+      <!-- WebGL TopoField Background -->
+      <div class="pricing-topo-bg" aria-hidden="true">
+        <canvas id="pricing-topo-canvas"></canvas>
+        <div class="pricing-topo-overlay"></div>
+      </div>
+
       <div class="landing-container">
         <div class="section-header text-center scroll-reveal">
           <div class="section-tag">Simple Pricing</div>
@@ -171,50 +275,182 @@
         </div>
 
         <div class="pricing-wrapper">
-          <div class="pricing-card-display scroll-reveal reveal-delay-1">
-            <img src="./card%20outline.png" alt="Card Outline" class="pricing-outline-img">
-            
-            <div class="pricing-card-overlay">
-              <!-- Top Row: PAY ONLY + $49.99 (Centered) -->
-              <div class="pricing-overlay-header">
-                <div class="pricing-overlay-eyebrow">PAY ONLY</div>
-                <div class="pricing-overlay-price">$49.99</div>
-              </div>
+          <div class="pricing-card">
+            <div class="pricing-pay-only">PAY ONLY</div>
+            <div class="pricing-price-val">$49.99</div>
 
-              <!-- Features checklist (previous 4 points) -->
-              <ul class="pricing-overlay-features">
-                <li class="pricing-overlay-item">
-                  <svg class="pricing-feature-icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
-                  <span>Gives 10x return by boosting your content</span>
-                </li>
-                <li class="pricing-overlay-item">
-                  <svg class="pricing-feature-icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
-                  <span>Interactive balances & live order streams</span>
-                </li>
-                <li class="pricing-overlay-item">
-                  <svg class="pricing-feature-icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
-                  <span>All future platform updates included</span>
-                </li>
-                <li class="pricing-overlay-item">
-                  <svg class="pricing-feature-icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
-                  <span>100% client-side & offline ready</span>
-                </li>
-              </ul>
+            <ul class="pricing-features-list">
+              <li class="pricing-feature-row">
+                <svg class="pricing-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+                <span>Gives 10x return by boosting your content</span>
+              </li>
+              <li class="pricing-feature-row">
+                <svg class="pricing-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+                <span>Interactive balances &amp; live order streams</span>
+              </li>
+              <li class="pricing-feature-row">
+                <svg class="pricing-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+                <span>All future platform updates included</span>
+              </li>
+              <li class="pricing-feature-row">
+                <svg class="pricing-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+                <span>100% client-side &amp; offline ready</span>
+              </li>
+            </ul>
 
-              <!-- Bottom Button & Guarantee -->
-              <div class="pricing-overlay-footer">
-                <button type="button" class="pricing-overlay-btn" id="pricing-checkout-btn">
-                  Get Lifetime Access
-                </button>
-                <div class="pricing-overlay-guarantee">Instant access after payment</div>
-              </div>
-            </div>
+            <button type="button" class="pricing-cta-btn" id="pricing-checkout-btn">
+              Get Lifetime Access
+            </button>
+            <div class="pricing-billing-note">Instant access after payment</div>
           </div>
         </div>
-
         <!-- Pricing below center tag -->
         <div class="pricing-signature-tag scroll-reveal reveal-delay-2">[N00BIEDOB]</div>
       </div>
+
+      <!-- Dedicated TopoField WebGL Renderer for Pricing -->
+      <script>
+        (function() {
+          function initPricingTopo() {
+            var canvas = document.getElementById('pricing-topo-canvas');
+            if (!canvas) return;
+
+            var gl = canvas.getContext('webgl', { alpha: true, antialias: false, depth: false }) ||
+                     canvas.getContext('experimental-webgl', { alpha: true, antialias: false, depth: false });
+            if (!gl) return;
+
+            var vsSource = [
+              'attribute vec2 a_position;',
+              'void main() {',
+              '  gl_Position = vec4(a_position, 0.0, 1.0);',
+              '}'
+            ].join('\n');
+
+            var fsSource = [
+              '#ifdef GL_FRAGMENT_PRECISION_HIGH',
+              'precision highp float;',
+              '#else',
+              'precision mediump float;',
+              '#endif',
+              'uniform vec2 u_resolution;',
+              'uniform float u_time;',
+              'uniform float u_dpr;',
+              '',
+              'vec3 permute(vec3 x) { return mod(((x*34.0)+1.0)*x, 289.0); }',
+              'float snoise(vec2 v){',
+              '  const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);',
+              '  vec2 i  = floor(v + dot(v, C.yy) );',
+              '  vec2 x0 = v -   i + dot(i, C.xx);',
+              '  vec2 i1;',
+              '  if (x0.x > x0.y) { i1 = vec2(1.0, 0.0); } else { i1 = vec2(0.0, 1.0); }',
+              '  vec4 x12 = x0.xyxy + C.xxzz; x12.xy -= i1;',
+              '  i = mod(i, 289.0);',
+              '  vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 )) + i.x + vec3(0.0, i1.x, 1.0 ));',
+              '  vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);',
+              '  m = m*m; m = m*m;',
+              '  vec3 x = 2.0 * fract(p * C.www) - 1.0;',
+              '  vec3 h = abs(x) - 0.5; vec3 ox = floor(x + 0.5);',
+              '  vec3 a0 = x - ox; m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );',
+              '  vec3 g; g.x  = a0.x  * x0.x  + h.x  * x0.y; g.yz = a0.yz * x12.xz + h.yz * x12.yw;',
+              '  return 130.0 * dot(m, g);',
+              '}',
+              '',
+              'void main() {',
+              '  vec2 st = gl_FragCoord.xy / u_resolution.xy;',
+              '  st.x *= u_resolution.x / u_resolution.y;',
+              '',
+              '  float gridSize = 46.0 * u_dpr;',
+              '  vec2 gridSt = gl_FragCoord.xy / gridSize;',
+              '  vec2 gridFract = fract(gridSt);',
+              '  float lineThickness = 1.0 / gridSize;',
+              '  float gridLines = step(1.0 - lineThickness, gridFract.x) + step(1.0 - lineThickness, gridFract.y);',
+              '  gridLines = clamp(gridLines, 0.0, 1.0) * 0.22;',
+              '',
+              '  float noiseScale = 1.35;',
+              '  vec2 noisePos = st * noiseScale + vec2(u_time * 0.016, u_time * 0.024);',
+              '  float n = snoise(noisePos) * 0.5 + 0.5;',
+              '  float numBands = 10.0;',
+              '  float bandVal = n * numBands;',
+              '  float triangleWave = abs(fract(bandVal) - 0.5) * 2.0;',
+              '',
+              '  float topoLines = smoothstep(0.040, 0.00, triangleWave) * 0.85;',
+              '',
+              '  vec3 color = vec3(0.0);',
+              '  color += vec3(0.85, 0.90, 1.0) * gridLines;',
+              '  color += vec3(0.95, 0.98, 1.0) * topoLines;',
+              '',
+              '  gl_FragColor = vec4(color, 1.0);',
+              '}'
+            ].join('\n');
+
+            function compile(type, src) {
+              var s = gl.createShader(type);
+              gl.shaderSource(s, src);
+              gl.compileShader(s);
+              return s;
+            }
+
+            var vs = compile(gl.VERTEX_SHADER, vsSource);
+            var fs = compile(gl.FRAGMENT_SHADER, fsSource);
+            var prog = gl.createProgram();
+            gl.attachShader(prog, vs);
+            gl.attachShader(prog, fs);
+            gl.linkProgram(prog);
+            gl.useProgram(prog);
+
+            var buf = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+
+            var pos = gl.getAttribLocation(prog, 'a_position');
+            gl.enableVertexAttribArray(pos);
+            gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+
+            var uRes = gl.getUniformLocation(prog, 'u_resolution');
+            var uTime = gl.getUniformLocation(prog, 'u_time');
+            var uDpr = gl.getUniformLocation(prog, 'u_dpr');
+
+            function resize() {
+              var dpr = Math.min(window.devicePixelRatio || 1, 2);
+              var rect = canvas.getBoundingClientRect();
+              var w = Math.max(200, Math.floor((rect.width || window.innerWidth) * dpr));
+              var h = Math.max(200, Math.floor((rect.height || 750) * dpr));
+              if (canvas.width !== w || canvas.height !== h) {
+                canvas.width = w;
+                canvas.height = h;
+              }
+              gl.viewport(0, 0, canvas.width, canvas.height);
+              gl.uniform2f(uRes, canvas.width, canvas.height);
+              gl.uniform1f(uDpr, dpr);
+            }
+
+            window.addEventListener('resize', resize, { passive: true });
+            resize();
+
+            var start = performance.now();
+            function loop(t) {
+              gl.uniform1f(uTime, (t - start) * 0.001);
+              gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+              requestAnimationFrame(loop);
+            }
+            requestAnimationFrame(loop);
+          }
+
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initPricingTopo);
+          } else {
+            initPricingTopo();
+          }
+        })();
+      </script>
     </section>
 
     <!-- 4. FAQ SECTION -->
@@ -233,13 +469,18 @@
             <button type="button" class="faq-question-btn">
               <div class="faq-roll-wrapper">
                 <span class="faq-roll-primary">What is included with the $49.99 lifetime purchase?</span>
-                <span class="faq-roll-secondary" aria-hidden="true">What is included with the $49.99 lifetime purchase?</span>
+                <span class="faq-roll-secondary" aria-hidden="true">What is included with the $49.99 lifetime
+                  purchase?</span>
               </div>
-              <svg class="faq-icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+              <svg class="faq-icon" viewBox="0 0 24 24">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
             </button>
             <div class="faq-answer">
               <div class="faq-answer-inner">
-                You receive full, unrestricted access to the complete simulation suite: Phantom Wallet (crypto/Solana), Shopify Store Admin (e-commerce telemetry), and Cash App (money transfer keypad). You also get every new simulator platform and feature enhancement we build in the future.
+                You receive full, unrestricted access to the complete simulation suite: Phantom Wallet (crypto/Solana),
+                Shopify Store Admin (e-commerce telemetry), and Cash App (money transfer keypad). You also get every new
+                simulator platform and feature enhancement we build in the future.
               </div>
             </div>
           </div>
@@ -248,13 +489,17 @@
             <button type="button" class="faq-question-btn">
               <div class="faq-roll-wrapper">
                 <span class="faq-roll-primary">Are there recurring or monthly subscription fees?</span>
-                <span class="faq-roll-secondary" aria-hidden="true">Are there recurring or monthly subscription fees?</span>
+                <span class="faq-roll-secondary" aria-hidden="true">Are there recurring or monthly subscription
+                  fees?</span>
               </div>
-              <svg class="faq-icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+              <svg class="faq-icon" viewBox="0 0 24 24">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
             </button>
             <div class="faq-answer">
               <div class="faq-answer-inner">
-                No. We maintain a strictly single-tier pricing model: $49.99 for lifetime access. Once purchased, you will never be charged recurring fees or maintenance costs.
+                No. We maintain a strictly single-tier pricing model: $49.99 for lifetime access. Once purchased, you
+                will never be charged recurring fees or maintenance costs.
               </div>
             </div>
           </div>
@@ -265,11 +510,14 @@
                 <span class="faq-roll-primary">How do future updates work?</span>
                 <span class="faq-roll-secondary" aria-hidden="true">How do future updates work?</span>
               </div>
-              <svg class="faq-icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+              <svg class="faq-icon" viewBox="0 0 24 24">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
             </button>
             <div class="faq-answer">
               <div class="faq-answer-inner">
-                Whenever a new simulator, user interface theme, or feature update is deployed, your license automatically provides access. No upgrade fees, no tier lockouts.
+                Whenever a new simulator, user interface theme, or feature update is deployed, your license
+                automatically provides access. No upgrade fees, no tier lockouts.
               </div>
             </div>
           </div>
@@ -280,11 +528,14 @@
                 <span class="faq-roll-primary">Can the simulators be used offline?</span>
                 <span class="faq-roll-secondary" aria-hidden="true">Can the simulators be used offline?</span>
               </div>
-              <svg class="faq-icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+              <svg class="faq-icon" viewBox="0 0 24 24">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
             </button>
             <div class="faq-answer">
               <div class="faq-answer-inner">
-                Yes. The application runs entirely within modern web browsers with local client-side state handling. It does not require remote server connectivity to simulate interfaces or input numbers.
+                Yes. The application runs entirely within modern web browsers with local client-side state handling. It
+                does not require remote server connectivity to simulate interfaces or input numbers.
               </div>
             </div>
           </div>
@@ -293,13 +544,18 @@
             <button type="button" class="faq-question-btn">
               <div class="faq-roll-wrapper">
                 <span class="faq-roll-primary">Will I get a refund If Larpwallet does not work?</span>
-                <span class="faq-roll-secondary" aria-hidden="true">Will I get a refund If Larpwallet does not work?</span>
+                <span class="faq-roll-secondary" aria-hidden="true">Will I get a refund If Larpwallet does not
+                  work?</span>
               </div>
-              <svg class="faq-icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+              <svg class="faq-icon" viewBox="0 0 24 24">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
             </button>
             <div class="faq-answer">
               <div class="faq-answer-inner">
-                Yes, in few cases. First you need to report or share your problem/issue in our Discord server where we're gonna try and help you fix it and if it still does not work then we will give you a refund. Refund is only possible in this case.
+                Yes, in few cases. First you need to report or share your problem/issue in our Discord server where
+                we're gonna try and help you fix it and if it still does not work then we will give you a refund. Refund
+                is only possible in this case.
               </div>
             </div>
           </div>
@@ -313,7 +569,7 @@
         <!-- Main Row: Larpwallet Brand + Community Links beside each other -->
         <div class="footer-main-row scroll-reveal">
           <div class="footer-brand-wrap">
-            <a href="#hero" class="landing-brand">
+            <a href="./" class="landing-brand">
               <div class="landing-brand-mark">L</div>
               <span>Larpwallet</span>
             </a>
@@ -323,11 +579,11 @@
           </div>
 
           <div class="footer-community-wrap">
-            <div class="footer-col-title">Community</div>
+            <div class="footer-col-title">Legal & Community</div>
             <ul class="footer-col-list">
               <li><a href="https://discord.com" target="_blank" rel="noopener noreferrer" class="footer-link">Discord Server</a></li>
-              <li><a href="javascript:void(0)" class="footer-link" id="footer-terms-btn">Terms & License</a></li>
-              <li><a href="javascript:void(0)" class="footer-link" id="footer-privacy-btn">Privacy</a></li>
+              <li><a href="./terms-and-conditions" class="footer-link" id="footer-terms-btn">Terms and Conditions</a></li>
+              <li><a href="./privacy-policy" class="footer-link" id="footer-privacy-btn">Privacy Policy</a></li>
             </ul>
           </div>
         </div>
@@ -338,7 +594,7 @@
             <div>© 2026 Larpwallet. All rights reserved.</div>
           </div>
           <div class="footer-bottom-right">
-            <a href="#hero" class="footer-link">Back to Top ↑</a>
+            <a href="javascript:void(0)" onclick="window.scrollTo({top:0,behavior:'smooth'})" class="footer-link">Back to Top ↑</a>
           </div>
         </div>
       </div>
@@ -346,8 +602,9 @@
 
     <!-- Floating Back to Top Button with Unblur & Float Animation -->
     <button type="button" class="floating-scroll-top" id="floating-scroll-top" aria-label="Scroll to top">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="m18 15-6-6-6 6"/>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="m18 15-6-6-6 6" />
       </svg>
     </button>
 
@@ -369,31 +626,35 @@
     </nav>
 
     <!-- Cash App Phone Frame -->
-    <div id="cashapp-phone-container" class="cashapp-phone-container relative min-h-[100dvh] flex justify-center overflow-hidden overscroll-none w-full"
-      style="height: 641px; background-color: rgb(6, 174, 19); font-family: 'InterDisplay', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; touch-action: none; overscroll-behavior: none; -webkit-font-smoothing: antialiased;">
-      <div class="w-full max-w-[480px] flex flex-col px-[14.8716px] pt-6 pb-20 text-black relative" style="touch-action: none; height: 100%;">
+    <div id="cashapp-phone-container"
+      class="cashapp-phone-container relative min-h-[100dvh] flex justify-center overflow-hidden overscroll-none w-full"
+      style="height: 641px; background-color: rgb(6, 174, 19); font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-weight: 600; touch-action: none; overscroll-behavior: none; -webkit-font-smoothing: antialiased;">
+      <div class="w-full max-w-[480px] flex flex-col px-[14.8716px] pt-6 pb-16 text-black relative"
+        style="touch-action: none; height: 100%;">
 
         <!-- Cash App Top Nav Icons (QR beside Smile on left, Search & User on right) -->
-        <div class="cashapp-top-nav-bar flex h-10 items-center justify-between" style="margin-top: 24px; margin-bottom: 12px; z-index: 10;">
+        <div class="cashapp-top-nav-bar flex h-10 items-center justify-between"
+          style="margin-top: 24px; margin-bottom: 12px; z-index: 10;">
           <div class="flex h-10 items-center" style="gap: 12px;">
             <!-- Smile -->
             <div
               class="cashapp-icon-circle w-[43.77px] h-[43.77px] rounded-full bg-[rgba(0,0,0,0.12)] flex items-center justify-center cursor-pointer hover:bg-[rgba(0,0,0,0.18)] transition-colors">
-              <img alt="Smile" class="cashapp-nav-icon-img w-[26.75px] h-[26.75px] object-contain" src="./smiley_icon.png">
+              <img alt="Smile" class="cashapp-nav-icon-img w-[26.75px] h-[26.75px] object-contain"
+                src="./smiley_icon.png">
             </div>
             <!-- QR Icon (Beside smile icon as requested) -->
             <div id="cashapp-top-qr-btn"
               class="cashapp-icon-circle w-[43.77px] h-[43.77px] rounded-full bg-[rgba(0,0,0,0.12)] flex items-center justify-center cursor-pointer hover:bg-[rgba(0,0,0,0.18)] transition-colors">
               <img alt="QR" aria-hidden="true" width="18.6" height="18.6" src="./qr_icon.png"
-                class="cashapp-nav-icon-img"
-                style="width: 18.6px; height: 18.6px; object-fit: contain;">
+                class="cashapp-nav-icon-img" style="width: 18.6px; height: 18.6px; object-fit: contain;">
             </div>
           </div>
           <div class="flex h-10 items-center" style="gap: 12px;">
             <!-- Search -->
             <div id="cashapp-top-search-btn"
               class="cashapp-icon-circle w-[43.77px] h-[43.77px] rounded-full bg-[rgba(0,0,0,0.12)] flex items-center justify-center cursor-pointer hover:bg-[rgba(0,0,0,0.18)] transition-colors">
-              <img alt="Search" class="cashapp-nav-icon-img w-[22.47px] h-[22.47px] object-contain" src="./magnifying_glass.png">
+              <img alt="Search" class="cashapp-nav-icon-img w-[22.47px] h-[22.47px] object-contain"
+                src="./magnifying_glass.png">
             </div>
             <!-- User -->
             <div id="cashapp-top-user-btn"
@@ -404,19 +665,20 @@
         </div>
 
         <!-- TAB 1: KEYPAD VIEW (Default) -->
-        <div id="cashapp-tab-keypad" class="cashapp-tab-pane flex-1 flex flex-col justify-between" style="display: flex;">
+        <div id="cashapp-tab-keypad" class="cashapp-tab-pane flex-1 flex flex-col"
+          style="display: flex; justify-content: flex-start; padding-top: 20px;">
           <!-- Amount Display -->
-          <div class="flex-1 flex items-center justify-center">
+          <div class="flex items-center justify-center" style="flex: 0 0 auto; padding: 8px 0 4px;">
             <div class="relative flex flex-col items-center">
               <div id="cashapp-min-warning"
                 class="text-black text-[14px] font-semibold transition-opacity duration-300 whitespace-nowrap"
                 style="opacity: 0; position: absolute; top: -55px; pointer-events: none;">
                 $1 is the minimum to send
               </div>
-              <div id="cashapp-amount-display" class="text-[91.8px] font-semibold leading-none select-none">
+              <div id="cashapp-amount-display" class="text-[98px] font-bold leading-none select-none tracking-tight">
                 <span>$</span><span>0</span>
               </div>
-              <div id="cashapp-measure-display" aria-hidden="true" class="text-[91.8px] font-semibold leading-none"
+              <div id="cashapp-measure-display" aria-hidden="true" class="text-[98px] font-bold leading-none"
                 style="position: absolute; visibility: hidden; pointer-events: none; white-space: nowrap;">
                 <span>$</span>0
               </div>
@@ -424,69 +686,44 @@
           </div>
 
           <!-- Keypad -->
-          <div class="grid grid-cols-3 text-[23.256px] font-bold" style="row-gap: 16px;">
-            <button type="button"
-              class="h-13 flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
-              data-cashkey="1">1</button>
-            <button type="button"
-              class="h-13 flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
-              data-cashkey="2">2</button>
-            <button type="button"
-              class="h-13 flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
-              data-cashkey="3">3</button>
-            <button type="button"
-              class="h-13 flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
-              data-cashkey="4">4</button>
-            <button type="button"
-              class="h-13 flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
-              data-cashkey="5">5</button>
-            <button type="button"
-              class="h-13 flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
-              data-cashkey="6">6</button>
-            <button type="button"
-              class="h-13 flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
-              data-cashkey="7">7</button>
-            <button type="button"
-              class="h-13 flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
-              data-cashkey="8">8</button>
-            <button type="button"
-              class="h-13 flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
-              data-cashkey="9">9</button>
-            <button type="button"
-              class="h-13 flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
-              data-cashkey=".">.</button>
-            <button type="button"
-              class="h-13 flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
-              data-cashkey="0">0</button>
-            <button type="button"
-              class="h-13 flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
-              data-cashkey="backspace" aria-label="Backspace">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-chevron-left w-8 h-8">
+          <div class="grid grid-cols-3 text-[32px] font-bold" style="row-gap: 10px; margin-top: 4px;">
+            <button type="button" class="cashapp-keypad-key" data-cashkey="1">1</button>
+            <button type="button" class="cashapp-keypad-key" data-cashkey="2">2</button>
+            <button type="button" class="cashapp-keypad-key" data-cashkey="3">3</button>
+            <button type="button" class="cashapp-keypad-key" data-cashkey="4">4</button>
+            <button type="button" class="cashapp-keypad-key" data-cashkey="5">5</button>
+            <button type="button" class="cashapp-keypad-key" data-cashkey="6">6</button>
+            <button type="button" class="cashapp-keypad-key" data-cashkey="7">7</button>
+            <button type="button" class="cashapp-keypad-key" data-cashkey="8">8</button>
+            <button type="button" class="cashapp-keypad-key" data-cashkey="9">9</button>
+            <button type="button" class="cashapp-keypad-key cashapp-dot-key" data-cashkey=".">.</button>
+            <button type="button" class="cashapp-keypad-key" data-cashkey="0">0</button>
+            <button type="button" class="cashapp-keypad-key" data-cashkey="backspace" aria-label="Backspace">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m15 18-6-6 6-6" />
               </svg>
             </button>
           </div>
 
           <!-- Pool & Request Action Row -->
-          <div class="mt-4 grid grid-cols-2 gap-3">
+          <div class="grid grid-cols-2 gap-3.5" style="margin-top: 10px;">
             <button type="button" id="cashapp-pool-btn"
-              class="rounded-full text-[16.15px] font-semibold cursor-pointer active:scale-[0.98] transition-transform"
-              style="background-color: rgba(0, 0, 0, 0.12); height: 48px;">
+              class="rounded-full text-[16.5px] font-semibold cursor-pointer active:scale-[0.98] transition-transform flex items-center justify-center"
+              style="background-color: rgba(0, 0, 0, 0.15); height: 44px; color: #000000;">
               Pool
             </button>
             <button type="button" id="cashapp-req-btn"
-              class="rounded-full text-[16.15px] font-semibold cursor-pointer active:scale-[0.98] transition-transform"
-              style="background-color: rgba(0, 0, 0, 0.12); height: 48px;">
+              class="rounded-full text-[16.5px] font-semibold cursor-pointer active:scale-[0.98] transition-transform flex items-center justify-center"
+              style="background-color: rgba(0, 0, 0, 0.15); height: 44px; color: #000000;">
               Request
             </button>
           </div>
 
           <!-- Pay Button -->
           <button type="button" id="cashapp-pay-btn"
-            class="mt-2.5 rounded-full bg-black text-white text-[16.15px] font-semibold cursor-pointer active:scale-[0.98] transition-transform"
-            style="height: 48px;">
+            class="w-full rounded-full bg-black text-white text-[17px] font-semibold cursor-pointer active:scale-[0.98] transition-transform flex items-center justify-center"
+            style="height: 38px; margin-top: 8px;">
             Pay
           </button>
         </div>
@@ -496,10 +733,14 @@
           <!-- Cash Card Top Peek -->
           <div class="cashapp-card-peek-tab">
             <div class="cashapp-peek-pill">
-              <svg width="18" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+              <svg width="18" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect width="20" height="14" x="2" y="5" rx="2" />
+                <line x1="2" x2="22" y1="10" y2="10" />
+              </svg>
               <span>•• 0764</span>
             </div>
-            <span class="cashapp-peek-username">$username</span>
+            <span id="cashapp-peek-username" class="cashapp-peek-username" contenteditable="true" spellcheck="false"
+              title="Click to edit username" role="textbox" aria-label="Edit username">$username</span>
           </div>
 
           <!-- Main Balance Card -->
@@ -507,13 +748,21 @@
             <div class="flex items-center justify-between">
               <button type="button" class="cashapp-balance-routing-btn">
                 <span>Cash balance •• 1605</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
               </button>
               <button type="button" class="cashapp-eye-btn" aria-label="Toggle balance privacy">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+                  <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
+                  <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" />
+                  <line x1="2" x2="22" y1="2" y2="22" />
+                </svg>
               </button>
             </div>
-            <div class="cashapp-balance-big" id="cashapp-main-cash-balance">$0.00</div>
+            <div class="cashapp-balance-big" id="cashapp-main-cash-balance" contenteditable="true" spellcheck="false"
+              title="Click to edit balance">$0.00</div>
             <div class="flex items-center gap-3 mt-4">
               <button type="button" id="cashapp-home-add-money-btn" class="cashapp-home-pill-btn">Add money</button>
               <button type="button" id="cashapp-home-withdraw-btn" class="cashapp-home-withdraw-btn">Withdraw</button>
@@ -534,9 +783,9 @@
             <div>
               <div class="text-white text-[15px] font-semibold">Savings</div>
               <div class="text-white text-[28px] font-bold my-0.5">$0.00</div>
-              <div class="text-[#8e8e93] text-[13px] font-medium">Up to 3.25% interest</div>
+              <div class="cashapp-subtitle-grey text-[13px] font-medium">Up to 3.25% interest</div>
             </div>
-            <div class="cashapp-home-circle-badge">
+            <div class="cashapp-home-circle-badge badge-savings">
               <span>$</span>
             </div>
           </div>
@@ -546,9 +795,9 @@
             <div>
               <div class="text-white text-[15px] font-semibold">Bitcoin</div>
               <div class="text-white text-[28px] font-bold my-0.5">$0.00</div>
-              <div class="text-[#8e8e93] text-[13px] font-medium">0% today</div>
+              <div class="cashapp-subtitle-grey text-[13px] font-medium">0% today</div>
             </div>
-            <div class="cashapp-home-circle-badge">
+            <div class="cashapp-home-circle-badge badge-bitcoin">
               <span>₿</span>
             </div>
           </div>
@@ -559,7 +808,8 @@
           <!-- Stocks Card -->
           <div class="cashapp-home-stocks-card">
             <div class="text-white text-[15px] font-semibold">Stocks</div>
-            <div class="text-white text-[22px] font-bold mt-1.5 mb-5 leading-tight">Buy stocks with no commission fees</div>
+            <div class="text-white text-[22px] font-bold mt-1.5 mb-5 leading-tight">Buy stocks with no commission fees
+            </div>
             <div class="cashapp-stocks-tickers">
               <span class="cashapp-ticker-pill cashapp-ticker-nvda">NVDA</span>
               <span class="cashapp-ticker-pill cashapp-ticker-aapl">AAPL</span>
@@ -575,7 +825,7 @@
                 <div class="cashapp-action-icon">💸</div>
                 <div>
                   <div class="text-white font-semibold text-[15.5px]">Pools</div>
-                  <div class="text-[#8e8e93] text-[13px] font-medium">Collect money with anyone</div>
+                  <div class="cashapp-subtitle-grey text-[13px] font-medium">Collect money with anyone</div>
                 </div>
               </div>
               <button type="button" class="cashapp-start-btn">Start</button>
@@ -585,7 +835,7 @@
                 <div class="cashapp-action-icon">🔑</div>
                 <div>
                   <div class="text-white font-semibold text-[15.5px]">Family</div>
-                  <div class="text-[#8e8e93] text-[13px] font-medium">Money tools for next gen</div>
+                  <div class="cashapp-subtitle-grey text-[13px] font-medium">Money tools for next gen</div>
                 </div>
               </div>
               <button type="button" class="cashapp-start-btn">Start</button>
@@ -595,7 +845,7 @@
                 <div class="cashapp-action-icon">📊</div>
                 <div>
                   <div class="text-white font-semibold text-[15.5px]">Earnings</div>
-                  <div class="text-[#8e8e93] text-[13px] font-medium">$0.00 this month</div>
+                  <div class="cashapp-subtitle-grey text-[13px] font-medium">$0.00 this month</div>
                 </div>
               </div>
               <button type="button" class="cashapp-start-btn">Start</button>
@@ -607,44 +857,69 @@
           <div class="cashapp-deposit-methods">
             <div class="cashapp-deposit-row">
               <div class="flex items-center gap-3 text-white">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect width="20" height="12" x="2" y="6" rx="2" />
+                  <circle cx="12" cy="12" r="2" />
+                </svg>
                 <span class="font-semibold text-white text-[16px]">Deposit paper money</span>
               </div>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="2.5">
+                <path d="m9 18 6-6-6-6" />
+              </svg>
             </div>
             <div class="cashapp-deposit-row">
               <div class="flex items-center gap-3 text-white">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect width="18" height="18" x="3" y="3" rx="2" />
+                  <path d="M7 8h10M7 12h10M7 16h6" />
+                </svg>
                 <span class="font-semibold text-white text-[16px]">Deposit check</span>
               </div>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="2.5">
+                <path d="m9 18 6-6-6-6" />
+              </svg>
             </div>
             <div class="cashapp-deposit-row">
               <div class="flex items-center gap-3 text-white">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                  <path d="M3 3v5h5" />
+                  <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+                  <path d="M16 21h5v-5" />
+                </svg>
                 <span class="font-semibold text-white text-[16px]">Auto reload</span>
               </div>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="2.5">
+                <path d="m9 18 6-6-6-6" />
+              </svg>
             </div>
           </div>
 
           <!-- FDIC & Legal Disclaimer Text (Screenshot 4) -->
           <div class="cashapp-legal-notice">
-            <p>Your balance may be eligible for FDIC pass-through insurance through Larp National Bank, N.A., Larp Trust Bank, and/or Larp Bancorp, N.A., Members FDIC, for up to $250,000 per customer when aggregated with all other deposits held in the same legal capacity at each bank. See the <a href="#" class="underline font-semibold text-white">LarpPay Terms of Service</a>.</p>
-            <p>LarpPay is a financial services platform, and not an FDIC-insured bank. Flex Cards are issued by Larp Bancorp, Member FDIC, and Larp National Bank, N.A., pursuant to a license from Visa U.S.A. Inc.</p>
-            <p>Banking services are provided by LarpPay's banking partners. Brokerage services are provided by LarpPay Investing LLC, member FINRA, a subsidiary of LarpPay, Inc. Digital asset services are provided by LarpPay Digital Assets LLC. Tax filing services are provided by LarpPay Taxes. <a href="#" class="underline font-semibold text-white">Disclosures</a>.</p>
+            <p>Your balance may be eligible for FDIC pass-through insurance through Larp National Bank, N.A., Larp Trust
+              Bank, and/or Larp Bancorp, N.A., Members FDIC, for up to $250,000 per customer when aggregated with all
+              other deposits held in the same legal capacity at each bank. See the <a href="#"
+                class="underline font-semibold text-white">LarpPay Terms of Service</a>.</p>
+            <p>LarpPay is a financial services platform, and not an FDIC-insured bank. Flex Cards are issued by Larp
+              Bancorp, Member FDIC, and Larp National Bank, N.A., pursuant to a license from Visa U.S.A. Inc.</p>
+            <p>Banking services are provided by LarpPay's banking partners. Brokerage services are provided by LarpPay
+              Investing LLC, member FINRA, a subsidiary of LarpPay, Inc. Digital asset services are provided by LarpPay
+              Digital Assets LLC. Tax filing services are provided by LarpPay Taxes. <a href="#"
+                class="underline font-semibold text-white">Disclosures</a>.</p>
           </div>
         </div>
 
-        <!-- TAB 3: ACTIVITY / HISTORY VIEW (Screenshot 1) -->
+        <!-- TAB 3: ACTIVITY / HISTORY VIEW (Screenshot 2) -->
         <div id="cashapp-tab-history" class="cashapp-tab-pane cashapp-history-scroll" style="display: none;">
-          <h2 class="cashapp-history-title">Today</h2>
-          <!-- Empty State -->
+          <!-- Empty State (Screenshot 2) -->
           <div id="cashapp-history-empty" class="cashapp-empty-history">
-            Nothing here
+            <h2 class="cashapp-empty-title">Nothing Here!</h2>
+            <p class="cashapp-empty-subtitle">Your future activity will be organized here</p>
           </div>
           <!-- Transaction List -->
           <div id="cashapp-history-list" class="cashapp-history-list" style="display: none;">
+            <h2 class="cashapp-history-title">Today</h2>
             <!-- Rendered dynamically -->
           </div>
         </div>
@@ -653,17 +928,17 @@
         <div class="cashapp-bottom-nav-wrap">
           <div class="cashapp-bottom-nav-pill">
             <button type="button" class="cashapp-tab-nav-btn" data-cashapp-tab="home" aria-label="Home / Banking">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M4 21V9l8-6 8 6v12h-5v-7h-6v7H4z"/>
-              </svg>
+              <img src="./bank_icon.png" alt="Bank" class="cashapp-bottom-nav-bank-img">
             </button>
-            <button type="button" class="cashapp-tab-nav-btn active" data-cashapp-tab="keypad" aria-label="Pay Keypad">
-              <span style="font-size: 24px; font-weight: 800; line-height: 1;">$</span>
+            <button type="button" class="cashapp-tab-nav-btn cashapp-dollar-tab-btn" data-cashapp-tab="keypad"
+              aria-label="Pay Keypad">
+              <span class="cashapp-dollar-symbol">$</span>
             </button>
             <button type="button" class="cashapp-tab-nav-btn" data-cashapp-tab="history" aria-label="Activity History">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"/>
-                <polyline points="12 6 12 12 16 14"/>
+              <svg class="cashapp-bottom-nav-clock-svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9.5" />
+                <polyline points="12 7 12 12 16 12" />
               </svg>
             </button>
           </div>
@@ -673,7 +948,8 @@
     </div>
 
     <!-- Cash App Add Money Sheet Modal (Screenshot 5) -->
-    <div id="cashapp-add-money-sheet" class="cashapp-pay-sheet-overlay" role="dialog" aria-modal="true" style="display: none;">
+    <div id="cashapp-add-money-sheet" class="cashapp-pay-sheet-overlay" role="dialog" aria-modal="true"
+      style="display: none;">
       <div class="cashapp-pay-sheet-container cashapp-add-money-container">
         <!-- Grabber Handle -->
         <div class="cashapp-sheet-grabber"></div>
@@ -699,7 +975,9 @@
             <span class="cashapp-card-blue-badge">💳</span>
             <span class="text-white font-semibold text-[15px]">Debit 6842</span>
           </div>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="2.5">
+            <path d="m9 18 6-6-6-6" />
+          </svg>
         </div>
 
         <!-- Add Button -->
@@ -707,7 +985,7 @@
       </div>
     </div>
 
-      </div>
+    </div>
     </div>
 
     <!-- Cash App Pay Sheet Modal (Screenshots 1 - 5) -->
@@ -718,7 +996,8 @@
         <!-- Top Navigation Row (Back / Close) -->
         <div class="cashapp-sheet-nav-row">
           <!-- Back Button (Step 4 & 5) -->
-          <button type="button" id="cashapp-pay-sheet-back" class="cashapp-sheet-nav-btn" aria-label="Go Back" style="display: none;">
+          <button type="button" id="cashapp-pay-sheet-back" class="cashapp-sheet-nav-btn" aria-label="Go Back"
+            style="display: none;">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
               stroke-linecap="round" stroke-linejoin="round">
               <path d="m15 18-6-6 6-6" />
@@ -851,7 +1130,8 @@
       <!-- Center Checkmark & 'You sent $... to ...' -->
       <div class="cashapp-success-center">
         <div class="cashapp-success-check-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round"
+            stroke-linejoin="round">
             <path d="M20 6 9 17l-5-5" />
           </svg>
         </div>
@@ -869,7 +1149,7 @@
        3. PHANTOM WALLET SIMULATOR VIEW (Sleek Dark Web3 Wallet)
        ====================================================================== -->
   <section id="view-phantom" class="view-panel">
-    <!-- Back to Home Navigation Pill -->
+    <!-- Back to Home Navigation Pill & Download Button -->
     <nav class="sim-top-nav">
       <button type="button" class="back-to-hub-btn" data-navigate="landing" aria-label="Go Back to Home">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -883,11 +1163,80 @@
     <!-- Phantom Mobile Mockup Container -->
     <div class="phantom-phone-frame" id="phantom-phone-frame">
 
+      <!-- Phantom Left Sidebar Drawer (Opens on Lock Icon Click) -->
+      <div class="phantom-sidebar-backdrop" id="phantom-sidebar-backdrop"></div>
+      <aside class="phantom-sidebar-drawer" id="phantom-sidebar-drawer" aria-label="Wallet menu">
+        <!-- Top Row: Lock Button & Copy Button -->
+        <div class="phantom-sidebar-top-row">
+          <button type="button" class="phantom-sidebar-lock-btn" id="phantom-sidebar-lock-btn" title="Close menu"
+            aria-label="Close menu">
+            <img src="./lock-key-placeholder.png" alt="Lock" class="phantom-sidebar-lock-img">
+          </button>
+          <button type="button" class="phantom-sidebar-copy-btn" id="phantom-sidebar-copy-btn"
+            title="Copy wallet address" aria-label="Copy address">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect width="13" height="13" x="9" y="9" rx="2" ry="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Big Bold Title: @Wallet Name -->
+        <h2 class="phantom-sidebar-handle" id="phantom-sidebar-handle">@Wallet Name</h2>
+
+        <!-- Active Wallet Dropdown / Switcher Pill -->
+        <div class="phantom-sidebar-wallet-pill" id="phantom-sidebar-wallet-trigger" role="button" tabindex="0"
+          title="Switch or edit wallet">
+          <div class="phantom-sidebar-avatar-circle">
+            <span id="phantom-sidebar-avatar-char">W</span>
+          </div>
+          <span class="phantom-sidebar-wallet-text" id="phantom-sidebar-wallet-text">Wallet Name</span>
+          <svg class="phantom-sidebar-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </div>
+
+        <!-- Navigation Menu Items -->
+        <nav class="phantom-sidebar-nav">
+          <!-- Profile -->
+          <button type="button" class="phantom-sidebar-nav-item" id="phantom-sidebar-nav-profile">
+            <svg class="phantom-sidebar-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            <span class="phantom-sidebar-nav-label">Profile</span>
+          </button>
+
+          <!-- Chats -->
+          <button type="button" class="phantom-sidebar-nav-item" id="phantom-sidebar-nav-chats">
+            <svg class="phantom-sidebar-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+            <span class="phantom-sidebar-nav-label">Chats</span>
+          </button>
+
+          <!-- History -->
+          <button type="button" class="phantom-sidebar-nav-item" id="phantom-sidebar-nav-history">
+            <svg class="phantom-sidebar-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+            <span class="phantom-sidebar-nav-label">History</span>
+          </button>
+        </nav>
+      </aside>
+
       <!-- Phantom Scrollable Content -->
       <div class="phantom-main-content">
         <!-- Top Nav Bar (Lock icon & Home, Trade, Explore pills) -->
         <header class="phantom-top-header">
-          <button type="button" class="phantom-top-lock-btn" aria-label="Wallet Lock">
+          <button type="button" class="phantom-top-lock-btn" id="phantom-top-lock-btn" aria-label="Wallet Lock"
+            title="Open wallet menu">
             <img src="./lock-key-placeholder.png" alt="Lock" class="phantom-header-lock-icon">
           </button>
           <div class="phantom-nav-pills">
@@ -902,7 +1251,8 @@
         <div class="phantom-wallet-select-wrap">
           <button type="button" class="phantom-wallet-name-btn" id="phantom-wallet-name-trigger">
             <span id="phantom-display-wallet-name">Wallet Name</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
               <path d="m6 9 6 6 6-6" />
             </svg>
           </button>
@@ -933,7 +1283,8 @@
         <!-- Tokens Section Header -->
         <div class="phantom-section-title">
           <span>Tokens</span>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
             <path d="m9 18 6-6-6-6" />
           </svg>
         </div>
@@ -947,14 +1298,16 @@
       <!-- Floating Bottom Search Bar & Plus Action Button -->
       <div class="phantom-bottom-floating-bar">
         <div class="phantom-search-box">
-          <svg class="phantom-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#717388" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg class="phantom-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#717388"
+            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8" />
             <path d="m21 21-4.35-4.35" />
           </svg>
           <span class="phantom-search-placeholder">Search Phantom</span>
         </div>
         <button type="button" id="phantom-fab-btn" class="phantom-fab-btn" aria-label="Open Actions">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.4" stroke-linecap="round">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.4"
+            stroke-linecap="round">
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
@@ -969,7 +1322,8 @@
           <div class="phantom-dial-option">
             <span class="phantom-dial-text">Send</span>
             <button type="button" class="phantom-dial-btn" aria-label="Send">
-              <img src="./phantom%20share%20send%20icon.png" alt="Send" class="phantom-dial-icon phantom-dial-icon-send">
+              <img src="./phantom%20share%20send%20icon.png" alt="Send"
+                class="phantom-dial-icon phantom-dial-icon-send">
             </button>
           </div>
 
@@ -985,7 +1339,8 @@
           <div class="phantom-dial-option" id="phantom-dial-add-cash">
             <span class="phantom-dial-text">Add Cash</span>
             <button type="button" class="phantom-dial-btn phantom-dial-btn-active" aria-label="Add Cash">
-              <img src="./phantom%20add%20cash%20icon.png" alt="Add Cash" class="phantom-dial-icon phantom-dial-icon-add-cash">
+              <img src="./phantom%20add%20cash%20icon.png" alt="Add Cash"
+                class="phantom-dial-icon phantom-dial-icon-add-cash">
             </button>
           </div>
 
@@ -999,7 +1354,8 @@
 
           <!-- Dial Close Button (✕) positioned over FAB -->
           <button type="button" id="phantom-dial-close-btn" class="phantom-dial-close-btn" aria-label="Close Dial">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.4"
+              stroke-linecap="round">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
@@ -1014,8 +1370,10 @@
           <!-- Header -->
           <div class="phantom-settings-top">
             <h3 class="phantom-settings-heading">Settings</h3>
-            <button type="button" id="phantom-settings-close-btn" class="phantom-settings-x-btn" aria-label="Close Settings">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round">
+            <button type="button" id="phantom-settings-close-btn" class="phantom-settings-x-btn"
+              aria-label="Close Settings">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"
+                stroke-linecap="round">
                 <line x1="18" y1="6" x2="6" y2="18" />
                 <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
@@ -1029,7 +1387,8 @@
               <div class="phantom-lock-squircle">
                 <img src="./lock-key-placeholder.png" alt="Lock">
               </div>
-              <input type="text" id="phantom-input-wallet-name" class="phantom-name-field" placeholder="Wallet Name" value="Wallet Name">
+              <input type="text" id="phantom-input-wallet-name" class="phantom-name-field" placeholder="Wallet Name"
+                value="Wallet Name">
             </div>
 
             <!-- Row 2: Cash -->
@@ -1038,7 +1397,8 @@
                 <img src="./money_icon-2.svg" alt="Cash" class="phantom-field-icon">
                 <span class="phantom-field-name">Cash</span>
               </div>
-              <input type="number" id="phantom-input-cash" class="phantom-num-field" placeholder="0" value="0" min="0" step="any">
+              <input type="number" id="phantom-input-cash" class="phantom-num-field" placeholder="0" value="0" min="0"
+                step="any">
             </div>
 
             <!-- Row 3: USDT -->
@@ -1047,7 +1407,8 @@
                 <img src="./usdt-logo.png" alt="USDT" class="phantom-field-icon">
                 <span class="phantom-field-name">USDT</span>
               </div>
-              <input type="number" id="phantom-input-usdt" class="phantom-num-field" placeholder="0" value="0" min="0" step="any">
+              <input type="number" id="phantom-input-usdt" class="phantom-num-field" placeholder="0" value="0" min="0"
+                step="any">
             </div>
 
             <!-- Row 4: Solana -->
@@ -1056,7 +1417,8 @@
                 <img src="./solana-logo.png" alt="Solana" class="phantom-field-icon">
                 <span class="phantom-field-name">Solana</span>
               </div>
-              <input type="number" id="phantom-input-solana" class="phantom-num-field" placeholder="0" value="0" min="0" step="any">
+              <input type="number" id="phantom-input-solana" class="phantom-num-field" placeholder="0" value="0" min="0"
+                step="any">
             </div>
 
             <!-- Row 5: Ethereum -->
@@ -1065,7 +1427,8 @@
                 <img src="./ethereum-logo.png" alt="Ethereum" class="phantom-field-icon">
                 <span class="phantom-field-name">Ethereum</span>
               </div>
-              <input type="number" id="phantom-input-ethereum" class="phantom-num-field" placeholder="0" value="0" min="0" step="any">
+              <input type="number" id="phantom-input-ethereum" class="phantom-num-field" placeholder="0" value="0"
+                min="0" step="any">
             </div>
 
             <!-- Row 6: BTC -->
@@ -1074,7 +1437,8 @@
                 <img src="./bitcoin-logo.png" alt="BTC" class="phantom-field-icon">
                 <span class="phantom-field-name">BTC</span>
               </div>
-              <input type="number" id="phantom-input-btc" class="phantom-num-field" placeholder="0" value="0" min="0" step="any">
+              <input type="number" id="phantom-input-btc" class="phantom-num-field" placeholder="0" value="0" min="0"
+                step="any">
             </div>
 
             <!-- Row 7: USDC -->
@@ -1083,7 +1447,8 @@
                 <img src="./usdc-logo.png" alt="USDC" class="phantom-field-icon">
                 <span class="phantom-field-name">USDC</span>
               </div>
-              <input type="number" id="phantom-input-usdc" class="phantom-num-field" placeholder="0" value="0" min="0" step="any">
+              <input type="number" id="phantom-input-usdc" class="phantom-num-field" placeholder="0" value="0" min="0"
+                step="any">
             </div>
 
             <!-- Row 8: Polygon -->
@@ -1092,7 +1457,8 @@
                 <img src="./polygon-logo.png" alt="Polygon" class="phantom-field-icon">
                 <span class="phantom-field-name">Polygon</span>
               </div>
-              <input type="number" id="phantom-input-polygon" class="phantom-num-field" placeholder="0" value="0" min="0" step="any">
+              <input type="number" id="phantom-input-polygon" class="phantom-num-field" placeholder="0" value="0"
+                min="0" step="any">
             </div>
           </div>
 
@@ -1115,16 +1481,8 @@
       <!-- 1. TOP BLACK NAVIGATION BAR -->
       <header class="shopify-desktop-top-bar">
         <div class="shopify-top-left">
-          <!-- Back to Home Button -->
-          <button type="button" class="shopify-desktop-back-btn" data-navigate="landing" aria-label="Back to Home" title="Back to Home">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="m15 18-6-6 6-6" />
-            </svg>
-            <span>Home</span>
-          </button>
-
           <!-- Shopify Brand: Spring Icon + Shopify Text Logo -->
-          <div class="shopify-desktop-brand" title="Shopify Admin">
+          <div class="shopify-desktop-brand" title="Shopify">
             <div class="shopify-desktop-logo-wrap">
               <img src="./spring_shopify_logo.avif" alt="Shopify" class="shopify-desktop-spring-logo">
               <img src="./shopify_text_logo.svg" alt="Shopify" class="shopify-desktop-text-logo">
@@ -1135,11 +1493,13 @@
         <!-- Center Global Search Input -->
         <div class="shopify-desktop-search-wrap">
           <div class="shopify-desktop-search-inner">
-            <svg class="shopify-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8a8a8a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="shopify-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8a8a8a"
+              stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="11" cy="11" r="8"></circle>
               <path d="m21 21-4.35-4.35"></path>
             </svg>
-            <input type="text" class="shopify-desktop-search-input" id="shopify-main-search-input" placeholder="Search" autocomplete="off">
+            <input type="text" class="shopify-desktop-search-input" id="shopify-main-search-input" placeholder="Search"
+              autocomplete="off">
             <div class="shopify-desktop-search-kbd">
               <span class="shopify-kbd">CTRL</span>
               <span class="shopify-kbd">K</span>
@@ -1151,17 +1511,20 @@
         <div class="shopify-desktop-top-right">
           <!-- Chat / Support Icon -->
           <button type="button" class="shopify-top-icon-btn" aria-label="Chat messages" title="Messages">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
             </svg>
           </button>
 
           <!-- Notifications Bell Icon with Badge and Dropdown -->
           <div class="shopify-notif-wrap">
-            <button type="button" class="shopify-top-icon-btn" id="shopify-notifications-btn" aria-label="Notifications" title="Alerts">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
-                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+            <button type="button" class="shopify-top-icon-btn" id="shopify-notifications-btn" aria-label="Notifications"
+              title="Alerts">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
               </svg>
               <span class="shopify-notif-badge" id="shopify-notif-badge" style="display: none;">0</span>
             </button>
@@ -1177,10 +1540,12 @@
           </div>
 
           <!-- Store Avatar & Name -->
-          <button type="button" class="shopify-desktop-profile-btn" id="shopify-profile-trigger" title="Click to customize store figures & logo">
+          <button type="button" class="shopify-desktop-profile-btn" id="shopify-profile-trigger"
+            title="Click to customize store figures & logo">
             <div class="shopify-desktop-avatar" id="shopify-avatar-container">
               <span id="shopify-avatar-letters">SN</span>
-              <img id="shopify-avatar-img" src="" alt="Store Logo" style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+              <img id="shopify-avatar-img" src="" alt="Store Logo"
+                style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
             </div>
             <span class="shopify-desktop-store-name" id="shopify-display-store-name">Shop Name</span>
           </button>
@@ -1194,93 +1559,104 @@
           <div class="shopify-sidebar-top-group">
             <nav class="shopify-sidebar-nav">
               <button type="button" class="shopify-sidebar-item active">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                  <polyline points="9 22 9 12 15 12 15 22"/>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                  <polyline points="9 22 9 12 15 12 15 22" />
                 </svg>
                 <span>Home</span>
               </button>
 
               <button type="button" class="shopify-sidebar-item">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect width="20" height="14" x="2" y="5" rx="2"/>
-                  <line x1="2" x2="22" y1="10" y2="10"/>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="20" height="14" x="2" y="5" rx="2" />
+                  <line x1="2" x2="22" y1="10" y2="10" />
                 </svg>
                 <span>Orders</span>
                 <span class="shopify-sidebar-badge" id="shopify-side-orders-badge">4</span>
               </button>
 
               <button type="button" class="shopify-sidebar-item">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/>
-                  <path d="M7 7h.01"/>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z" />
+                  <path d="M7 7h.01" />
                 </svg>
                 <span>Products</span>
               </button>
 
               <button type="button" class="shopify-sidebar-item">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-                  <circle cx="12" cy="7" r="4"/>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
                 </svg>
                 <span>Customers</span>
               </button>
 
               <button type="button" class="shopify-sidebar-item">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="7" y1="17" x2="17" y2="7"/>
-                  <polyline points="7 7 17 7 17 17"/>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="7" y1="17" x2="17" y2="7" />
+                  <polyline points="7 7 17 7 17 17" />
                 </svg>
                 <span>Growth</span>
               </button>
 
               <button type="button" class="shopify-sidebar-item">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="m19 5-7 7-7-7"/>
-                  <path d="m12 19 7-7H5"/>
-                  <circle cx="9" cy="9" r="1.5"/>
-                  <circle cx="15" cy="15" r="1.5"/>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m19 5-7 7-7-7" />
+                  <path d="m12 19 7-7H5" />
+                  <circle cx="9" cy="9" r="1.5" />
+                  <circle cx="15" cy="15" r="1.5" />
                 </svg>
                 <span>Discounts</span>
               </button>
 
               <button type="button" class="shopify-sidebar-item">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
-                  <circle cx="9" cy="9" r="2"/>
-                  <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                  <circle cx="9" cy="9" r="2" />
+                  <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
                 </svg>
                 <span>Content</span>
               </button>
 
               <button type="button" class="shopify-sidebar-item">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"/>
-                  <line x1="2" y1="12" x2="22" y2="12"/>
-                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="2" y1="12" x2="22" y2="12" />
+                  <path
+                    d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                 </svg>
                 <span>Markets</span>
               </button>
 
               <button type="button" class="shopify-sidebar-item">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="3" y1="21" x2="21" y2="21"/>
-                  <line x1="3" y1="10" x2="21" y2="10"/>
-                  <polyline points="5 6 12 3 19 6"/>
-                  <line x1="4" y1="10" x2="4" y2="21"/>
-                  <line x1="20" y1="10" x2="20" y2="21"/>
-                  <line x1="8" y1="14" x2="8" y2="17"/>
-                  <line x1="12" y1="14" x2="12" y2="17"/>
-                  <line x1="16" y1="14" x2="16" y2="17"/>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="3" y1="21" x2="21" y2="21" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                  <polyline points="5 6 12 3 19 6" />
+                  <line x1="4" y1="10" x2="4" y2="21" />
+                  <line x1="20" y1="10" x2="20" y2="21" />
+                  <line x1="8" y1="14" x2="8" y2="17" />
+                  <line x1="12" y1="14" x2="12" y2="17" />
+                  <line x1="16" y1="14" x2="16" y2="17" />
                 </svg>
                 <span>Finance</span>
               </button>
 
               <button type="button" class="shopify-sidebar-item">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="18" y1="20" x2="18" y2="10"/>
-                  <line x1="12" y1="20" x2="12" y2="4"/>
-                  <line x1="6" y1="20" x2="6" y2="14"/>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10" />
+                  <line x1="12" y1="20" x2="12" y2="4" />
+                  <line x1="6" y1="20" x2="6" y2="14" />
                 </svg>
                 <span>Analytics</span>
               </button>
@@ -1290,16 +1666,18 @@
             <div class="shopify-sidebar-section">
               <div class="shopify-sidebar-heading">
                 <span>Sales channels</span>
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                  <path d="m9 18 6-6-6-6"/>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round">
+                  <path d="m9 18 6-6-6-6" />
                 </svg>
               </div>
               <button type="button" class="shopify-sidebar-item">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/>
-                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-                  <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/>
-                  <path d="M2 7h20"/>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7" />
+                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                  <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4" />
+                  <path d="M2 7h20" />
                 </svg>
                 <span>Online Store</span>
               </button>
@@ -1309,13 +1687,15 @@
             <div class="shopify-sidebar-section">
               <div class="shopify-sidebar-heading">
                 <span>Apps</span>
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                  <path d="m9 18 6-6-6-6"/>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round">
+                  <path d="m9 18 6-6-6-6" />
                 </svg>
               </div>
               <button type="button" class="shopify-sidebar-item">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                 </svg>
                 <span>Messaging</span>
                 <span class="shopify-sidebar-unread-dot"></span>
@@ -1326,9 +1706,11 @@
           <!-- Sidebar Footer Settings -->
           <div class="shopify-sidebar-bottom">
             <button type="button" class="shopify-sidebar-item" id="shopify-settings-trigger-btn">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
-                <circle cx="12" cy="12" r="3"/>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path
+                  d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+                <circle cx="12" cy="12" r="3" />
               </svg>
               <span>Settings</span>
             </button>
@@ -1369,8 +1751,9 @@
                 <div class="shopify-kpi-val-group">
                   <span class="shopify-kpi-val" id="shopify-display-sessions">0</span>
                   <span class="shopify-kpi-up-badge">
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
-                      <polyline points="18 15 12 9 6 15"/>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                      stroke-linecap="round">
+                      <polyline points="18 15 12 9 6 15" />
                     </svg>
                     <span id="shopify-display-growth-sessions">0%</span>
                   </span>
@@ -1383,8 +1766,9 @@
                 <div class="shopify-kpi-val-group">
                   <span class="shopify-kpi-val" id="shopify-display-sales">$0</span>
                   <span class="shopify-kpi-up-badge">
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
-                      <polyline points="18 15 12 9 6 15"/>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                      stroke-linecap="round">
+                      <polyline points="18 15 12 9 6 15" />
                     </svg>
                     <span id="shopify-display-growth-sales">0%</span>
                   </span>
@@ -1397,8 +1781,9 @@
                 <div class="shopify-kpi-val-group">
                   <span class="shopify-kpi-val" id="shopify-display-orders">0</span>
                   <span class="shopify-kpi-up-badge">
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
-                      <polyline points="18 15 12 9 6 15"/>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                      stroke-linecap="round">
+                      <polyline points="18 15 12 9 6 15" />
                     </svg>
                     <span id="shopify-display-growth-orders">0%</span>
                   </span>
@@ -1411,8 +1796,9 @@
                 <div class="shopify-kpi-val-group">
                   <span class="shopify-kpi-val" id="shopify-display-conv">0%</span>
                   <span class="shopify-kpi-up-badge">
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
-                      <polyline points="18 15 12 9 6 15"/>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                      stroke-linecap="round">
+                      <polyline points="18 15 12 9 6 15" />
                     </svg>
                     <span id="shopify-display-growth-conv">0%</span>
                   </span>
@@ -1442,23 +1828,27 @@
               <div class="shopify-ai-bar-inner">
                 <div class="shopify-magic-badge" title="Shopify Magic Sidekick">
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 2L13.8 8.2L20 10L13.8 11.8L12 18L10.2 11.8L4 10L10.2 8.2L12 2Z" fill="#ffffff"/>
-                    <circle cx="18.5" cy="5.5" r="1.5" fill="#ffffff"/>
-                    <circle cx="6.5" cy="17.5" r="1.5" fill="#ffffff"/>
+                    <path d="M12 2L13.8 8.2L20 10L13.8 11.8L12 18L10.2 11.8L4 10L10.2 8.2L12 2Z" fill="#ffffff" />
+                    <circle cx="18.5" cy="5.5" r="1.5" fill="#ffffff" />
+                    <circle cx="6.5" cy="17.5" r="1.5" fill="#ffffff" />
                   </svg>
                 </div>
-                <input type="text" class="shopify-ai-input" id="shopify-magic-input" placeholder="Ask anything..." autocomplete="off">
+                <input type="text" class="shopify-ai-input" id="shopify-magic-input" placeholder="Ask anything..."
+                  autocomplete="off">
                 <div class="shopify-ai-actions">
                   <button type="button" class="shopify-ai-plus-btn" aria-label="Add context" title="Attach context">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                      <line x1="12" y1="5" x2="12" y2="19"/>
-                      <line x1="5" y1="12" x2="19" y2="12"/>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round">
+                      <line x1="12" y1="5" x2="12" y2="19" />
+                      <line x1="5" y1="12" x2="19" y2="12" />
                     </svg>
                   </button>
-                  <button type="button" class="shopify-ai-submit-btn" aria-label="Submit prompt" id="shopify-magic-submit-btn">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-                      <line x1="12" y1="19" x2="12" y2="5"/>
-                      <polyline points="5 12 12 5 19 12"/>
+                  <button type="button" class="shopify-ai-submit-btn" aria-label="Submit prompt"
+                    id="shopify-magic-submit-btn">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="12" y1="19" x2="12" y2="5" />
+                      <polyline points="5 12 12 5 19 12" />
                     </svg>
                   </button>
                 </div>
@@ -1491,14 +1881,16 @@
             <article class="shopify-card shopify-card-insights">
               <div class="shopify-card-header">
                 <h3 class="shopify-card-title">Get intelligence-powered insights to grow your business</h3>
-                <p class="shopify-card-desc">Discover next steps to attract more customers, improve conversion and drive repeat purchases.</p>
+                <p class="shopify-card-desc">Discover next steps to attract more customers, improve conversion and drive
+                  repeat purchases.</p>
               </div>
               <div class="shopify-card-visual shopify-card-visual-insights">
                 <div class="shopify-insights-gradient-box">
                   <div class="shopify-insights-lock-badge">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1c1c1e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-                      <rect x="4" y="10" width="16" height="11" rx="2" ry="2"/>
-                      <path d="M7 10V6.5a5 5 0 0 1 10 0V10"/>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1c1c1e" stroke-width="2.6"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="4" y="10" width="16" height="11" rx="2" ry="2" />
+                      <path d="M7 10V6.5a5 5 0 0 1 10 0V10" />
                     </svg>
                   </div>
                 </div>
@@ -1513,7 +1905,9 @@
                   <span>0 of 5 tasks completed</span>
                 </div>
                 <h3 class="shopify-card-title">Prepare your store for EU right of withdrawal</h3>
-                <p class="shopify-card-desc">Set up return and cancellation options for EU orders. <a href="javascript:void(0)" class="shopify-inline-link">Learn more</a> about EU right of withdrawal requirements.</p>
+                <p class="shopify-card-desc">Set up return and cancellation options for EU orders. <a
+                    href="javascript:void(0)" class="shopify-inline-link">Learn more</a> about EU right of withdrawal
+                  requirements.</p>
               </div>
               <div class="shopify-card-visual shopify-card-visual-withdrawal">
                 <div class="shopify-withdrawal-art">
@@ -1535,32 +1929,35 @@
                   <svg viewBox="0 0 700 240" preserveAspectRatio="none" class="shopify-mountain-svg">
                     <defs>
                       <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stop-color="#e0edff"/>
-                        <stop offset="100%" stop-color="#edf4ff"/>
+                        <stop offset="0%" stop-color="#e0edff" />
+                        <stop offset="100%" stop-color="#edf4ff" />
                       </linearGradient>
                       <linearGradient id="backMtnGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stop-color="#93c5fd"/>
-                        <stop offset="100%" stop-color="#60a5fa"/>
+                        <stop offset="0%" stop-color="#93c5fd" />
+                        <stop offset="100%" stop-color="#60a5fa" />
                       </linearGradient>
                       <linearGradient id="midMtnGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stop-color="#3b82f6"/>
-                        <stop offset="100%" stop-color="#2563eb"/>
+                        <stop offset="0%" stop-color="#3b82f6" />
+                        <stop offset="100%" stop-color="#2563eb" />
                       </linearGradient>
                       <linearGradient id="frontMtnGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stop-color="#2563eb"/>
-                        <stop offset="100%" stop-color="#1d4ed8"/>
+                        <stop offset="0%" stop-color="#2563eb" />
+                        <stop offset="100%" stop-color="#1d4ed8" />
                       </linearGradient>
                     </defs>
-                    <rect width="700" height="240" fill="url(#skyGrad)"/>
+                    <rect width="700" height="240" fill="url(#skyGrad)" />
                     <!-- Back Peaks -->
-                    <polygon points="0,240 70,180 180,210 320,130 450,180 580,140 700,190 700,240" fill="url(#backMtnGrad)" opacity="0.6"/>
+                    <polygon points="0,240 70,180 180,210 320,130 450,180 580,140 700,190 700,240"
+                      fill="url(#backMtnGrad)" opacity="0.6" />
                     <!-- Mid Peaks -->
-                    <polygon points="0,240 80,200 220,215 340,110 490,165 620,160 700,200 700,240" fill="url(#midMtnGrad)"/>
+                    <polygon points="0,240 80,200 220,215 340,110 490,165 620,160 700,200 700,240"
+                      fill="url(#midMtnGrad)" />
                     <!-- Front Slope -->
-                    <polygon points="0,240 140,225 280,185 410,210 560,170 700,220 700,240" fill="url(#frontMtnGrad)"/>
+                    <polygon points="0,240 140,225 280,185 410,210 560,170 700,220 700,240" fill="url(#frontMtnGrad)" />
                     <!-- Red Target Pin Marker on Peak -->
-                    <circle cx="340" cy="110" r="10" fill="#ef4444" stroke="#ffffff" stroke-width="3.5" filter="drop-shadow(0 2px 5px rgba(0,0,0,0.2))"/>
-                    <circle cx="340" cy="110" r="4" fill="#ffffff"/>
+                    <circle cx="340" cy="110" r="10" fill="#ef4444" stroke="#ffffff" stroke-width="3.5"
+                      filter="drop-shadow(0 2px 5px rgba(0,0,0,0.2))" />
+                    <circle cx="340" cy="110" r="4" fill="#ffffff" />
                   </svg>
                 </div>
               </div>
@@ -1570,14 +1967,15 @@
             <article class="shopify-card shopify-card-pricing">
               <div class="shopify-card-header">
                 <h3 class="shopify-card-title">Move stock and grow profit with Smart Pricing</h3>
-                <p class="shopify-card-desc">See which products to discount or mark up, based on your sales, inventory, and cost data.</p>
+                <p class="shopify-card-desc">See which products to discount or mark up, based on your sales, inventory,
+                  and cost data.</p>
               </div>
               <div class="shopify-card-visual shopify-card-visual-pricing">
                 <div class="shopify-smart-pricing-art">
                   <div class="shopify-pricing-spotlight-circle"></div>
                   <div class="shopify-pricing-purple-star">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                      <path d="M12 2L14.2 9.8L22 12L14.2 14.2L12 22L9.8 14.2L2 12L9.8 9.8L12 2Z" fill="#ffffff"/>
+                      <path d="M12 2L14.2 9.8L22 12L14.2 14.2L12 22L9.8 14.2L2 12L9.8 9.8L12 2Z" fill="#ffffff" />
                     </svg>
                   </div>
                 </div>
@@ -1588,8 +1986,300 @@
       </div>
     </div>
 
-    <!-- Real-Time Shopify Order Alert Toast Stream -->
-    <div class="shopify-toast-stream" id="shopify-toast-stream"></div>
+    <!-- MOBILE SHOPIFY APP VIEW (Exact match to Mobile App Screenshot) -->
+    <div class="shopify-mobile-layout">
+      <!-- 1. MOBILE TOP APP BAR -->
+      <header class="shopify-mobile-top-bar">
+        <!-- Left: Magenta/Purple User Avatar (LP) or Uploaded Logo -->
+        <button type="button" class="shopify-mobile-avatar-btn" id="shopify-mobile-avatar-btn"
+          aria-label="Store Profile & Settings" title="Click to customize store profile & logo">
+          <div class="shopify-mobile-avatar-circle" id="shopify-mobile-avatar-container">
+            <span id="shopify-mobile-avatar-letters">LP</span>
+            <img id="shopify-mobile-avatar-img" src="" alt="Store Logo" style="display: none;">
+          </div>
+        </button>
+
+        <!-- Center: Green Sho Badge + Store Name -->
+        <div class="shopify-mobile-store-brand" id="shopify-mobile-brand-trigger" title="Click to edit store name">
+          <div class="shopify-mobile-store-badge">
+            <span class="shopify-mobile-badge-text">Sho</span>
+          </div>
+          <span class="shopify-mobile-store-title" id="shopify-mobile-store-name">Shop Name</span>
+        </div>
+
+        <!-- Right: Notifications Bell Icon with Glassmorphism Dropdown -->
+        <div class="shopify-mobile-notif-wrap">
+          <button type="button" class="shopify-mobile-bell-btn" id="shopify-mobile-bell-btn" aria-label="Notifications"
+            title="Alerts">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+              <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+            </svg>
+            <span class="shopify-notif-badge" id="shopify-mobile-notif-badge" style="display: none;">3</span>
+          </button>
+          <div class="shopify-notif-dropdown shopify-mobile-notif-dropdown" id="shopify-mobile-notif-dropdown"
+            style="display: none;">
+            <div class="shopify-notif-dropdown-header">
+              <span class="shopify-notif-dropdown-title">Notifications</span>
+              <span class="shopify-notif-dropdown-count" id="shopify-mobile-dropdown-count">3</span>
+            </div>
+            <div class="shopify-notif-dropdown-list" id="shopify-mobile-notif-dropdown-list">
+              <!-- Dynamically populated with editable order numbers -->
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- 2. DARK ANALYTICS SECTION (KPIs + CHART) -->
+      <div class="shopify-mobile-dark-section">
+        <!-- 4-Column KPI Metrics Bar -->
+        <div class="shopify-mobile-kpi-row">
+          <!-- Live -->
+          <div class="shopify-mobile-kpi-col" id="shopify-mobile-live-click" title="Click to edit live visitors">
+            <span class="shopify-mobile-kpi-label">Live</span>
+            <div class="shopify-mobile-kpi-val-wrap">
+              <svg class="shopify-mobile-live-sun" width="13" height="13" viewBox="0 0 24 24" fill="none"
+                stroke="#22c55e" stroke-width="2.6" stroke-linecap="round">
+                <circle cx="12" cy="12" r="4" />
+                <path
+                  d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+              </svg>
+              <span class="shopify-mobile-kpi-val" id="shopify-mobile-visitors">0</span>
+            </div>
+          </div>
+
+          <!-- Total Sales (Highlighted Card) -->
+          <div class="shopify-mobile-kpi-col shopify-mobile-kpi-highlighted" id="shopify-mobile-sales-click"
+            title="Click to edit total sales">
+            <span class="shopify-mobile-kpi-label">Total sales</span>
+            <div class="shopify-mobile-kpi-val-wrap">
+              <span class="shopify-mobile-kpi-val" id="shopify-mobile-sales">$800</span>
+              <span class="shopify-mobile-kpi-growth" id="shopify-mobile-growth-sales">+0%</span>
+            </div>
+          </div>
+
+          <!-- Orders -->
+          <div class="shopify-mobile-kpi-col" id="shopify-mobile-orders-click" title="Click to edit orders">
+            <span class="shopify-mobile-kpi-label">Orders</span>
+            <div class="shopify-mobile-kpi-val-wrap">
+              <span class="shopify-mobile-kpi-val" id="shopify-mobile-orders">20</span>
+              <svg class="shopify-mobile-trend-icon" width="10" height="10" viewBox="0 0 24 24" fill="none"
+                stroke="#22c55e" stroke-width="3" stroke-linecap="round">
+                <polyline points="18 15 12 9 6 15" />
+              </svg>
+              <span class="shopify-mobile-kpi-growth" id="shopify-mobile-growth-orders">+0%</span>
+            </div>
+          </div>
+
+          <!-- Conversion Rate -->
+          <div class="shopify-mobile-kpi-col" id="shopify-mobile-conv-click" title="Click to edit conversion rate">
+            <span class="shopify-mobile-kpi-label">Conversion rate</span>
+            <div class="shopify-mobile-kpi-val-wrap">
+              <span class="shopify-mobile-kpi-val" id="shopify-mobile-conv">7%</span>
+              <svg class="shopify-mobile-trend-icon" width="10" height="10" viewBox="0 0 24 24" fill="none"
+                stroke="#22c55e" stroke-width="3" stroke-linecap="round">
+                <polyline points="18 15 12 9 6 15" />
+              </svg>
+              <span class="shopify-mobile-kpi-growth" id="shopify-mobile-growth-conv">+0%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Chart -->
+        <div class="shopify-mobile-chart-wrap" id="shopify-mobile-chart-trigger">
+          <div class="shopify-mobile-chart-inner">
+            <!-- Y-Axis Labels -->
+            <div class="shopify-mobile-y-axis">
+              <span>$47</span>
+              <span>$24</span>
+              <span>$0</span>
+            </div>
+
+            <!-- SVG Chart Lines & Grid -->
+            <div class="shopify-mobile-svg-container">
+              <svg class="shopify-mobile-chart-svg" viewBox="0 0 340 100" preserveAspectRatio="none">
+                <!-- 3 Subtle Horizontal Grid Lines -->
+                <line x1="0" y1="12" x2="340" y2="12" stroke="#27272a" stroke-width="1" />
+                <line x1="0" y1="52" x2="340" y2="52" stroke="#27272a" stroke-width="1" />
+                <line x1="0" y1="92" x2="340" y2="92" stroke="#27272a" stroke-width="1" />
+
+                <!-- Comparison / Previous Period Dashed Curve -->
+                <path
+                  d="M 0,90 C 20,86 40,80 60,80 C 75,80 85,78 95,66 C 105,56 115,56 125,62 C 135,68 150,66 165,70 C 180,73 195,76 210,86 C 225,90 240,78 255,70 C 270,64 285,72 300,82 C 315,88 328,94 340,94"
+                  fill="none" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="4 4" stroke-linecap="round" />
+
+                <!-- Main Period Solid Bright Blue Curve -->
+                <path
+                  d="M 0,95 C 20,95 32,88 42,80 C 55,68 65,48 80,38 C 90,30 100,28 110,32 C 120,38 128,34 135,38 C 145,43 150,28 165,28 C 180,28 190,46 205,50 C 215,54 225,58 240,74 C 255,80 270,72 285,75 C 300,80 315,90 340,95"
+                  fill="none" stroke="#0099ff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- X-Axis Labels -->
+          <div class="shopify-mobile-x-axis">
+            <span>12:00 AM</span>
+            <span>10:00 AM</span>
+            <span>8:00 PM</span>
+          </div>
+
+          <!-- Action Buttons: Today & View Report -->
+          <div class="shopify-mobile-pills-row">
+            <button type="button" class="shopify-mobile-pill-btn" id="shopify-mobile-pill-today">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+              <span>Today</span>
+            </button>
+            <button type="button" class="shopify-mobile-pill-btn" id="shopify-mobile-pill-report">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <circle cx="10.5" cy="14.5" r="2.5" />
+                <line x1="12.3" y1="16.3" x2="14.5" y2="18.5" />
+              </svg>
+              <span>View report</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. WHITE ACTIVITY SHEET -->
+      <section class="shopify-mobile-activity-sheet">
+        <h2 class="shopify-mobile-activity-title">
+          <span class="title-light">Hey there!</span> <span class="title-bold">Here's your activity</span>
+        </h2>
+
+        <!-- Row 1: Fulfill Orders Card -->
+        <div class="shopify-mobile-fulfill-card" id="shopify-mobile-fulfill-trigger"
+          title="Click to edit orders to fulfill">
+          <div class="shopify-mobile-card-left">
+            <svg class="shopify-mobile-card-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="#18181b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+              <path d="m3.3 7 8.7 5 8.7-5" />
+              <path d="M12 22V12" />
+            </svg>
+            <span class="shopify-mobile-fulfill-text">Fulfill orders</span>
+          </div>
+          <div class="shopify-mobile-card-right">
+            <span class="shopify-mobile-fulfill-num" id="shopify-mobile-display-fulfill">0</span>
+            <svg class="shopify-mobile-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#71717a"
+              stroke-width="2.5" stroke-linecap="round">
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Row 2: Shopify Editions | Spring '26 Banner -->
+        <div class="shopify-mobile-editions-banner" id="shopify-mobile-editions-trigger">
+          <div class="shopify-mobile-editions-left">
+            <div class="shopify-mobile-editions-icon-box">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <path d="M16 10a4 4 0 0 1-8 0" />
+              </svg>
+            </div>
+            <div class="shopify-mobile-editions-text">
+              <span class="shopify-mobile-editions-headline">Shopify Editions | Spring '26</span>
+              <span class="shopify-mobile-editions-subline">150+ updates</span>
+            </div>
+          </div>
+          <svg class="shopify-mobile-chevron-white" width="15" height="15" viewBox="0 0 24 24" fill="none"
+            stroke="#ffffff" stroke-width="2.5" stroke-linecap="round">
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        </div>
+
+        <!-- Row 3: Test your changes with AI shoppers -->
+        <article class="shopify-mobile-card-box shopify-mobile-ai-card">
+          <div class="shopify-mobile-ai-text">
+            <h3 class="shopify-mobile-box-title">Test your changes with AI shoppers</h3>
+            <p class="shopify-mobile-box-desc">Find friction and drop-off points to guide storefront improvements.</p>
+            <a href="javascript:void(0)" class="shopify-mobile-box-link">Learn more</a>
+          </div>
+          <div class="shopify-mobile-ai-media">
+            <img src="./shopify_ai_robot.jpg" alt="AI Shopper Robot" class="shopify-mobile-robot-thumb">
+          </div>
+        </article>
+
+        <!-- Row 4: Enhance emails with your logo -->
+        <article class="shopify-mobile-card-box shopify-mobile-email-card">
+          <div class="shopify-mobile-email-text">
+            <h3 class="shopify-mobile-box-title">Enhance emails with your logo</h3>
+            <p class="shopify-mobile-box-desc">Create a strong brand image in your customer emails with Branded Mail,
+              free with Apple Mail.</p>
+          </div>
+          <div class="shopify-mobile-email-media">
+            <img src="./shopify mobile email.png" alt="Enhance emails with your logo"
+              class="shopify-mobile-email-thumb">
+          </div>
+        </article>
+      </section>
+
+      <!-- 4. FLOATING BOTTOM DOCK -->
+      <nav class="shopify-mobile-dock" aria-label="Mobile Navigation">
+        <button type="button" class="shopify-dock-item" aria-label="Search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+        </button>
+
+        <button type="button" class="shopify-dock-item active" aria-label="Home">
+          <div class="shopify-dock-home-bubble">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            </svg>
+          </div>
+        </button>
+
+        <button type="button" class="shopify-dock-item" aria-label="Orders">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path
+              d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+            <path d="m3.3 7 8.7 5 8.7-5" />
+            <path d="M12 22V12" />
+          </svg>
+        </button>
+
+        <button type="button" class="shopify-dock-item" aria-label="Products & Tags">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z" />
+            <path d="M7 7h.01" />
+          </svg>
+        </button>
+
+        <button type="button" class="shopify-dock-item" aria-label="Menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+            stroke-linecap="round">
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+
+        <button type="button" class="shopify-dock-item" id="shopify-mobile-dock-profile-btn" aria-label="Store Settings"
+          title="Click to customize store figures & logo">
+          <div class="shopify-dock-mini-avatar" id="shopify-mobile-dock-avatar">
+            <span id="shopify-mobile-dock-letters">LP</span>
+            <img id="shopify-mobile-dock-img" src="" alt="Avatar" style="display: none;">
+          </div>
+        </button>
+      </nav>
+    </div>
 
     <!-- 3. SHOPIFY SIMULATOR SETTINGS MODAL (For Larping Numbers) -->
     <div id="shopify-settings-modal" class="shopify-modal-overlay">
@@ -1597,64 +2287,87 @@
       <div class="shopify-modal-card">
         <div class="shopify-modal-top">
           <div class="shopify-modal-title-wrap">
-            <h3 class="shopify-modal-heading">Simulate Shopify Admin Figures</h3>
-            <p class="shopify-modal-subheading">Customize your store telemetry. Edit any figure and all other metrics will auto-estimate automatically.</p>
+            <h3 class="shopify-modal-heading">Simulate Shopify Figures</h3>
+            <p class="shopify-modal-subheading">Customize your store telemetry. Edit any figure and all other metrics
+              will auto-estimate automatically.</p>
           </div>
           <button type="button" class="shopify-modal-close-btn" id="shopify-modal-close-btn" aria-label="Close modal">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
 
         <div class="shopify-modal-body">
-          <!-- 1. Profile / Store Logo -->
           <!-- 1. Profile / Store Logo & Name -->
           <div class="shopify-modal-field">
             <label>Store Profile & Logo</label>
             <div class="shopify-logo-row">
               <div class="shopify-logo-preview" id="shopify-logo-preview">
-                <span id="shopify-modal-avatar-letters">SN</span>
+                <span id="shopify-modal-avatar-letters">LP</span>
                 <img id="shopify-modal-avatar-img" src="" alt="Store Logo" style="display: none;">
               </div>
               <div class="shopify-logo-meta">
-                <div class="shopify-logo-input-wrap">
-                  <input type="text" id="shopify-input-store-name" class="shopify-form-input" placeholder="Store Name" value="Shop Name" style="font-weight: 600;">
+                <div class="shopify-logo-input-wrap" style="display: flex; gap: 8px;">
+                  <input type="text" id="shopify-input-store-name" class="shopify-form-input" placeholder="Store Name"
+                    value="Shop Name" style="font-weight: 600; flex: 1;">
+                  <input type="text" id="shopify-input-initials" class="shopify-form-input" placeholder="LP" value="LP"
+                    maxlength="3" title="Avatar Initials"
+                    style="width: 58px; text-transform: uppercase; text-align: center; font-weight: 700;">
                 </div>
                 <div class="shopify-logo-btns">
                   <label for="shopify-logo-upload-input" class="shopify-btn-upload">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                      <polyline points="17 8 12 3 7 8"/>
-                      <line x1="12" y1="3" x2="12" y2="15"/>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="17 8 12 3 7 8" />
+                      <line x1="12" y1="3" x2="12" y2="15" />
                     </svg>
                     <span>Change Logo</span>
                   </label>
                   <input type="file" id="shopify-logo-upload-input" accept="image/*" style="display: none;">
-                  <button type="button" class="shopify-btn-remove-logo" id="shopify-logo-remove-btn" style="display: none;">Remove</button>
+                  <button type="button" class="shopify-btn-remove-logo" id="shopify-logo-remove-btn"
+                    style="display: none;">Remove</button>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- 2. Notifications Count & Real-time Trigger -->
+          <!-- 2. Notifications Count & Order Number Settings -->
           <div class="shopify-modal-field shopify-modal-field-highlight">
-            <label for="shopify-input-notifs">Notifications Count</label>
-            <div class="shopify-notif-action-row">
-              <input type="number" id="shopify-input-notifs" class="shopify-form-input" placeholder="3" value="3" min="0" max="99">
-              <button type="button" class="shopify-btn-notif-done" id="shopify-btn-notif-done" title="Display this number directly on the bell icon">
+            <label for="shopify-input-notifs">Notifications & Order Numbers</label>
+            <div class="shopify-notif-action-row" style="display: flex; gap: 8px; align-items: flex-end;">
+              <div style="flex: 1;">
+                <label for="shopify-input-notifs"
+                  style="font-size: 11px; margin-bottom: 4px; display: block; color: #a1a1aa;">Notification
+                  Count</label>
+                <input type="number" id="shopify-input-notifs" class="shopify-form-input" placeholder="3" value="3"
+                  min="0" max="99">
+              </div>
+              <div style="flex: 1;">
+                <label for="shopify-input-order-num"
+                  style="font-size: 11px; margin-bottom: 4px; display: block; color: #a1a1aa;">Starting Order #</label>
+                <input type="number" id="shopify-input-order-num" class="shopify-form-input" placeholder="1042"
+                  value="1042" min="1" max="999999">
+              </div>
+              <button type="button" class="shopify-btn-notif-done" id="shopify-btn-notif-done"
+                title="Display this number directly on the bell icon" style="height: 38px;">
                 Done
               </button>
-              <button type="button" class="shopify-btn-notif-get" id="shopify-btn-get-notifs" title="Send this many real-time order notifications right now">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
-                  <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+              <button type="button" class="shopify-btn-notif-get" id="shopify-btn-get-notifs"
+                title="Send this many real-time order notifications right now" style="height: 38px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                  <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
                 </svg>
-                <span>Get Notification</span>
+                <span>Stream</span>
               </button>
             </div>
-            <p class="shopify-field-tip"><strong>Done:</strong> Sets the badge number on the bell icon.<br><strong>Get Notification:</strong> Sends that many live order alerts with audio right now.</p>
+            <p class="shopify-field-tip"><strong>Editable Order Numbers:</strong> You can edit the starting order number
+              here or click directly on any Order # in the notification list to edit it inline.</p>
           </div>
 
           <div class="shopify-modal-row">
@@ -1758,21 +2471,223 @@
     </div>
   </div>
 
+  <!-- ======================================================================
+       DOWNLOAD & INSTALL CENTER MODAL
+       ====================================================================== -->
+  <div id="download-modal" class="download-modal-overlay" aria-hidden="true">
+    <div class="download-modal-card" role="dialog" aria-labelledby="download-modal-title">
+      <button type="button" class="download-modal-close" id="download-modal-close-btn"
+        aria-label="Close download modal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M18 6 6 18M6 6l12 12" />
+        </svg>
+      </button>
+
+      <div class="download-modal-header">
+        <div class="download-modal-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+        </div>
+        <h2 class="download-modal-title" id="download-modal-title">Download & Install Apps</h2>
+        <p class="download-modal-desc">
+          Install the standalone Progressive Web App (PWA) to your desktop or phone home screen, or download 100%
+          offline standalone apps.
+        </p>
+      </div>
+
+      <!-- Quick Install App Banner (Trigger Native PWA install if available) -->
+      <div class="download-pwa-banner" id="pwa-install-banner">
+        <div class="pwa-banner-left">
+          <div class="pwa-banner-icon">
+            <img src="./favicon.png" alt="Larpwallet" width="36" height="36" style="border-radius: 8px;">
+          </div>
+          <div>
+            <div class="pwa-banner-title">Install Larpwallet Suite</div>
+            <div class="pwa-banner-sub">Add directly to your desktop or mobile home screen</div>
+          </div>
+        </div>
+        <button type="button" class="pwa-banner-action-btn" id="pwa-native-install-btn">
+          <span>Install Now</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Apps Download Grid -->
+      <div class="download-sims-grid">
+        <!-- 1. Shopify -->
+        <div class="download-sim-card" data-sim="shopify">
+          <div class="download-sim-header">
+            <div class="download-sim-icon-wrap"
+              style="background: rgba(149, 191, 71, 0.12); border: 1px solid rgba(149, 191, 71, 0.25);">
+              <img src="./shopify app icon.jpg" alt="Shopify" class="download-sim-img">
+            </div>
+            <div class="download-sim-meta">
+              <div class="download-sim-category">E-Commerce</div>
+              <h3 class="download-sim-name">Shopify</h3>
+            </div>
+            <span class="download-sim-pill-badge" style="color: #95bf47; border-color: rgba(149, 191, 71, 0.3);">Live
+              Audio</span>
+          </div>
+          <p class="download-sim-desc">
+            Simulate real-time store analytics, order telemetries, and live customer transactions with audio alert
+            triggers.
+          </p>
+          <div class="download-sim-actions">
+            <a href="./shopify-simulator" class="download-sim-btn primary-dl-btn" target="_blank" rel="noopener">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+              <span>Launch / Install App</span>
+            </a>
+            <button type="button" class="download-sim-btn secondary-dl-btn" data-action="download-launcher"
+              data-sim="shopify" title="Download Windows batch shortcut that opens in a standalone window">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              <span>Desktop Shortcut (.bat)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. Phantom Wallet -->
+        <div class="download-sim-card" data-sim="phantom">
+          <div class="download-sim-header">
+            <div class="download-sim-icon-wrap"
+              style="background: rgba(171, 159, 242, 0.12); border: 1px solid rgba(171, 159, 242, 0.25);">
+              <img src="./phantom app icon.jpg" alt="Phantom Wallet" class="download-sim-img">
+            </div>
+            <div class="download-sim-meta">
+              <div class="download-sim-category">Web3 Wallet</div>
+              <h3 class="download-sim-name">Phantom Wallet</h3>
+            </div>
+            <span class="download-sim-pill-badge"
+              style="color: #ab9ff2; border-color: rgba(171, 159, 242, 0.3);">Multi-Chain</span>
+          </div>
+          <p class="download-sim-desc">
+            Simulate Solana, Ethereum, Bitcoin portfolio balances, token swaps, secret recovery phrases, and
+            send/receive flows.
+          </p>
+          <div class="download-sim-actions">
+            <a href="./phantom-wallet-simulator" class="download-sim-btn primary-dl-btn" target="_blank"
+              rel="noopener">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+              <span>Launch / Install App</span>
+            </a>
+            <button type="button" class="download-sim-btn secondary-dl-btn" data-action="download-launcher"
+              data-sim="phantom" title="Download Windows batch shortcut that opens in a standalone window">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              <span>Desktop Shortcut (.bat)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. Cash App -->
+        <div class="download-sim-card" data-sim="cashapp">
+          <div class="download-sim-header">
+            <div class="download-sim-icon-wrap"
+              style="background: rgba(0, 214, 50, 0.12); border: 1px solid rgba(0, 214, 50, 0.25);">
+              <img src="./cash app icon.jpg" alt="Cash App" class="download-sim-img">
+            </div>
+            <div class="download-sim-meta">
+              <div class="download-sim-category">Digital Wallet</div>
+              <h3 class="download-sim-name">Cash App</h3>
+            </div>
+            <span class="download-sim-pill-badge" style="color: #00d632; border-color: rgba(0, 214, 50, 0.3);">Keypad
+              P2P</span>
+          </div>
+          <p class="download-sim-desc">
+            Simulate the full green keypad transfer, instant money sends, simulated user contacts, Cash Card, and
+            activity feed.
+          </p>
+          <div class="download-sim-actions">
+            <a href="./cashapp-simulator" class="download-sim-btn primary-dl-btn" target="_blank" rel="noopener">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+              <span>Launch / Install App</span>
+            </a>
+            <button type="button" class="download-sim-btn secondary-dl-btn" data-action="download-launcher"
+              data-sim="cashapp" title="Download Windows batch shortcut that opens in a standalone window">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              <span>Desktop Shortcut (.bat)</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Installation Guide Accordion -->
+      <div class="download-guide-box">
+        <div class="download-guide-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a1a1aa" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="16" x2="12" y2="12" />
+            <line x1="12" y1="8" x2="12.01" y2="8" />
+          </svg>
+          <span>How to Install on Mobile & Desktop</span>
+        </div>
+        <div class="download-guide-grid">
+          <div class="guide-item">
+            <div class="guide-platform">🍎 iOS Safari</div>
+            <p class="guide-step">Tap <strong>Share</strong> (square with up arrow) in Safari, then scroll and tap
+              <strong>"Add to Home Screen"</strong>.</p>
+          </div>
+          <div class="guide-item">
+            <div class="guide-platform">🤖 Android Chrome</div>
+            <p class="guide-step">Tap the <strong>Install Now</strong> button above or tap menu <strong>⋮</strong> >
+              <strong>"Install app"</strong>.</p>
+          </div>
+          <div class="guide-item">
+            <div class="guide-platform">💻 PC / Mac</div>
+            <p class="guide-step">Click the <strong>Install</strong> icon ⊞ in your browser's address bar (Chrome, Edge,
+              Brave) to install as desktop app.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Modern Inspired Auth Modal (Sign up / Log in / Card Details Step) -->
   <div id="auth-modal" class="auth-modal-overlay">
     <div class="auth-modal-card" id="auth-modal-card">
       <button type="button" class="auth-modal-close" id="auth-modal-close-btn" aria-label="Close modal">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M18 6 6 18M6 6l12 12" />
+        </svg>
       </button>
 
       <!-- STEP 1: CREDENTIALS (Sign In / Sign Up) -->
       <div id="auth-step-credentials" class="auth-step">
         <!-- Floating rounded entrance badge -->
         <div class="auth-icon-badge" id="auth-badge-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
-            <polyline points="10 17 15 12 10 7"/>
-            <line x1="15" y1="12" x2="3" y2="12"/>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+            <polyline points="10 17 15 12 10 7" />
+            <line x1="15" y1="12" x2="3" y2="12" />
           </svg>
         </div>
 
@@ -1783,35 +2698,44 @@
 
         <!-- Gate Banner shown when user tries to open a simulator without logging in -->
         <div id="auth-gate-notice" class="auth-gate-banner" style="display: none;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          <span id="auth-gate-text">Please log in with your email to launch this simulator.</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          <span id="auth-gate-text">Please log in with your email to launch this app.</span>
         </div>
 
         <form id="auth-form-credentials" novalidate>
           <!-- Email Input Pill -->
           <div class="auth-input-pill" id="wrap-auth-email">
             <span class="auth-input-icon">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect width="20" height="16" x="2" y="4" rx="2"/>
-                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect width="20" height="16" x="2" y="4" rx="2" />
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
               </svg>
             </span>
-            <input type="email" id="auth-email-input" class="auth-pill-input" placeholder="Email" required autocomplete="email">
+            <input type="email" id="auth-email-input" class="auth-pill-input" placeholder="Email" required
+              autocomplete="email">
           </div>
 
           <!-- Password Input Pill with Toggle -->
           <div class="auth-input-pill" id="wrap-auth-password" style="margin-top: 12px;">
             <span class="auth-input-icon">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
-                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
               </svg>
             </span>
-            <input type="password" id="auth-password-input" class="auth-pill-input" placeholder="Password" required autocomplete="current-password">
+            <input type="password" id="auth-password-input" class="auth-pill-input" placeholder="Password" required
+              autocomplete="current-password">
             <button type="button" class="auth-pw-toggle" id="auth-pw-toggle" aria-label="Toggle password visibility">
-              <svg id="pw-eye-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
-                <circle cx="12" cy="12" r="3"/>
+              <svg id="pw-eye-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                <circle cx="12" cy="12" r="3" />
               </svg>
             </button>
           </div>
@@ -1865,22 +2789,27 @@
       <!-- STEP 2: WIDER CARD DETAILS FORM (for Sign Up) -->
       <div id="auth-step-card" class="auth-step" style="display: none;">
         <div class="auth-icon-badge">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect width="20" height="14" x="2" y="5" rx="2"/>
-            <line x1="2" x2="22" y1="10" y2="10"/>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect width="20" height="14" x="2" y="5" rx="2" />
+            <line x1="2" x2="22" y1="10" y2="10" />
           </svg>
         </div>
 
         <h3 class="auth-card-title">Payment Details</h3>
         <p class="auth-card-desc">
-          Enter card details to activate simulator access. <strong style="color: #34d399;">$0.00 billed today</strong> (Free access).
+          Enter card details to activate app access. <strong style="color: #34d399;">$0.00 billed today</strong>
+          (Free access).
         </p>
 
         <form id="auth-form-card" novalidate>
           <!-- Cardholder Name -->
           <div class="auth-input-pill">
             <span class="auth-input-icon">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
             </span>
             <input type="text" id="card-name-input" class="auth-pill-input" placeholder="Cardholder Name" required>
           </div>
@@ -1888,27 +2817,37 @@
           <!-- Card Number -->
           <div class="auth-input-pill" style="margin-top: 12px;">
             <span class="auth-input-icon">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect width="20" height="14" x="2" y="5" rx="2" />
+                <line x1="2" x2="22" y1="10" y2="10" />
+              </svg>
             </span>
-            <input type="text" id="card-number-input" class="auth-pill-input" placeholder="Card number (4242 •••• •••• 4242)" maxlength="19" required>
+            <input type="text" id="card-number-input" class="auth-pill-input"
+              placeholder="Card number (4242 •••• •••• 4242)" maxlength="19" required>
             <span class="card-brand-badge" id="card-brand-badge">VISA</span>
           </div>
 
           <!-- Expiry, CVC & ZIP Grid -->
           <div class="auth-input-split" style="margin-top: 12px;">
             <div class="auth-input-pill">
-              <input type="text" id="card-exp-input" class="auth-pill-input" placeholder="MM / YY" maxlength="5" required style="padding-left: 14px;">
+              <input type="text" id="card-exp-input" class="auth-pill-input" placeholder="MM / YY" maxlength="5"
+                required style="padding-left: 14px;">
             </div>
             <div class="auth-input-pill">
-              <input type="password" id="card-cvc-input" class="auth-pill-input" placeholder="CVC" maxlength="4" required style="padding-left: 14px;">
+              <input type="password" id="card-cvc-input" class="auth-pill-input" placeholder="CVC" maxlength="4"
+                required style="padding-left: 14px;">
             </div>
             <div class="auth-input-pill">
-              <input type="text" id="card-zip-input" class="auth-pill-input" placeholder="ZIP" maxlength="6" required style="padding-left: 14px;">
+              <input type="text" id="card-zip-input" class="auth-pill-input" placeholder="ZIP" maxlength="6" required
+                style="padding-left: 14px;">
             </div>
           </div>
 
           <div class="auth-security-notice">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2">
+              <rect width="18" height="11" x="3" y="11" rx="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
             <span>Encrypted simulated checkout • Zero charges incurred</span>
           </div>
 
@@ -1925,6 +2864,9 @@
       </div>
     </div>
   </div>
+
+  <!-- Real-Time Shopify Order Alert Toast Stream (Global Top-Level) -->
+  <div class="shopify-toast-stream" id="shopify-toast-stream"></div>
 
   <!-- App Controller Module -->
   <script type="module" src="./app.js"></script>
