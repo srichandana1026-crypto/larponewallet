@@ -829,6 +829,7 @@ function switchCashAppTab(tabName) {
   state.cashAppActiveTab = tabName;
 
   const phoneContainer = document.getElementById('cashapp-phone-container');
+  const viewCashApp = document.getElementById('view-cashapp');
   const tabKeypad = document.getElementById('cashapp-tab-keypad');
   const tabHome = document.getElementById('cashapp-tab-home');
   const tabHistory = document.getElementById('cashapp-tab-history');
@@ -842,6 +843,7 @@ function switchCashAppTab(tabName) {
       phoneContainer.classList.remove('dark-theme');
       phoneContainer.style.backgroundColor = 'rgb(6, 174, 19)';
     }
+    if (viewCashApp) viewCashApp.classList.remove('dark-theme');
     if (tabKeypad) tabKeypad.style.display = 'flex';
     if (tabHome) tabHome.style.display = 'none';
     if (tabHistory) tabHistory.style.display = 'none';
@@ -850,6 +852,7 @@ function switchCashAppTab(tabName) {
       phoneContainer.classList.add('dark-theme');
       phoneContainer.style.backgroundColor = '#000000';
     }
+    if (viewCashApp) viewCashApp.classList.add('dark-theme');
     if (tabKeypad) tabKeypad.style.display = 'none';
     if (tabHome) tabHome.style.display = 'block';
     if (tabHistory) tabHistory.style.display = 'none';
@@ -859,6 +862,7 @@ function switchCashAppTab(tabName) {
       phoneContainer.classList.add('dark-theme');
       phoneContainer.style.backgroundColor = '#000000';
     }
+    if (viewCashApp) viewCashApp.classList.add('dark-theme');
     if (tabKeypad) tabKeypad.style.display = 'none';
     if (tabHome) tabHome.style.display = 'none';
     if (tabHistory) tabHistory.style.display = 'block';
@@ -951,36 +955,17 @@ function closeCashAppSuccessScreen() {
 }
 
 function triggerCashAppAction(actionType) {
-  if (actionType === 'pay') {
-    let numVal = parseFloat(state.cashAppAmount);
-    if (!numVal || numVal <= 0) {
-      numVal = 99999;
-      state.cashAppAmount = '99999';
-      updateCashAppDisplay();
-    }
-    const formattedAmount = `$${numVal.toLocaleString('en-US')}`;
-    openCashAppPaySheet(formattedAmount);
-  } else if (actionType === 'request') {
-    let numVal = parseFloat(state.cashAppAmount);
-    if (!numVal || numVal <= 0) {
-      numVal = 99999;
-      state.cashAppAmount = '99999';
-      updateCashAppDisplay();
-    }
-    const formattedAmount = `$${numVal.toLocaleString('en-US')}`;
-    showSimModal({
-      iconSvg: '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00D54B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>',
-      iconBg: 'rgba(0, 213, 75, 0.15)',
-      title: `Requested ${formattedAmount}`,
-      desc: `A payment link request has been dispatched.`,
-      actionText: 'Done'
-    });
-    state.cashAppAmount = '0';
+  // Request and Pool buttons do not work per requirement
+  if (actionType !== 'pay') return;
+
+  let numVal = parseFloat(state.cashAppAmount);
+  if (!numVal || numVal <= 0) {
+    numVal = 99999;
+    state.cashAppAmount = '99999';
     updateCashAppDisplay();
-  } else if (actionType === 'pool') {
-    const numVal = parseFloat(state.cashAppAmount) || 99999;
-    showToast(`Pool feature ready for $${numVal.toLocaleString('en-US')}`);
   }
+  const formattedAmount = `$${numVal.toLocaleString('en-US')}`;
+  openCashAppPaySheet(formattedAmount);
 }
 
 // --------------------------------------------------------------------------
@@ -2294,15 +2279,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Cash App Pay / Request / Pool
+  // Cash App Pay / Request / Pool (Request and Pool disabled per requirement)
   const payBtn = document.getElementById('cashapp-pay-btn');
   if (payBtn) payBtn.addEventListener('click', () => triggerCashAppAction('pay'));
 
   const reqBtn = document.getElementById('cashapp-req-btn');
-  if (reqBtn) reqBtn.addEventListener('click', () => triggerCashAppAction('request'));
+  if (reqBtn) {
+    reqBtn.setAttribute('disabled', 'true');
+    reqBtn.setAttribute('tabindex', '-1');
+    reqBtn.style.pointerEvents = 'none';
+    reqBtn.style.cursor = 'default';
+  }
 
   const poolBtn = document.getElementById('cashapp-pool-btn');
-  if (poolBtn) poolBtn.addEventListener('click', () => triggerCashAppAction('pool'));
+  if (poolBtn) {
+    poolBtn.setAttribute('disabled', 'true');
+    poolBtn.setAttribute('tabindex', '-1');
+    poolBtn.style.pointerEvents = 'none';
+    poolBtn.style.cursor = 'default';
+  }
 
   // Phantom FAB (+) Button -> Opens Speed Dial
   const phantomFabBtn = document.getElementById('phantom-fab-btn');
@@ -2686,11 +2681,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Cash App Bottom Nav Tab Buttons (Home, Keypad, History)
-  document.querySelectorAll('.cashapp-tab-nav-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      switchCashAppTab(btn.dataset.cashappTab);
+  const cashAppTabBtns = document.querySelectorAll('.cashapp-tab-nav-btn');
+  if (cashAppTabBtns.length > 0) {
+    cashAppTabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        switchCashAppTab(btn.dataset.cashappTab);
+      });
     });
-  });
+    switchCashAppTab('keypad');
+  }
 
   // Cash App Editable Username in Home View
   const usernameEl = document.getElementById('cashapp-peek-username');

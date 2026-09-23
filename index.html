@@ -614,27 +614,17 @@
        1. CASH APP SIMULATOR VIEW (The Green Display Screen)
        ====================================================================== -->
   <section id="view-cashapp" class="view-panel">
-    <!-- Back to Home Navigation Pill -->
-    <nav class="sim-top-nav">
-      <button type="button" class="back-to-hub-btn" data-navigate="landing" aria-label="Go Back to Home">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-          stroke-linecap="round" stroke-linejoin="round">
-          <path d="m15 18-6-6 6-6" />
-        </svg>
-        <span>Back to Home</span>
-      </button>
-    </nav>
 
     <!-- Cash App Phone Frame -->
     <div id="cashapp-phone-container"
-      class="cashapp-phone-container relative min-h-[100dvh] flex justify-center overflow-hidden overscroll-none w-full"
-      style="height: 641px; background-color: rgb(6, 174, 19); font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-weight: 600; touch-action: none; overscroll-behavior: none; -webkit-font-smoothing: antialiased;">
-      <div class="w-full max-w-[480px] flex flex-col px-[14.8716px] pt-6 pb-16 text-black relative"
+      class="cashapp-phone-container relative flex justify-center overflow-hidden overscroll-none w-full"
+      style="background-color: rgb(6, 174, 19); font-family: 'Proxima Nova', 'ProximaNova', 'Proxima-Nova-Sbold', sans-serif; font-weight: 600; touch-action: none; overscroll-behavior: none; -webkit-font-smoothing: antialiased;">
+      <div class="w-full max-w-[480px] flex flex-col px-[20px] pt-6 pb-4 text-black relative"
         style="touch-action: none; height: 100%;">
 
         <!-- Cash App Top Nav Icons (QR beside Smile on left, Search & User on right) -->
         <div class="cashapp-top-nav-bar flex h-10 items-center justify-between"
-          style="margin-top: 24px; margin-bottom: 12px; z-index: 10;">
+          style="margin-top: 14px; margin-bottom: 8px; z-index: 10;">
           <div class="flex h-10 items-center" style="gap: 12px;">
             <!-- Smile -->
             <div
@@ -665,20 +655,19 @@
         </div>
 
         <!-- TAB 1: KEYPAD VIEW (Default) -->
-        <div id="cashapp-tab-keypad" class="cashapp-tab-pane flex-1 flex flex-col"
-          style="display: flex; justify-content: flex-start; padding-top: 20px;">
+        <div id="cashapp-tab-keypad" class="cashapp-tab-pane flex-1 flex flex-col">
           <!-- Amount Display -->
-          <div class="flex items-center justify-center" style="flex: 0 0 auto; padding: 8px 0 4px;">
+          <div class="flex items-center justify-center cashapp-amount-section" style="flex: 0 0 auto; padding: 36px 0 14px;">
             <div class="relative flex flex-col items-center">
               <div id="cashapp-min-warning"
                 class="text-black text-[14px] font-semibold transition-opacity duration-300 whitespace-nowrap"
-                style="opacity: 0; position: absolute; top: -55px; pointer-events: none;">
+                style="opacity: 0; position: absolute; top: -45px; pointer-events: none;">
                 $1 is the minimum to send
               </div>
-              <div id="cashapp-amount-display" class="text-[98px] font-bold leading-none select-none tracking-tight">
+              <div id="cashapp-amount-display" class="cashapp-amount-hero select-none tracking-tight">
                 <span>$</span><span>0</span>
               </div>
-              <div id="cashapp-measure-display" aria-hidden="true" class="text-[98px] font-bold leading-none"
+              <div id="cashapp-measure-display" aria-hidden="true" class="cashapp-amount-hero tracking-tight"
                 style="position: absolute; visibility: hidden; pointer-events: none; white-space: nowrap;">
                 <span>$</span>0
               </div>
@@ -686,7 +675,7 @@
           </div>
 
           <!-- Keypad -->
-          <div class="grid grid-cols-3 text-[32px] font-bold" style="row-gap: 10px; margin-top: 4px;">
+          <div class="cashapp-keypad-grid">
             <button type="button" class="cashapp-keypad-key" data-cashkey="1">1</button>
             <button type="button" class="cashapp-keypad-key" data-cashkey="2">2</button>
             <button type="button" class="cashapp-keypad-key" data-cashkey="3">3</button>
@@ -696,36 +685,26 @@
             <button type="button" class="cashapp-keypad-key" data-cashkey="7">7</button>
             <button type="button" class="cashapp-keypad-key" data-cashkey="8">8</button>
             <button type="button" class="cashapp-keypad-key" data-cashkey="9">9</button>
-            <button type="button" class="cashapp-keypad-key cashapp-dot-key" data-cashkey=".">.</button>
+            <button type="button" class="cashapp-keypad-key cashapp-dot-key" data-cashkey="." aria-label="Decimal point">
+              <span class="cashapp-dot-symbol"></span>
+            </button>
             <button type="button" class="cashapp-keypad-key" data-cashkey="0">0</button>
-            <button type="button" class="cashapp-keypad-key" data-cashkey="backspace" aria-label="Backspace">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <button type="button" class="cashapp-keypad-key cashapp-backspace-key" data-cashkey="backspace" aria-label="Backspace">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m15 18-6-6 6-6" />
               </svg>
             </button>
           </div>
 
-          <!-- Pool & Request Action Row -->
-          <div class="grid grid-cols-2 gap-3.5" style="margin-top: 10px;">
-            <button type="button" id="cashapp-pool-btn"
-              class="rounded-full text-[16.5px] font-semibold cursor-pointer active:scale-[0.98] transition-transform flex items-center justify-center"
-              style="background-color: rgba(0, 0, 0, 0.15); height: 44px; color: #000000;">
-              Pool
-            </button>
-            <button type="button" id="cashapp-req-btn"
-              class="rounded-full text-[16.5px] font-semibold cursor-pointer active:scale-[0.98] transition-transform flex items-center justify-center"
-              style="background-color: rgba(0, 0, 0, 0.15); height: 44px; color: #000000;">
-              Request
-            </button>
+          <!-- Pool & Request Action Row + Pay Button -->
+          <div class="cashapp-action-group">
+            <div class="cashapp-pool-req-row">
+              <button type="button" id="cashapp-pool-btn" disabled tabindex="-1" style="pointer-events: none; cursor: default;">Pool</button>
+              <button type="button" id="cashapp-req-btn" disabled tabindex="-1" style="pointer-events: none; cursor: default;">Request</button>
+            </div>
+            <button type="button" id="cashapp-pay-btn">Pay</button>
           </div>
-
-          <!-- Pay Button -->
-          <button type="button" id="cashapp-pay-btn"
-            class="w-full rounded-full bg-black text-white text-[17px] font-semibold cursor-pointer active:scale-[0.98] transition-transform flex items-center justify-center"
-            style="height: 38px; margin-top: 8px;">
-            Pay
-          </button>
         </div>
 
         <!-- TAB 2: HOME / BANKING VIEW (Screenshots 2, 3, 4) -->
@@ -930,7 +909,7 @@
             <button type="button" class="cashapp-tab-nav-btn" data-cashapp-tab="home" aria-label="Home / Banking">
               <img src="./bank_icon.png" alt="Bank" class="cashapp-bottom-nav-bank-img">
             </button>
-            <button type="button" class="cashapp-tab-nav-btn cashapp-dollar-tab-btn" data-cashapp-tab="keypad"
+            <button type="button" class="cashapp-tab-nav-btn cashapp-dollar-tab-btn active" data-cashapp-tab="keypad"
               aria-label="Pay Keypad">
               <span class="cashapp-dollar-symbol">$</span>
             </button>
