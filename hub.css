@@ -523,26 +523,64 @@ html[data-standalone] .footer-brand-section {
   box-sizing: border-box;
 }
 
-#view-phantom {
-  justify-content: center;
-  align-items: center;
-  background: #000000;
-  padding: 24px 16px;
-  min-height: 100vh;
+/* Hide any Back to Home button in Phantom Wallet */
+#view-phantom .sim-top-nav,
+#view-phantom .back-to-hub-btn,
+.phantom-phone-frame .sim-top-nav,
+.phantom-phone-frame .back-to-hub-btn {
+  display: none !important;
 }
 
-.phantom-phone-frame {
-  width: 100%;
-  max-width: 390px;
+#view-phantom {
+  display: flex !important;
+  justify-content: center;
+  align-items: stretch;
   background: #000000;
-  border-radius: 44px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.98), 0 0 0 1px rgba(255, 255, 255, 0.05);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  height: 780px;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  min-height: 100vh !important;
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+#phantom-phone-frame,
+.phantom-phone-frame {
+  width: 100% !important;
+  max-width: 440px !important;
+  background: #000000 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  max-height: 100dvh !important;
+  margin: 0 auto !important;
+}
+
+html[data-standalone="phantom"],
+html[data-standalone="phantom"] body {
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  max-height: 100dvh !important;
+  overflow: hidden !important;
+  background-color: #000000 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.phantom-pwa-install-btn {
+  display: none !important;
 }
 
 /* Phantom Left Sidebar Drawer & Backdrop */
@@ -746,18 +784,19 @@ html[data-standalone] .footer-brand-section {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 22px 18px 95px;
+  padding: max(20px, env(safe-area-inset-top)) 18px max(96px, calc(76px + env(safe-area-inset-bottom)));
   display: flex;
   flex-direction: column;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
 
-.phantom-main-content::-webkit-scrollbar {
-  width: 4px;
-}
-
-.phantom-main-content::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+.phantom-main-content::-webkit-scrollbar,
+.phantom-phone-frame::-webkit-scrollbar,
+#view-phantom::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 /* Top Header */
@@ -892,22 +931,23 @@ html[data-standalone] .footer-brand-section {
   line-height: 1;
 }
 
-/* Cash Row Card */
+/* Cash Row (Direct seamless list row, not a card box) */
 .phantom-asset-card {
-  background: #18181a;
-  border-radius: 20px;
-  padding: 18px 20px;
+  background: transparent;
+  border-radius: 14px;
+  padding: 12px 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  margin-bottom: 24px;
-  transition: background 0.15s ease, transform 0.15s ease;
+  border: none;
+  box-shadow: none;
+  margin-bottom: 16px;
+  transition: background 0.15s ease;
   cursor: pointer;
 }
 
 .phantom-asset-card:hover {
-  background: #1e1e21;
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .phantom-asset-left {
@@ -954,7 +994,8 @@ html[data-standalone] .footer-brand-section {
   color: #ffffff;
   font-size: 17px;
   font-weight: 700;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
+  padding: 0 10px;
   cursor: pointer;
 }
 
@@ -962,27 +1003,28 @@ html[data-standalone] .footer-brand-section {
   color: #8e8e93;
 }
 
-/* Tokens List */
+/* Tokens List (Direct seamless list rows, not card boxes) */
 .phantom-tokens-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 2px;
 }
 
 .phantom-token-card {
-  background: #18181a;
-  border-radius: 20px;
-  padding: 14px 18px;
+  background: transparent;
+  border-radius: 14px;
+  padding: 10px 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  border: none;
+  box-shadow: none;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease;
 }
 
 .phantom-token-card:hover {
-  background: #1e1e21;
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .phantom-token-left {
@@ -1378,6 +1420,7 @@ html[data-standalone] .footer-brand-section {
 }
 
 .phantom-lock-squircle {
+  position: relative;
   width: 42px;
   height: 42px;
   border-radius: 12px;
@@ -1386,13 +1429,184 @@ html[data-standalone] .footer-brand-section {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.phantom-lock-squircle:hover {
+  background: #323238;
+  border-color: #ab9ff2;
+  transform: scale(1.05);
 }
 
 .phantom-lock-squircle img {
   width: 24px;
   height: 24px;
   object-fit: contain;
+}
+
+.phantom-squircle-badge {
+  position: absolute;
+  bottom: -3px;
+  right: -3px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #ab9ff2;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #161618;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.phantom-lock-emoji-display {
+  font-size: 20px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Phantom Lock Emoji Selector Panel */
+.phantom-emoji-selector-panel {
+  background: #19191c;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.phantom-emoji-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.phantom-emoji-panel-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #8e8e93;
+}
+
+.phantom-emoji-default-btn {
+  background: none;
+  border: none;
+  color: #ab9ff2;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.15s ease;
+}
+
+.phantom-emoji-default-btn:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.phantom-emoji-presets {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 6px;
+}
+
+.phantom-emoji-preset-btn {
+  aspect-ratio: 1;
+  border-radius: 10px;
+  background: #242428;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.phantom-emoji-preset-btn:hover {
+  background: #323238;
+  transform: scale(1.12);
+}
+
+.phantom-emoji-preset-btn.active {
+  background: rgba(171, 159, 242, 0.22);
+  border-color: #ab9ff2;
+  box-shadow: 0 0 0 1.5px #ab9ff2;
+}
+
+.phantom-emoji-custom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.phantom-emoji-custom-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #c4c4c8;
+  white-space: nowrap;
+}
+
+.phantom-emoji-input-wrap {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.phantom-emoji-input {
+  width: 100%;
+  background: #111113;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 7px 28px 7px 10px;
+  color: #ffffff;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.phantom-emoji-input:focus {
+  border-color: #ab9ff2;
+}
+
+.phantom-emoji-clear-btn {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  color: #8e8e93;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px;
+}
+
+.phantom-emoji-clear-btn:hover {
+  color: #ffffff;
+}
+
+.phantom-emoji-error-text {
+  font-size: 11.5px;
+  color: #ff453a;
+  font-weight: 600;
+  margin-top: -4px;
 }
 
 .phantom-name-field {

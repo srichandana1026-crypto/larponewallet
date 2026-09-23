@@ -28,6 +28,8 @@ const state = {
     address: '9WzQ...7k2q',
     fullAddress: '9WzQxR64mY8cK3eN2uFpLt5J8vG1mZbAo41P7k2q',
     walletName: 'Wallet Name',
+    lockEmoji: '',
+    changePct: '',
     cash: 0,
     tokens: {
       btc: 0,
@@ -87,6 +89,8 @@ try {
     const parsedP = JSON.parse(savedPhantom);
     if (parsedP) {
       if (parsedP.walletName !== undefined) state.phantom.walletName = parsedP.walletName;
+      if (parsedP.lockEmoji !== undefined) state.phantom.lockEmoji = parsedP.lockEmoji;
+      if (parsedP.changePct !== undefined) state.phantom.changePct = parsedP.changePct;
       if (parsedP.cash !== undefined) state.phantom.cash = parsedP.cash;
       if (parsedP.tokens) state.phantom.tokens = { ...state.phantom.tokens, ...parsedP.tokens };
     }
@@ -992,6 +996,14 @@ function triggerCashAppAction(actionType) {
 // --------------------------------------------------------------------------
 // PHANTOM WALLET LOGIC
 // --------------------------------------------------------------------------
+const PHANTOM_EMOJI_REGEX = /\p{Extended_Pictographic}(?:\uFE0F|\u200D\p{Extended_Pictographic})*/u;
+
+function extractPhantomEmoji(str) {
+  if (!str) return '';
+  const match = str.match(PHANTOM_EMOJI_REGEX);
+  return match ? match[0] : '';
+}
+
 function formatPhantomCurrency(val) {
   const num = typeof val === 'number' ? val : parseFloat(val) || 0;
   return '$' + num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -1016,24 +1028,132 @@ function renderPhantomUI() {
   if (sideText) sideText.textContent = wName;
   if (sideAvatar) sideAvatar.textContent = (wName || 'W').charAt(0).toUpperCase();
 
-  // Calculate total balance
+  // Render Lock Icon as Emoji or Default Image
+  const currentLockEmoji = state.phantom.lockEmoji || '';
+
+  // 1. Header Lock Button
+  const topLockBtn = document.getElementById('phantom-top-lock-btn');
+  if (topLockBtn) {
+    const img = topLockBtn.querySelector('img');
+    let emojiSpan = topLockBtn.querySelector('.phantom-header-lock-emoji');
+    if (!emojiSpan) {
+      emojiSpan = document.createElement('span');
+      emojiSpan.className = 'phantom-header-lock-emoji phantom-lock-emoji-display';
+      topLockBtn.appendChild(emojiSpan);
+    }
+    if (currentLockEmoji) {
+      if (img) img.style.display = 'none';
+      emojiSpan.textContent = currentLockEmoji;
+      emojiSpan.style.display = 'flex';
+    } else {
+      if (img) img.style.display = 'block';
+      emojiSpan.style.display = 'none';
+    }
+  }
+
+  // 2. Sidebar Lock Button
+  const sideLockBtn = document.getElementById('phantom-sidebar-lock-btn');
+  if (sideLockBtn) {
+    const img = sideLockBtn.querySelector('img');
+    let emojiSpan = sideLockBtn.querySelector('.phantom-sidebar-lock-emoji');
+    if (!emojiSpan) {
+      emojiSpan = document.createElement('span');
+      emojiSpan.className = 'phantom-sidebar-lock-emoji phantom-lock-emoji-display';
+      sideLockBtn.appendChild(emojiSpan);
+    }
+    if (currentLockEmoji) {
+      if (img) img.style.display = 'none';
+      emojiSpan.textContent = currentLockEmoji;
+      emojiSpan.style.display = 'flex';
+    } else {
+      if (img) img.style.display = 'block';
+      emojiSpan.style.display = 'none';
+    }
+  }
+
+  // 3. Settings Modal Squircle Preview
+  const squircleImg = document.getElementById('phantom-settings-lock-img');
+  const squircleEmoji = document.getElementById('phantom-settings-lock-emoji');
+  if (squircleImg && squircleEmoji) {
+    if (currentLockEmoji) {
+      squircleImg.style.display = 'none';
+      squircleEmoji.textContent = currentLockEmoji;
+      squircleEmoji.style.display = 'flex';
+    } else {
+      squircleImg.style.display = 'block';
+      squircleEmoji.style.display = 'none';
+    }
+  }
+
+  // 4. Sidebar Nav Lock Icon
+  const sideNavEmoji = document.querySelector('.phantom-sidebar-nav-emoji');
+  if (sideNavEmoji) {
+    sideNavEmoji.textContent = currentLockEmoji || '🔒';
+  }
+
+  // Calculate total balance & realistic weighted 24h market change
   const cashAmt = parseFloat(state.phantom.cash) || 0;
   let totalCrypto = 0;
+  let weightedCryptoChange = 0;
+
+  const COIN_24H_CHANGE = {
+    btc: 3.42,
+    solana: 6.84,
+    ethereum: 4.15,
+    usdt: 0.02,
+    usdc: 0.01,
+    polygon: 2.18
+  };
+
   Object.entries(state.phantom.tokens).forEach(([k, qty]) => {
     const q = parseFloat(qty) || 0;
     const price = state.phantom.prices[k] || 0;
-    totalCrypto += q * price;
+    const fiat = q * price;
+    totalCrypto += fiat;
+    weightedCryptoChange += fiat * (COIN_24H_CHANGE[k] || 4.5);
   });
   const totalVal = cashAmt + totalCrypto;
+
+  // Determine percentage
+  let pct = 0;
+  if (state.phantom.changePct !== undefined && state.phantom.changePct !== '' && state.phantom.changePct !== null) {
+    pct = parseFloat(state.phantom.changePct) || 0;
+  } else if (totalVal > 0) {
+    if (totalCrypto > 0) {
+      const cryptoPct = weightedCryptoChange / totalCrypto;
+      pct = cashAmt > 0 ? ((totalCrypto * cryptoPct + cashAmt * 4.8) / totalVal) : cryptoPct;
+    } else {
+      pct = 5.25;
+    }
+  }
+
+  // Calculate change dollar amount
+  const changeAmtVal = totalVal > 0 ? (totalVal * (Math.abs(pct) / 100)) : 0;
+  const isNegative = pct < 0;
+  const sign = isNegative ? '-' : '+';
+  const formattedPct = `${sign}${Math.abs(pct).toFixed(2)}%`;
+  const formattedChangeAmt = `${sign}${formatPhantomCurrency(changeAmtVal)}`;
 
   if (portfolioValEl) {
     portfolioValEl.textContent = formatPhantomCurrency(totalVal);
   }
   if (changeAmtEl) {
-    changeAmtEl.textContent = '+' + formatPhantomCurrency(totalVal);
+    changeAmtEl.textContent = formattedChangeAmt;
+    if (isNegative) {
+      changeAmtEl.style.color = '#ff3b30';
+    } else {
+      changeAmtEl.style.color = '#00e676';
+    }
   }
   if (changeBadgeEl) {
-    changeBadgeEl.textContent = '+0.00%';
+    changeBadgeEl.textContent = formattedPct;
+    if (isNegative) {
+      changeBadgeEl.style.backgroundColor = '#ff3b30';
+      changeBadgeEl.style.color = '#ffffff';
+    } else {
+      changeBadgeEl.style.backgroundColor = '#00e676';
+      changeBadgeEl.style.color = '#000000';
+    }
   }
   if (cashValEl) {
     cashValEl.textContent = formatPhantomCurrency(cashAmt);
@@ -1078,7 +1198,9 @@ function renderPhantomUI() {
     const sortedTokens = [...tokensWithBalances, ...tokensZero];
 
     tokensListEl.innerHTML = sortedTokens.map(t => {
-      const changeStr = t.qty > 0 ? '+' + formatPhantomCurrency(t.fiat) : '$0.00';
+      const coinRate = COIN_24H_CHANGE[t.key] || 4.2;
+      const coinAmtChange = t.fiat * (coinRate / 100);
+      const changeStr = t.qty > 0 ? '+' + formatPhantomCurrency(coinAmtChange) : '$0.00';
       const changeClass = t.qty > 0 ? 'phantom-token-change green' : 'phantom-token-change';
       return `
         <div class="phantom-token-card" data-token="${t.key}">
@@ -1148,6 +1270,7 @@ function openPhantomSettingsModal() {
 
   const nameInput = document.getElementById('phantom-input-wallet-name');
   const cashInput = document.getElementById('phantom-input-cash');
+  const changePctInput = document.getElementById('phantom-input-change-pct');
   const usdtInput = document.getElementById('phantom-input-usdt');
   const solInput = document.getElementById('phantom-input-solana');
   const ethInput = document.getElementById('phantom-input-ethereum');
@@ -1157,12 +1280,46 @@ function openPhantomSettingsModal() {
 
   if (nameInput) nameInput.value = state.phantom.walletName || 'Wallet Name';
   if (cashInput) cashInput.value = state.phantom.cash !== undefined ? state.phantom.cash : 0;
+  if (changePctInput) changePctInput.value = state.phantom.changePct !== undefined ? state.phantom.changePct : '';
   if (usdtInput) usdtInput.value = state.phantom.tokens.usdt !== undefined ? state.phantom.tokens.usdt : 0;
   if (solInput) solInput.value = state.phantom.tokens.solana !== undefined ? state.phantom.tokens.solana : 0;
   if (ethInput) ethInput.value = state.phantom.tokens.ethereum !== undefined ? state.phantom.tokens.ethereum : 0;
   if (btcInput) btcInput.value = state.phantom.tokens.btc !== undefined ? state.phantom.tokens.btc : 0;
   if (usdcInput) usdcInput.value = state.phantom.tokens.usdc !== undefined ? state.phantom.tokens.usdc : 0;
   if (polyInput) polyInput.value = state.phantom.tokens.polygon !== undefined ? state.phantom.tokens.polygon : 0;
+
+  // Sync Lock Emoji in Settings Modal
+  const lockEmojiInput = document.getElementById('phantom-input-lock-emoji');
+  const clearEmojiBtn = document.getElementById('phantom-emoji-clear-btn');
+  const emojiErrorMsg = document.getElementById('phantom-emoji-error');
+  const currentLockEmoji = state.phantom.lockEmoji || '';
+
+  if (lockEmojiInput) lockEmojiInput.value = currentLockEmoji;
+  if (clearEmojiBtn) clearEmojiBtn.style.display = currentLockEmoji ? 'block' : 'none';
+  if (emojiErrorMsg) emojiErrorMsg.style.display = 'none';
+
+  // Highlight matching preset chip
+  document.querySelectorAll('.phantom-emoji-preset-btn').forEach(btn => {
+    if (btn.getAttribute('data-emoji') === currentLockEmoji) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  // Update Squircle Preview in Modal
+  const squircleImg = document.getElementById('phantom-settings-lock-img');
+  const squircleEmoji = document.getElementById('phantom-settings-lock-emoji');
+  if (squircleImg && squircleEmoji) {
+    if (currentLockEmoji) {
+      squircleImg.style.display = 'none';
+      squircleEmoji.textContent = currentLockEmoji;
+      squircleEmoji.style.display = 'flex';
+    } else {
+      squircleImg.style.display = 'block';
+      squircleEmoji.style.display = 'none';
+    }
+  }
 
   modal.classList.add('active');
 }
@@ -1174,6 +1331,7 @@ function closePhantomSettingsModal() {
 
 function resetPhantomSettingsInputs() {
   const cashInput = document.getElementById('phantom-input-cash');
+  const changePctInput = document.getElementById('phantom-input-change-pct');
   const usdtInput = document.getElementById('phantom-input-usdt');
   const solInput = document.getElementById('phantom-input-solana');
   const ethInput = document.getElementById('phantom-input-ethereum');
@@ -1182,6 +1340,7 @@ function resetPhantomSettingsInputs() {
   const polyInput = document.getElementById('phantom-input-polygon');
 
   if (cashInput) cashInput.value = 0;
+  if (changePctInput) changePctInput.value = '';
   if (usdtInput) usdtInput.value = 0;
   if (solInput) solInput.value = 0;
   if (ethInput) ethInput.value = 0;
@@ -1189,12 +1348,31 @@ function resetPhantomSettingsInputs() {
   if (usdcInput) usdcInput.value = 0;
   if (polyInput) polyInput.value = 0;
 
-  showToast('Numbers reset to 0. Click Done to apply.');
+  state.phantom.changePct = '';
+
+  // Reset emoji input & squircle preview
+  state.phantom.lockEmoji = '';
+  const lockEmojiInput = document.getElementById('phantom-input-lock-emoji');
+  if (lockEmojiInput) lockEmojiInput.value = '';
+  const clearEmojiBtn = document.getElementById('phantom-emoji-clear-btn');
+  if (clearEmojiBtn) clearEmojiBtn.style.display = 'none';
+  const emojiErrorMsg = document.getElementById('phantom-emoji-error');
+  if (emojiErrorMsg) emojiErrorMsg.style.display = 'none';
+
+  document.querySelectorAll('.phantom-emoji-preset-btn').forEach(btn => btn.classList.remove('active'));
+
+  const squircleImg = document.getElementById('phantom-settings-lock-img');
+  const squircleEmoji = document.getElementById('phantom-settings-lock-emoji');
+  if (squircleImg) squircleImg.style.display = 'block';
+  if (squircleEmoji) squircleEmoji.style.display = 'none';
+
+  showToast('Settings reset to default. Click Done to apply.');
 }
 
 function savePhantomSettings() {
   const nameInput = document.getElementById('phantom-input-wallet-name');
   const cashInput = document.getElementById('phantom-input-cash');
+  const changePctInput = document.getElementById('phantom-input-change-pct');
   const usdtInput = document.getElementById('phantom-input-usdt');
   const solInput = document.getElementById('phantom-input-solana');
   const ethInput = document.getElementById('phantom-input-ethereum');
@@ -1204,6 +1382,10 @@ function savePhantomSettings() {
 
   if (nameInput) state.phantom.walletName = nameInput.value.trim() || 'Wallet Name';
   if (cashInput) state.phantom.cash = parseFloat(cashInput.value) || 0;
+  if (changePctInput) {
+    const rawPct = changePctInput.value.trim();
+    state.phantom.changePct = rawPct !== '' ? rawPct : '';
+  }
   if (usdtInput) state.phantom.tokens.usdt = parseFloat(usdtInput.value) || 0;
   if (solInput) state.phantom.tokens.solana = parseFloat(solInput.value) || 0;
   if (ethInput) state.phantom.tokens.ethereum = parseFloat(ethInput.value) || 0;
@@ -1211,9 +1393,23 @@ function savePhantomSettings() {
   if (usdcInput) state.phantom.tokens.usdc = parseFloat(usdcInput.value) || 0;
   if (polyInput) state.phantom.tokens.polygon = parseFloat(polyInput.value) || 0;
 
+  // Save Lock Emoji with strict emoji enforcement
+  const customEmojiInput = document.getElementById('phantom-input-lock-emoji');
+  if (customEmojiInput) {
+    const rawEmoji = customEmojiInput.value.trim();
+    if (!rawEmoji) {
+      state.phantom.lockEmoji = '';
+    } else {
+      const validEmoji = extractPhantomEmoji(rawEmoji);
+      state.phantom.lockEmoji = validEmoji;
+    }
+  }
+
   try {
     localStorage.setItem('larpkit_phantom', JSON.stringify({
       walletName: state.phantom.walletName,
+      lockEmoji: state.phantom.lockEmoji,
+      changePct: state.phantom.changePct,
       cash: state.phantom.cash,
       tokens: state.phantom.tokens
     }));
@@ -1221,7 +1417,7 @@ function savePhantomSettings() {
 
   renderPhantomUI();
   closePhantomSettingsModal();
-  showToast('Balance updated!');
+  showToast('Settings updated!');
 }
 
 // --------------------------------------------------------------------------
@@ -2390,6 +2586,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  const phantomChangeAmtTrigger = document.getElementById('phantom-change-amt');
+  if (phantomChangeAmtTrigger) {
+    phantomChangeAmtTrigger.style.cursor = 'pointer';
+    phantomChangeAmtTrigger.addEventListener('click', () => {
+      openPhantomSettingsModal();
+      setTimeout(() => {
+        const inp = document.getElementById('phantom-input-change-pct');
+        if (inp) inp.focus();
+      }, 150);
+    });
+  }
+
+  const phantomChangeBadgeTrigger = document.getElementById('phantom-change-badge');
+  if (phantomChangeBadgeTrigger) {
+    phantomChangeBadgeTrigger.style.cursor = 'pointer';
+    phantomChangeBadgeTrigger.addEventListener('click', () => {
+      openPhantomSettingsModal();
+      setTimeout(() => {
+        const inp = document.getElementById('phantom-input-change-pct');
+        if (inp) inp.focus();
+      }, 150);
+    });
+  }
+
   // Settings Modal Close Buttons & Backdrop
   const phantomSettingsCloseBtn = document.getElementById('phantom-settings-close-btn');
   if (phantomSettingsCloseBtn) {
@@ -2421,6 +2641,125 @@ document.addEventListener('DOMContentLoaded', () => {
     phantomSettingsDoneBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       savePhantomSettings();
+    });
+  }
+
+  const phantomModalCard = document.querySelector('.phantom-modal-card');
+  if (phantomModalCard) {
+    phantomModalCard.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        savePhantomSettings();
+      }
+    });
+  }
+
+  // Phantom Lock Emoji Interaction Controls
+  function applyPhantomSelectedEmoji(emoji) {
+    const lockEmojiInput = document.getElementById('phantom-input-lock-emoji');
+    const clearEmojiBtn = document.getElementById('phantom-emoji-clear-btn');
+    const emojiErrorMsg = document.getElementById('phantom-emoji-error');
+    const squircleImg = document.getElementById('phantom-settings-lock-img');
+    const squircleEmoji = document.getElementById('phantom-settings-lock-emoji');
+
+    if (emoji) {
+      if (lockEmojiInput) lockEmojiInput.value = emoji;
+      if (clearEmojiBtn) clearEmojiBtn.style.display = 'block';
+      if (squircleImg) squircleImg.style.display = 'none';
+      if (squircleEmoji) {
+        squircleEmoji.textContent = emoji;
+        squircleEmoji.style.display = 'flex';
+      }
+      if (emojiErrorMsg) emojiErrorMsg.style.display = 'none';
+    } else {
+      if (lockEmojiInput) lockEmojiInput.value = '';
+      if (clearEmojiBtn) clearEmojiBtn.style.display = 'none';
+      if (squircleImg) squircleImg.style.display = 'block';
+      if (squircleEmoji) squircleEmoji.style.display = 'none';
+    }
+
+    document.querySelectorAll('.phantom-emoji-preset-btn').forEach(btn => {
+      if (emoji && btn.getAttribute('data-emoji') === emoji) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+  }
+
+  // Preset emoji clicks
+  document.querySelectorAll('.phantom-emoji-preset-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const emoji = btn.getAttribute('data-emoji');
+      applyPhantomSelectedEmoji(emoji);
+    });
+  });
+
+  // Default lock reset button in modal
+  const defaultLockBtn = document.getElementById('phantom-emoji-default-btn');
+  if (defaultLockBtn) {
+    defaultLockBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      applyPhantomSelectedEmoji('');
+    });
+  }
+
+  // Custom emoji input (strict emoji-only validation)
+  const lockEmojiInput = document.getElementById('phantom-input-lock-emoji');
+  if (lockEmojiInput) {
+    lockEmojiInput.addEventListener('input', (e) => {
+      const val = e.target.value;
+      const emojiErrorMsg = document.getElementById('phantom-emoji-error');
+      if (!val) {
+        applyPhantomSelectedEmoji('');
+        return;
+      }
+
+      const extracted = extractPhantomEmoji(val);
+      if (extracted) {
+        applyPhantomSelectedEmoji(extracted);
+      } else {
+        // Disallow non-emoji input
+        e.target.value = '';
+        if (emojiErrorMsg) {
+          emojiErrorMsg.textContent = 'Only emojis are allowed!';
+          emojiErrorMsg.style.display = 'block';
+        }
+        applyPhantomSelectedEmoji('');
+      }
+    });
+  }
+
+  // Clear emoji button
+  const clearEmojiBtn = document.getElementById('phantom-emoji-clear-btn');
+  if (clearEmojiBtn) {
+    clearEmojiBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      applyPhantomSelectedEmoji('');
+    });
+  }
+
+  // Squircle click in settings -> Focus emoji input
+  const squircleTrigger = document.getElementById('phantom-settings-lock-squircle');
+  if (squircleTrigger) {
+    squircleTrigger.addEventListener('click', () => {
+      const inp = document.getElementById('phantom-input-lock-emoji');
+      if (inp) inp.focus();
+    });
+  }
+
+  // Sidebar "Lock Icon" item
+  const sideNavLockBtn = document.getElementById('phantom-sidebar-nav-lock-icon');
+  if (sideNavLockBtn) {
+    sideNavLockBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      togglePhantomSidebar(false);
+      openPhantomSettingsModal();
+      setTimeout(() => {
+        const inp = document.getElementById('phantom-input-lock-emoji');
+        if (inp) inp.focus();
+      }, 250);
     });
   }
 

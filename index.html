@@ -1130,17 +1130,6 @@
        3. PHANTOM WALLET SIMULATOR VIEW (Sleek Dark Web3 Wallet)
        ====================================================================== -->
   <section id="view-phantom" class="view-panel">
-    <!-- Back to Home Navigation Pill & Download Button -->
-    <nav class="sim-top-nav">
-      <button type="button" class="back-to-hub-btn" data-navigate="landing" aria-label="Go Back to Home">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-          stroke-linecap="round" stroke-linejoin="round">
-          <path d="m15 18-6-6 6-6" />
-        </svg>
-        <span>Back to Home</span>
-      </button>
-    </nav>
-
     <!-- Phantom Mobile Mockup Container -->
     <div class="phantom-phone-frame" id="phantom-phone-frame">
 
@@ -1152,6 +1141,7 @@
           <button type="button" class="phantom-sidebar-lock-btn" id="phantom-sidebar-lock-btn" title="Close menu"
             aria-label="Close menu">
             <img src="./lock-key-placeholder.png" alt="Lock" class="phantom-sidebar-lock-img">
+            <span class="phantom-sidebar-lock-emoji phantom-lock-emoji-display" style="display: none;"></span>
           </button>
           <button type="button" class="phantom-sidebar-copy-btn" id="phantom-sidebar-copy-btn"
             title="Copy wallet address" aria-label="Copy address">
@@ -1185,7 +1175,7 @@
           <button type="button" class="phantom-sidebar-nav-item" id="phantom-sidebar-nav-profile">
             <svg class="phantom-sidebar-nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+              <path d="M19 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
               <circle cx="12" cy="7" r="4" />
             </svg>
             <span class="phantom-sidebar-nav-label">Profile</span>
@@ -1209,6 +1199,12 @@
             </svg>
             <span class="phantom-sidebar-nav-label">History</span>
           </button>
+
+          <!-- Lock Icon (Emojis Only) -->
+          <button type="button" class="phantom-sidebar-nav-item" id="phantom-sidebar-nav-lock-icon" title="Change Lock Icon">
+            <span class="phantom-sidebar-nav-icon phantom-sidebar-nav-emoji" style="font-size: 19px; width: 22px; text-align: center; display: inline-flex; align-items: center; justify-content: center;">🔒</span>
+            <span class="phantom-sidebar-nav-label">Lock Icon</span>
+          </button>
         </nav>
       </aside>
 
@@ -1219,6 +1215,7 @@
           <button type="button" class="phantom-top-lock-btn" id="phantom-top-lock-btn" aria-label="Wallet Lock"
             title="Open wallet menu">
             <img src="./lock-key-placeholder.png" alt="Lock" class="phantom-header-lock-icon">
+            <span class="phantom-header-lock-emoji phantom-lock-emoji-display" style="display: none;"></span>
           </button>
           <div class="phantom-nav-pills">
             <button type="button" class="phantom-pill-btn active">Home</button>
@@ -1363,13 +1360,53 @@
 
           <!-- Settings Input Rows Container -->
           <div class="phantom-settings-rows">
-            <!-- Row 1: Wallet Name -->
+            <!-- Row 1: Wallet Name & Lock Squircle -->
             <div class="phantom-input-row phantom-input-row-wallet">
-              <div class="phantom-lock-squircle">
-                <img src="./lock-key-placeholder.png" alt="Lock">
-              </div>
+              <button type="button" class="phantom-lock-squircle" id="phantom-settings-lock-squircle" title="Change Lock Icon (Emojis Only)">
+                <img src="./lock-key-placeholder.png" alt="Lock" id="phantom-settings-lock-img">
+                <span class="phantom-settings-lock-emoji phantom-lock-emoji-display" id="phantom-settings-lock-emoji" style="display: none; font-size: 22px;"></span>
+                <span class="phantom-squircle-badge" title="Change emoji">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                  </svg>
+                </span>
+              </button>
               <input type="text" id="phantom-input-wallet-name" class="phantom-name-field" placeholder="Wallet Name"
                 value="Wallet Name">
+            </div>
+
+            <!-- Lock Icon Emoji Selector Panel -->
+            <div class="phantom-emoji-selector-panel" id="phantom-emoji-selector-panel">
+              <div class="phantom-emoji-panel-header">
+                <span class="phantom-emoji-panel-title">Lock Icon (Emojis Only)</span>
+                <button type="button" id="phantom-emoji-default-btn" class="phantom-emoji-default-btn" title="Reset to default lock icon">Reset to Lock</button>
+              </div>
+              <div class="phantom-emoji-presets" id="phantom-emoji-presets">
+                <button type="button" class="phantom-emoji-preset-btn" data-emoji="🔒" title="Lock">🔒</button>
+                <button type="button" class="phantom-emoji-preset-btn" data-emoji="🔑" title="Key">🔑</button>
+                <button type="button" class="phantom-emoji-preset-btn" data-emoji="🛡️" title="Shield">🛡️</button>
+                <button type="button" class="phantom-emoji-preset-btn" data-emoji="👻" title="Ghost">👻</button>
+                <button type="button" class="phantom-emoji-preset-btn" data-emoji="💜" title="Purple Heart">💜</button>
+                <button type="button" class="phantom-emoji-preset-btn" data-emoji="💎" title="Diamond">💎</button>
+                <button type="button" class="phantom-emoji-preset-btn" data-emoji="🚀" title="Rocket">🚀</button>
+                <button type="button" class="phantom-emoji-preset-btn" data-emoji="⚡" title="Lightning">⚡</button>
+                <button type="button" class="phantom-emoji-preset-btn" data-emoji="🔥" title="Fire">🔥</button>
+                <button type="button" class="phantom-emoji-preset-btn" data-emoji="💰" title="Money Bag">💰</button>
+                <button type="button" class="phantom-emoji-preset-btn" data-emoji="🪙" title="Coin">🪙</button>
+                <button type="button" class="phantom-emoji-preset-btn" data-emoji="🦊" title="Fox">🦊</button>
+                <button type="button" class="phantom-emoji-preset-btn" data-emoji="👑" title="Crown">👑</button>
+                <button type="button" class="phantom-emoji-preset-btn" data-emoji="🌟" title="Star">🌟</button>
+                <button type="button" class="phantom-emoji-preset-btn" data-emoji="🤑" title="Money Face">🤑</button>
+                <button type="button" class="phantom-emoji-preset-btn" data-emoji="🎯" title="Bullseye">🎯</button>
+              </div>
+              <div class="phantom-emoji-custom-row">
+                <div class="phantom-emoji-custom-label">Custom Emoji</div>
+                <div class="phantom-emoji-input-wrap">
+                  <input type="text" id="phantom-input-lock-emoji" class="phantom-emoji-input" placeholder="Type or paste emoji (e.g. 👻)" maxlength="4" autocomplete="off">
+                  <button type="button" id="phantom-emoji-clear-btn" class="phantom-emoji-clear-btn" title="Clear emoji" style="display: none;">✕</button>
+                </div>
+              </div>
+              <div id="phantom-emoji-error" class="phantom-emoji-error-text" style="display: none;">Only emojis are allowed!</div>
             </div>
 
             <!-- Row 2: Cash -->
@@ -1380,6 +1417,15 @@
               </div>
               <input type="number" id="phantom-input-cash" class="phantom-num-field" placeholder="0" value="0" min="0"
                 step="any">
+            </div>
+
+            <!-- Row 3: 24h Change % -->
+            <div class="phantom-input-row">
+              <div class="phantom-row-label-group">
+                <span class="phantom-change-pct-badge" style="width: 22px; height: 22px; border-radius: 6px; background: #00e676; color: #000; font-size: 13px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center;">%</span>
+                <span class="phantom-field-name">24h Change %</span>
+              </div>
+              <input type="number" id="phantom-input-change-pct" class="phantom-num-field" placeholder="Auto (e.g. 5.4)" step="any">
             </div>
 
             <!-- Row 3: USDT -->
